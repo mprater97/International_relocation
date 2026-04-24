@@ -509,14 +509,23 @@ function searchMap(){
     .then(function(r){return r.json()})
     .then(function(data){
       if(!data.length){res.innerHTML='<p class="tx tm">No results found. Try a different search.</p>';return}
-      res.innerHTML='<div class="table-wrap"><table><tr><th>Result</th><th>Type</th><th></th></tr>'+
-        data.map(function(d,i){
-          return '<tr><td>'+d.display_name.substring(0,80)+'</td><td class="tx tm">'+(d.type||'')+'</td>'+
-          '<td><button class="btn btn-p" style="padding:4px 10px" onclick="goToResult('+d.lat+','+d.lon+')">📍 Go</button> '+
-          '<button class="btn btn-o" style="padding:4px 10px" onclick="pinFromSearch('+d.lat+','+d.lon+',\''+d.display_name.replace(/'/g,'').substring(0,50)+'\')">+ Pin</button></td></tr>';
-        }).join('')+'</table></div>';
+      res.innerHTML=data.map(function(d,i){
+          var name=d.display_name.replace(/'/g,'').substring(0,60);
+          return '<div style="display:flex;align-items:center;gap:8px;padding:8px;border-bottom:1px solid var(--border);cursor:pointer" onclick="goToResult('+d.lat+','+d.lon+')">'+
+          '<div style="flex:1"><div class="ts" style="font-weight:600">'+name+'</div><div class="tx tm">'+(d.type||'')+'</div></div>'+
+          '<select id="srCat'+i+'" style="max-width:110px;min-height:36px" onclick="event.stopPropagation()">'+PIN_CATS.map(function(c){return'<option value="'+c.id+'">'+c.label+'</option>'}).join('')+'</select>'+
+          '<button class="btn btn-p" style="padding:4px 12px" onclick="event.stopPropagation();quickPin('+d.lat+','+d.lon+',\''+name+'\','+i+')">+ Save</button></div>';
+        }).join('');
     })
     .catch(function(){res.innerHTML='<p class="tx tm tr">Search failed — check your connection.</p>'});
+}
+
+function quickPin(lat,lng,name,idx){
+  var cat=document.getElementById('srCat'+idx).value;
+  if(!state.pins)state.pins=[];
+  state.pins.push({lat:lat,lng:lng,cat:cat,title:name,note:''});
+  save();loadPins();
+  if(mapInstance)mapInstance.flyTo([lat,lng],15);
 }
 
 function goToResult(lat,lng){
@@ -529,6 +538,12 @@ function pinFromSearch(lat,lng,name){
   document.getElementById('pinTitle').value=name;
   document.getElementById('pinNote').value='';
   document.getElementById('pinTitle').focus();
+}
+
+function toggleCatCollapse(catId){
+  if(!state._collapsed)state._collapsed={};
+  state._collapsed[catId]=!state._collapsed[catId];
+  save();loadPins();
 }
 
 function savePin(){
