@@ -154,7 +154,7 @@ function moneyCosts(){
       <tr><th>Item</th><th>Wk</th><th>Forecast</th><th>Actual</th><th>Funded By</th><th></th></tr>
       ${items.map(i=>{const act=state.actuals[i.id];const st=act!=null?(act>(i.forecastHigh||999999)?'over':'b-paid'):'b-pend';
         return`<tr><td>${i.desc}</td><td>${i.week}</td>
-        <td><input type="number" class="ism" value="${i.forecast}" oninput="FORECAST_ITEMS.find(x=>x.id==='${i.id}').forecast=+this.value;dbSave(renderMoney)"></td>
+        <td><input type="number" class="ism" value="${i.forecast}" oninput="FORECAST_ITEMS.find(x=>x.id==='${i.id}').forecast=+this.value;if(!state.forecasts)state.forecasts={};state.forecasts['${i.id}']=+this.value;dbSave(renderMoney)"></td>
         <td><input type="number" class="ism" value="${act!=null?act:''}" placeholder="—" oninput="state.actuals['${i.id}']=this.value===''?null:+this.value;dbSave(renderMoney)"></td>
         <td><select onchange="if(!state.funding)state.funding={};state.funding['${i.id}']=this.value;save()">${FUNDING_SOURCES.map(f=>`<option value="${f.id}" ${getFund(i.id)===f.id?'selected':''}>${f.label}</option>`).join('')}</select></td>
         <td><span class="badge ${act!=null?'b-paid':'b-pend'}">${act!=null?'Paid':'Pending'}</span></td></tr>`}).join('')}</table></div>`).join('')}
@@ -673,6 +673,11 @@ function changePw(){
 
 function restoreCustomItems(){
   if(!state.pins||!state.pins.length){if(typeof DEFAULT_PINS!=='undefined')state.pins=DEFAULT_PINS.slice()}
+  // Restore saved forecast values
+  if(state.forecasts){Object.keys(state.forecasts).forEach(function(id){
+    var item=FORECAST_ITEMS.find(function(x){return x.id===id});
+    if(item)item.forecast=state.forecasts[id];
+  })}
   (state.customTasks||[]).forEach(function(t){
     if(!CHECKLIST.find(function(c){return c.id===t.id}))CHECKLIST.push(t);
   });
