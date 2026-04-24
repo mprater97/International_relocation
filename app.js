@@ -3,6 +3,9 @@ let state=load();
 function load(){try{const s=localStorage.getItem('relo_v3');if(s)return JSON.parse(s)}catch(e){}
   return{auStart:null,moveDate:null,lumpSum:30000,checked:{},actuals:{},funding:{},contacts:{},decisions:{},weeklySpend:{},fx:[],income:[],debtPaid:{},debts:null,journal:{},riskStatus:{},docChecked:{},todos:[],customTasks:[],customCosts:[],customDocs:[],pins:[]}}
 function save(){state._saved=Date.now();localStorage.setItem('relo_v3',JSON.stringify(state))}
+// Auto-save every 30 seconds as safety net
+setInterval(function(){save()},30000);
+
 function exportData(){const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='relo-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
 function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{state=JSON.parse(ev.target.result);save();location.reload()}catch(e){alert('Invalid file')}};r.readAsText(f)}
 function resetData(){if(confirm('Delete ALL data?')&&confirm('Really sure?')){localStorage.removeItem('relo_v3');location.reload()}}
