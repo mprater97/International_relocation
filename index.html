@@ -132,8 +132,12 @@ ul{margin:6px 0 6px 20px}ul li{margin-bottom:2px}
     </div>
     <div style="background:rgba(255,255,255,.05);border-radius:16px;padding:24px;margin:16px 0;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.08)">
       <div id="loginQuote" style="font-size:.95rem;color:#e2e8f0;font-style:italic;margin-bottom:16px;line-height:1.6"></div>
-      <input type="password" id="loginPw" placeholder="Enter password" style="text-align:center;padding:12px;font-size:1rem;margin-bottom:10px;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#f1f5f9;width:100%" onkeydown="if(event.key==='Enter')checkLogin()">
-      <br><button class="btn btn-p" style="width:100%;padding:12px;font-size:1rem;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#22c55e)" onclick="checkLogin()">🔓 Let's Go</button>
+      <form id="loginForm" onsubmit="checkLogin();return false;" autocomplete="on">
+      <input type="hidden" name="username" value="prater" autocomplete="username">
+      <input type="password" id="loginPw" name="password" autocomplete="current-password" placeholder="Enter password" style="text-align:center;padding:12px;font-size:1rem;margin-bottom:10px;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#f1f5f9;width:100%">
+      <br><button type="submit" class="btn btn-p" style="width:100%;padding:12px;font-size:1rem;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#22c55e)">🔓 Let's Go</button>
+      </form>
+      <label style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;font-size:.82rem;color:#94a3b8;cursor:pointer"><input type="checkbox" id="trustDevice" style="width:18px;height:18px;min-height:18px"> Trust this device (stay logged in)</label>
       <p id="loginErr" style="color:#ef4444;font-size:.8rem;margin-top:8px;display:none">Wrong password — try again</p>
     </div>
     <p style="font-size:.7rem;color:#475569">Family Relocation Tracker · 2026</p>
@@ -192,16 +196,20 @@ function checkLogin(){
   var pw=document.getElementById('loginPw').value;
   var hash=0;for(var i=0;i<pw.length;i++){hash=((hash<<5)-hash)+pw.charCodeAt(i);hash|=0}
   var stored=localStorage.getItem('relo_pw_hash');
-  if(!stored){localStorage.setItem('relo_pw_hash',String(hash));unlock()}
-  else if(String(hash)===stored){unlock()}
+  if(!stored){localStorage.setItem('relo_pw_hash',String(hash));unlock(true)}
+  else if(String(hash)===stored){unlock(true)}
   else{document.getElementById('loginErr').style.display='block'}
 }
-function unlock(){
+function unlock(fromLogin){
   document.getElementById('loginOverlay').style.display='none';
   document.getElementById('appContainer').style.display='block';
   sessionStorage.setItem('relo_unlocked','1');
+  if(fromLogin&&document.getElementById('trustDevice')&&document.getElementById('trustDevice').checked){
+    localStorage.setItem('relo_trusted','1');
+  }
 }
-if(sessionStorage.getItem('relo_unlocked')==='1'){unlock()}
+// Auto-unlock trusted devices or active sessions
+if(sessionStorage.getItem('relo_unlocked')==='1'||localStorage.getItem('relo_trusted')==='1'){unlock(false)}
 </script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="data.js"></script>

@@ -430,6 +430,7 @@ function renderSettings(){
         <button class="btn btn-o" onclick="document.getElementById('imp').click()">📂 Import Backup</button>
         <button class="btn btn-o tr" onclick="resetData()">🗑️ Reset All Data</button>
         <button class="btn btn-o" onclick="changePw()">🔒 Change Password</button>
+        <button class="btn btn-o" onclick="localStorage.removeItem('relo_trusted');alert('Device untrusted — you will need to log in next time')">🚫 Untrust Device</button>
       </div>
       ${state._saved?`<p class="tx tm mt2">Last saved: ${new Date(state._saved).toLocaleString('en-GB')}</p>`:''}
     </div>
