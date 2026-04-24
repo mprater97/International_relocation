@@ -451,7 +451,7 @@ var PIN_CATS=[
 
 function renderMap(){
   var el=document.getElementById('map');
-  el.innerHTML='<div class="card"><h2>🗺️ Melbourne Map</h2><p class="tx tm mb2">Click the map to drop a pin. Add notes for housing, schools, activities, and anything useful.</p></div><div id="mapView"></div><div class="pin-form" id="pinForm" style="display:none"><h3>Add Pin</h3><div class="flex g2 fw aic mt2"><select id="pinCat">'+PIN_CATS.map(function(c){return'<option value="'+c.id+'">'+c.label+'</option>'}).join('')+'</select><input type="text" id="pinTitle" placeholder="Title (e.g. 42 Smith St)" style="flex:1;min-width:180px"><input type="text" id="pinNote" placeholder="Notes..." style="flex:1;min-width:180px"><button class="btn btn-p" onclick="savePin()">Save Pin</button><button class="btn btn-o" onclick="cancelPin()">Cancel</button></div></div><div class="card mt2" id="pinList"></div>';
+  el.innerHTML='<div class="card"><h2>🗺️ Melbourne Map</h2><p class="tx tm mb2">Search for any address, school, or business. Click the map to drop a pin.</p><div class="flex g2 fw aic"><input type="text" id="mapSearch" placeholder="🔍 Search address, school, business..." style="flex:1;min-width:200px" onkeydown="if(event.key===\'Enter\')searchMap()"><button class="btn btn-p" onclick="searchMap()">Search</button></div><div id="searchResults" class="mt2"></div></div><div id="mapView"></div><div class="pin-form" id="pinForm" style="display:none"><h3>Add Pin</h3><div class="flex g2 fw aic mt2"><select id="pinCat">'+PIN_CATS.map(function(c){return'<option value="'+c.id+'">'+c.label+'</option>'}).join('')+'</select><input type="text" id="pinTitle" placeholder="Title (e.g. 42 Smith St)" style="flex:1;min-width:180px"><input type="text" id="pinNote" placeholder="Notes..." style="flex:1;min-width:180px"><button class="btn btn-p" onclick="savePin()">Save Pin</button><button class="btn btn-o" onclick="cancelPin()">Cancel</button></div></div><div class="card mt2" id="pinList"></div>';
   setTimeout(initMap,100);
 }
 
@@ -498,6 +498,37 @@ function loadPins(){
     html+='<p class="tm ts">No pins yet. Click the map to add one.</p>';
   }
   document.getElementById('pinList').innerHTML=html;
+}
+
+function searchMap(){
+  var q=document.getElementById('mapSearch').value;
+  if(!q)return;
+  var res=document.getElementById('searchResults');
+  res.innerHTML='<p class="tx tm">Searching...</p>';
+  fetch('https://nominatim.openstreetmap.org/search?format=json&q='+encodeURIComponent(q+' Melbourne Australia')+'&limit=5&addressdetails=1')
+    .then(function(r){return r.json()})
+    .then(function(data){
+      if(!data.length){res.innerHTML='<p class="tx tm">No results found. Try a different search.</p>';return}
+      res.innerHTML='<div class="table-wrap"><table><tr><th>Result</th><th>Type</th><th></th></tr>'+
+        data.map(function(d,i){
+          return '<tr><td>'+d.display_name.substring(0,80)+'</td><td class="tx tm">'+(d.type||'')+'</td>'+
+          '<td><button class="btn btn-p" style="padding:4px 10px" onclick="goToResult('+d.lat+','+d.lon+')">📍 Go</button> '+
+          '<button class="btn btn-o" style="padding:4px 10px" onclick="pinFromSearch('+d.lat+','+d.lon+',\''+d.display_name.replace(/'/g,'').substring(0,50)+'\')">+ Pin</button></td></tr>';
+        }).join('')+'</table></div>';
+    })
+    .catch(function(){res.innerHTML='<p class="tx tm tr">Search failed — check your connection.</p>'});
+}
+
+function goToResult(lat,lng){
+  if(mapInstance)mapInstance.flyTo([lat,lng],16);
+}
+
+function pinFromSearch(lat,lng,name){
+  pendingLatLng={lat:lat,lng:lng};
+  document.getElementById('pinForm').style.display='block';
+  document.getElementById('pinTitle').value=name;
+  document.getElementById('pinNote').value='';
+  document.getElementById('pinTitle').focus();
 }
 
 function savePin(){
