@@ -206,6 +206,7 @@ function syncFromCloud(){
     if(snap.exists){
       var cloud=snap.data();
       // Always use cloud data when manually syncing
+      if(cloud._deleted){if(el){el.textContent='Cloud is empty - start fresh';el.style.color='var(--muted)'}return}
       localStorage.setItem('relo_v3',JSON.stringify(cloud));
       if(el){el.textContent='☁️ Got cloud data - reloading...';el.style.color='var(--accent)'}
       setTimeout(function(){location.reload()},500);
@@ -260,16 +261,16 @@ window._fbLoad().then(function(snap){
   if(snap.exists){
     var cloud=snap.data();
     var local=JSON.parse(localStorage.getItem('relo_v3')||'{}');
-    if(cloud._saved&&(!local._saved||cloud._saved>local._saved)){
+    if(cloud._saved&&!cloud._deleted&&(!local._saved||cloud._saved>local._saved)){
       localStorage.setItem('relo_v3',JSON.stringify(cloud));
       location.reload();
     }
   }
 }).catch(function(e){console.log('Firebase load:',e)});
 </script>
-<script src="data.js?v=1777110848"></script>
-<script src="checklist-data.js?v=1777110848"></script>
-<script src="plan.js?v=1777110848"></script>
-<script src="app.js?v=1777110848"></script>
+<script src="data.js?v=1777113817"></script>
+<script src="checklist-data.js?v=1777113817"></script>
+<script src="plan.js?v=1777113817"></script>
+<script src="app.js?v=1777113817"></script>
 </body>
 </html>

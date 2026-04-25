@@ -27,6 +27,18 @@ setInterval(function(){save()},30000);
 
 function exportData(){const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='relo-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
 function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{state=JSON.parse(ev.target.result);save();location.reload()}catch(e){alert('Invalid file')}};r.readAsText(f)}
+function resetEverything(){
+  if(!confirm('This will delete ALL data on ALL devices - cloud and local. Are you sure?'))return;
+  if(!confirm('LAST CHANCE - this cannot be undone.'))return;
+  localStorage.removeItem('relo_v3');
+  localStorage.removeItem('relo_pw_hash');
+  localStorage.removeItem('relo_trusted');
+  sessionStorage.removeItem('relo_unlocked');
+  if(window._fbReady){
+    window._fbSave({_deleted:true,_saved:0}).then(function(){location.reload()}).catch(function(){location.reload()});
+  }else{location.reload()}
+}
+
 function resetData(){if(confirm('Delete ALL data?')&&confirm('Really sure?')){localStorage.removeItem('relo_v3');location.reload()}}
 function toggleTheme(){const t=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=t;localStorage.setItem('relo_theme',t)}
 let _dbt;function dbSave(fn){save();clearTimeout(_dbt);_dbt=setTimeout(fn,400)}
@@ -447,7 +459,8 @@ function renderSettings(){
       <div class="flex g2 fw">
         <button class="btn btn-p" onclick="exportData()">💾 Export Backup</button>
         <button class="btn btn-o" onclick="document.getElementById('imp').click()">📂 Import Backup</button>
-        <button class="btn btn-o tr" onclick="resetData()">🗑️ Reset All Data</button>
+        <button class="btn btn-o tr" onclick="resetData()">🗑️ Reset This Device</button>
+        <button class="btn btn-o tr" onclick="resetEverything()">💣 Reset ALL Devices (cloud + local)</button>
         <button class="btn btn-o" onclick="changePw()">🔒 Change Password</button>
         <button class="btn btn-o" onclick="localStorage.removeItem('relo_trusted');alert('Device untrusted — you will need to log in next time')">🚫 Untrust Device</button>
       </div>
