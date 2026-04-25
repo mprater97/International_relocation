@@ -200,19 +200,20 @@ document.getElementById('loginQuote').textContent=QUOTES[Math.floor(Math.random(
 
 function syncFromCloud(){
   var el=document.getElementById('saveIndicator');
-  if(el){el.textContent='🔄 Syncing...';el.style.color='var(--orange)'}
-  if(!window._fbReady){if(el){el.textContent='⚠️ No connection';el.style.color='var(--red)'}return}
+  if(el){el.textContent='🔄 Pulling from cloud...';el.style.color='var(--orange)'}
+  if(!window._fbReady){if(el){el.textContent='⚠️ Firebase not ready - wait a moment and try again';el.style.color='var(--red)'}return}
   window._fbLoad().then(function(snap){
     if(snap.exists){
       var cloud=snap.data();
+      // Always use cloud data when manually syncing
       localStorage.setItem('relo_v3',JSON.stringify(cloud));
-      if(el){el.textContent='☁️ Synced';el.style.color='var(--accent)'}
-      location.reload();
+      if(el){el.textContent='☁️ Got cloud data - reloading...';el.style.color='var(--accent)'}
+      setTimeout(function(){location.reload()},500);
     }else{
-      if(el){el.textContent='No cloud data';el.style.color='var(--muted)'}
+      if(el){el.textContent='No cloud data yet - save something first on another device';el.style.color='var(--muted)'}
     }
   }).catch(function(e){
-    if(el){el.textContent='⚠️ Sync failed';el.style.color='var(--red)'}
+    if(el){el.textContent='⚠️ Sync failed: '+e.message;el.style.color='var(--red)'}
     console.log('Sync error:',e);
   });
 }
@@ -266,9 +267,9 @@ window._fbLoad().then(function(snap){
   }
 }).catch(function(e){console.log('Firebase load:',e)});
 </script>
-<script src="data.js?v=1777110204"></script>
-<script src="checklist-data.js?v=1777110204"></script>
-<script src="plan.js?v=1777110204"></script>
-<script src="app.js?v=1777110204"></script>
+<script src="data.js?v=1777110848"></script>
+<script src="checklist-data.js?v=1777110848"></script>
+<script src="plan.js?v=1777110848"></script>
+<script src="app.js?v=1777110848"></script>
 </body>
 </html>
