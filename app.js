@@ -161,12 +161,12 @@ function moneyCosts(){
     <h2>All Cost Items</h2>
     ${Object.entries(cats).map(([cat,items])=>`<h3>${cat}</h3><div class="table-wrap"><table>
       <tr><th>Item</th><th>Wk</th><th>Forecast</th><th>Actual</th><th>Funded By</th><th></th></tr>
-      ${items.map(i=>{const act=state.actuals[i.id];const st=act!=null?(act>(i.forecastHigh||999999)?'over':'b-paid'):'b-pend';
-        return`<tr><td>${i.desc}</td><td>${i.week}</td>
+      ${items.map(i=>{const act=state.actuals[i.id];
+        return`<tr><td><input type="text" value="${i.desc}" style="min-width:140px" oninput="renameCost('${i.id}',this.value)"></td><td><input type="number" class="ism" style="width:50px" value="${i.week}" oninput="updateCostWeek('${i.id}',+this.value)"></td>
         <td><input type="number" class="ism" value="${i.forecast}" oninput="FORECAST_ITEMS.find(x=>x.id==='${i.id}').forecast=+this.value;if(!state.forecasts)state.forecasts={};state.forecasts['${i.id}']=+this.value;dbSave(renderMoney)"></td>
         <td><input type="number" class="ism" value="${act!=null?act:''}" placeholder="—" oninput="state.actuals['${i.id}']=this.value===''?null:+this.value;dbSave(renderMoney)"></td>
         <td><select onchange="if(!state.funding)state.funding={};state.funding['${i.id}']=this.value;save()">${FUNDING_SOURCES.map(f=>`<option value="${f.id}" ${getFund(i.id)===f.id?'selected':''}>${f.label}</option>`).join('')}</select></td>
-        <td><span class="badge ${act!=null?'b-paid':'b-pend'}">${act!=null?'Paid':'Pending'}</span></td></tr>`}).join('')}</table></div>`).join('')}
+        <td><button class="btn btn-o" style="padding:2px 6px;color:var(--red)" onclick="removeCost('${i.id}')">✕</button></td></tr>`}).join('')}</table></div>`).join('')}
       <h3 class="mt3">+ Add Cost Item</h3>
       <div class="flex g2 fw aic">
         <input type="text" id="ccDesc" placeholder="Description" style="flex:1;min-width:180px">
@@ -645,6 +645,31 @@ function addCustomTask(){
 }
 
 // ===== CUSTOM COST ADDING =====
+function renameCost(id,name){
+  if(!state.renames)state.renames={};
+  state.renames[id]=name;
+  var item=FORECAST_ITEMS.find(function(x){return x.id===id});
+  if(item)item.desc=name;
+  save();
+}
+
+function updateCostWeek(id,week){
+  if(!state.costWeeks)state.costWeeks={};
+  state.costWeeks[id]=week;
+  var item=FORECAST_ITEMS.find(function(x){return x.id===id});
+  if(item)item.week=week;
+  save();
+}
+
+function removeCost(id){
+  if(!confirm('Remove this cost item?'))return;
+  if(!state.removedCosts)state.removedCosts=[];
+  state.removedCosts.push(id);
+  var idx=FORECAST_ITEMS.findIndex(function(x){return x.id===id});
+  if(idx>-1)FORECAST_ITEMS.splice(idx,1);
+  save();renderMoney();
+}
+
 function addCustomCost(){
   var desc=document.getElementById('ccDesc').value;
   var week=+(document.getElementById('ccWeek').value)||1;
@@ -686,6 +711,21 @@ function restoreCustomItems(){
   if(state.forecasts){Object.keys(state.forecasts).forEach(function(id){
     var item=FORECAST_ITEMS.find(function(x){return x.id===id});
     if(item)item.forecast=state.forecasts[id];
+  })}
+  // Restore renames
+  if(state.renames){Object.keys(state.renames).forEach(function(id){
+    var item=FORECAST_ITEMS.find(function(x){return x.id===id});
+    if(item)item.desc=state.renames[id];
+  })}
+  // Restore week changes
+  if(state.costWeeks){Object.keys(state.costWeeks).forEach(function(id){
+    var item=FORECAST_ITEMS.find(function(x){return x.id===id});
+    if(item)item.week=state.costWeeks[id];
+  })}
+  // Remove deleted items
+  if(state.removedCosts){state.removedCosts.forEach(function(id){
+    var idx=FORECAST_ITEMS.findIndex(function(x){return x.id===id});
+    if(idx>-1)FORECAST_ITEMS.splice(idx,1);
   })}
   (state.customTasks||[]).forEach(function(t){
     if(!CHECKLIST.find(function(c){return c.id===t.id}))CHECKLIST.push(t);
