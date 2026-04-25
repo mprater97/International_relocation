@@ -158,6 +158,7 @@ ul{margin:6px 0 6px 20px}ul li{margin-bottom:2px}
     <button class="btn-i" onclick="document.getElementById('imp').click()" title="Restore">📂</button>
     <input type="file" id="imp" accept=".json" style="display:none" onchange="importData(event)">
     <button class="btn-i" onclick="toggleTheme()">🌓</button>
+    <button class="btn-i" onclick="logout()" title="Logout">🔒</button>
   </div>
 </header>
 <div class="tabs">
@@ -195,6 +196,15 @@ var QUOTES=[
   '"Melbourne: World\'s most liveable city. Soon to be YOUR city." ☀️',
 ];
 document.getElementById('loginQuote').textContent=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+
+function logout(){
+  sessionStorage.removeItem('relo_unlocked');
+  localStorage.removeItem('relo_trusted');
+  document.getElementById('loginOverlay').style.display='flex';
+  document.getElementById('appContainer').style.display='none';
+  document.getElementById('loginPw').value='';
+  document.getElementById('loginErr').style.display='none';
+}
 
 function checkLogin(){
   var pw=document.getElementById('loginPw').value;
@@ -240,9 +250,9 @@ window._fbReady=true;
   }catch(e){console.log('Firebase load:',e)}
 })();
 </script>
-<script src="data.js?v=1777108268"></script>
-<script src="checklist-data.js?v=1777108268"></script>
-<script src="plan.js?v=1777108268"></script>
-<script src="app.js?v=1777108268"></script>
+<script src="data.js?v=1777109076"></script>
+<script src="checklist-data.js?v=1777109076"></script>
+<script src="plan.js?v=1777109076"></script>
+<script src="app.js?v=1777109076"></script>
 </body>
 </html>
