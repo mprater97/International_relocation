@@ -50,7 +50,7 @@ const CHECKLIST = [
   {id:'cp_2',text:'Decide: voluntary NI contributions from AU',phase:1,week:4,cost:'~£800/yr',cat:'Pension'},
   {id:'cp_3',text:'Locate all UK workplace pensions',phase:1,week:3,cost:'Free',cat:'Pension'},
   // Phase 2
-  {id:'c6_1',text:'Gas Safety Certificate (CP12)',phase:2,week:5,cost:'£60–£90',cat:'Property'},
+  {id:'c6_1',text:'Oil boiler service & safety certificate',phase:2,week:5,cost:'£60–£90',cat:'Property'},
   {id:'c6_2',text:'EICR electrical cert',phase:2,week:5,cost:'£120–£250',cat:'Property'},
   {id:'c6_3',text:'EPC certificate',phase:2,week:5,cost:'£60–£120',cat:'Property'},
   {id:'c6_4',text:'Smoke alarms & CO detectors',phase:2,week:5,cost:'£30–£80',cat:'Property'},

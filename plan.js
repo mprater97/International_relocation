@@ -215,7 +215,7 @@ PLAN_SECTIONS.phase2=`
   <h2>🏠 Property Compliance (MANDATORY for letting)</h2>
   <div class="table-wrap"><table>
     <tr><th>Certificate</th><th>Cost</th><th>Detail</th></tr>
-    <tr><td>Gas Safety (CP12)</td><td>£60–£90</td><td>Must be Gas Safe registered engineer. <a href="https://www.gassaferegister.co.uk" target="_blank">Find engineer</a></td></tr>
+    <tr><td>Oil Safety (CP12)</td><td>£60–£90</td><td>Must be Gas Safe registered engineer. <a href="https://www.oftec.org" target="_blank">Find engineer</a></td></tr>
     <tr><td>EICR (Electrical)</td><td>£120–£250</td><td>Electrical Installation Condition Report</td></tr>
     <tr><td>EPC</td><td>£60–£120</td><td>Min rating E. Valid 10 years — check if current</td></tr>
     <tr><td>Smoke alarms</td><td>£30–£80</td><td>Every floor. Interlinked recommended</td></tr>
@@ -544,7 +544,7 @@ PLAN_SECTIONS.links=`
     <tr><td>Royal Mail redirect</td><td><a href="https://www.royalmail.com/personal/receiving-mail/redirection" target="_blank">royalmail.com/redirection</a></td></tr>
     <tr><td>TV Licence cancel</td><td><a href="https://www.tvlicensing.co.uk" target="_blank">tvlicensing.co.uk</a></td></tr>
     <tr><td>How to Rent guide</td><td><a href="https://www.gov.uk/government/publications/how-to-rent" target="_blank">gov.uk — How to Rent</a></td></tr>
-    <tr><td>Gas Safe Register</td><td><a href="https://www.gassaferegister.co.uk" target="_blank">gassaferegister.co.uk</a></td></tr>
+    <tr><td>OFTEC Register</td><td><a href="https://www.oftec.org" target="_blank">oftec.org</a></td></tr>
     <tr><td>Deposit Protection</td><td><a href="https://www.depositprotection.com" target="_blank">DPS</a> · <a href="https://www.tenancydepositscheme.com" target="_blank">TDS</a></td></tr>
     <tr><td>Checkatrade (tradespeople)</td><td><a href="https://www.checkatrade.com" target="_blank">checkatrade.com</a></td></tr>
     <tr><td>Wise (FX)</td><td><a href="https://wise.com" target="_blank">wise.com</a></td></tr>
