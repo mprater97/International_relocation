@@ -1,8 +1,17 @@
 // ===== STATE =====
 let state=load();
-function load(){try{const s=localStorage.getItem('relo_v3');if(s)return JSON.parse(s)}catch(e){}
-  return{auStart:null,moveDate:null,lumpSum:30000,checked:{},actuals:{},funding:{},contacts:{},decisions:{},weeklySpend:{},fx:[],income:[],debtPaid:{},debts:null,journal:{},riskStatus:{},docChecked:{},todos:[],customTasks:[],customCosts:[],customDocs:[],pins:[]}}
-function save(){state._saved=Date.now();localStorage.setItem('relo_v3',JSON.stringify(state))}
+function defaults(){return{auStart:null,moveDate:null,lumpSum:30000,checked:{},actuals:{},funding:{},forecasts:{},contacts:{},decisions:{},weeklySpend:{},fx:[],income:[],debtPaid:{},debts:null,journal:{},riskStatus:{},docChecked:{},todos:[],customTasks:[],customCosts:[],customDocs:[],pins:[],_collapsed:{}}}
+function load(){
+  var d=defaults();
+  try{var s=localStorage.getItem('relo_v3');if(s){var saved=JSON.parse(s);Object.keys(saved).forEach(function(k){d[k]=saved[k]})}}catch(e){}
+  return d;
+}
+function save(){
+  state._saved=Date.now();
+  try{localStorage.setItem('relo_v3',JSON.stringify(state))}catch(e){console.error('Save failed',e)}
+  var el=document.getElementById('saveIndicator');
+  if(el){el.textContent='✓ Saved';el.style.opacity='1';clearTimeout(el._t);el._t=setTimeout(function(){el.style.opacity='0'},1500)}
+}
 // Auto-save every 30 seconds as safety net
 setInterval(function(){save()},30000);
 
