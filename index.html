@@ -202,8 +202,8 @@ function syncFromCloud(){
   var el=document.getElementById('saveIndicator');
   if(el){el.textContent='🔄 Syncing...';el.style.color='var(--orange)'}
   if(!window._fbReady){if(el){el.textContent='⚠️ No connection';el.style.color='var(--red)'}return}
-  window._fbGetDoc(window._fbDoc(window._fbDb,'tracker','state')).then(function(snap){
-    if(snap.exists()){
+  window._fbLoad().then(function(snap){
+    if(snap.exists){
       var cloud=snap.data();
       localStorage.setItem('relo_v3',JSON.stringify(cloud));
       if(el){el.textContent='☁️ Synced';el.style.color='var(--accent)'}
@@ -246,33 +246,29 @@ function unlock(fromLogin){
 if(sessionStorage.getItem('relo_unlocked')==='1'||localStorage.getItem('relo_trusted')==='1'){unlock(false)}
 </script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import{getFirestore,doc,getDoc,setDoc}from"https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-const firebaseConfig={apiKey:"AIzaSyCkKC4fUOBNqnXghQNUGTHe4lZ06gIILIY",authDomain:"international-travel-prater-co.firebaseapp.com",projectId:"international-travel-prater-co",storageBucket:"international-travel-prater-co.firebasestorage.app",messagingSenderId:"388410986075",appId:"1:388410986075:web:5c51ebcb30fcce0c1ff97e"};
-const fbApp=initializeApp(firebaseConfig);
-const db=getFirestore(fbApp);
-window._fbDb=db;window._fbDoc=doc;window._fbGetDoc=getDoc;window._fbSetDoc=setDoc;
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({apiKey:"AIzaSyCkKC4fUOBNqnXghQNUGTHe4lZ06gIILIY",authDomain:"international-travel-prater-co.firebaseapp.com",projectId:"international-travel-prater-co",storageBucket:"international-travel-prater-co.firebasestorage.app",messagingSenderId:"388410986075",appId:"1:388410986075:web:5c51ebcb30fcce0c1ff97e"});
+var _fbDb=firebase.firestore();
 window._fbReady=true;
-// Load from Firebase on startup
-(async function(){
-  try{
-    const snap=await getDoc(doc(db,'tracker','state'));
-    if(snap.exists()){
-      const cloud=snap.data();
-      const local=JSON.parse(localStorage.getItem('relo_v3')||'{}');
-      // Use whichever was saved more recently
-      if(cloud._saved&&(!local._saved||cloud._saved>local._saved)){
-        localStorage.setItem('relo_v3',JSON.stringify(cloud));
-        location.reload();
-      }
+window._fbSave=function(data){return _fbDb.collection('tracker').doc('state').set(data)};
+window._fbLoad=function(){return _fbDb.collection('tracker').doc('state').get()};
+// Load from cloud on startup
+window._fbLoad().then(function(snap){
+  if(snap.exists){
+    var cloud=snap.data();
+    var local=JSON.parse(localStorage.getItem('relo_v3')||'{}');
+    if(cloud._saved&&(!local._saved||cloud._saved>local._saved)){
+      localStorage.setItem('relo_v3',JSON.stringify(cloud));
+      location.reload();
     }
-  }catch(e){console.log('Firebase load:',e)}
-})();
+  }
+}).catch(function(e){console.log('Firebase load:',e)});
 </script>
-<script src="data.js?v=1777109455"></script>
-<script src="checklist-data.js?v=1777109455"></script>
-<script src="plan.js?v=1777109455"></script>
-<script src="app.js?v=1777109455"></script>
+<script src="data.js?v=1777110204"></script>
+<script src="checklist-data.js?v=1777110204"></script>
+<script src="plan.js?v=1777110204"></script>
+<script src="app.js?v=1777110204"></script>
 </body>
 </html>

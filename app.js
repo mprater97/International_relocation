@@ -15,7 +15,7 @@ function save(){
   clearTimeout(window._fbSaveTimer);
   window._fbSaveTimer=setTimeout(function(){
     if(window._fbReady){
-      try{window._fbSetDoc(window._fbDoc(window._fbDb,'tracker','state'),JSON.parse(JSON.stringify(state))).then(function(){
+      try{window._fbSave(JSON.parse(JSON.stringify(state))).then(function(){
         var el=document.getElementById('saveIndicator');
         if(el){el.textContent='☁️ Synced';el.style.color='var(--accent)'}
       }).catch(function(e){console.log('Firebase sync error:',e)})}catch(e){}
