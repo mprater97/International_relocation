@@ -122,18 +122,18 @@ function renderMoney(){
   var budget=getBudget(),fc=totalFC(),inc=totalInc(),net=netSpend();
   el.innerHTML=`
     <div class="sg">
-      <div class="sb blue"><div class="l">Lump Sum</div><div class="v">\${fG(budget)}</div></div>
-      <div class="sb orange"><div class="l">Forecast</div><div class="v">\${fG(fc)}</div></div>
-      <div class="sb green"><div class="l">Actual</div><div class="v">\${fG(totalAct())}</div></div>
-      <div class="sb \${(budget-net)>0?'green':'red'}"><div class="l">Remaining</div><div class="v">\${fG(budget-net)}</div></div>
+      <div class="sb blue"><div class="l">Lump Sum</div><div class="v">${fG(budget)}</div></div>
+      <div class="sb orange"><div class="l">Forecast</div><div class="v">${fG(fc)}</div></div>
+      <div class="sb green"><div class="l">Actual</div><div class="v">${fG(totalAct())}</div></div>
+      <div class="sb ${(budget-net)>0?'green':'red'}"><div class="l">Remaining</div><div class="v">${fG(budget-net)}</div></div>
     </div>
     <div class="stabs">
-      <div class="stab \${moneySub==='overview'?'active':''}" onclick="moneySub='overview';renderMoney()">Overview</div>
-      <div class="stab \${moneySub==='costs'?'active':''}" onclick="moneySub='costs';renderMoney()">Costs</div>
-      <div class="stab \${moneySub==='debts'?'active':''}" onclick="moneySub='debts';renderMoney()">Debts</div>
-      <div class="stab \${moneySub==='income'?'active':''}" onclick="moneySub='income';renderMoney()">Income & Sales</div>
-      <div class="stab \${moneySub==='fx'?'active':''}" onclick="moneySub='fx';renderMoney()">FX Rates</div>
-      <div class="stab \${moneySub==='uk'?'active':''}" onclick="moneySub='uk';renderMoney()">UK Costs</div>
+      <div class="stab ${moneySub==='overview'?'active':''}" onclick="moneySub='overview';renderMoney()">Overview</div>
+      <div class="stab ${moneySub==='costs'?'active':''}" onclick="moneySub='costs';renderMoney()">Costs</div>
+      <div class="stab ${moneySub==='debts'?'active':''}" onclick="moneySub='debts';renderMoney()">Debts</div>
+      <div class="stab ${moneySub==='income'?'active':''}" onclick="moneySub='income';renderMoney()">Income & Sales</div>
+      <div class="stab ${moneySub==='fx'?'active':''}" onclick="moneySub='fx';renderMoney()">FX Rates</div>
+      <div class="stab ${moneySub==='uk'?'active':''}" onclick="moneySub='uk';renderMoney()">UK Costs</div>
     </div>
     <div id="moneySub"></div>`;
   ({overview:moneyOverview,costs:moneyCosts,debts:moneyDebts,income:moneyIncome,fx:moneyFX,uk:moneyUK})[moneySub]?.();
