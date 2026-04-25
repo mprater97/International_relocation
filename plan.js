@@ -215,7 +215,7 @@ PLAN_SECTIONS.phase2=`
   <h2>🏠 Property Compliance (MANDATORY for letting)</h2>
   <div class="table-wrap"><table>
     <tr><th>Certificate</th><th>Cost</th><th>Detail</th></tr>
-    <tr><td>Oil Safety (CP12)</td><td>£60–£90</td><td>Must be Gas Safe registered engineer. <a href="https://www.oftec.org" target="_blank">Find engineer</a></td></tr>
+    <tr><td>Oil boiler safety certificate</td><td>£60–£90</td><td>Must be OFTEC registered engineer. <a href="https://www.oftec.org" target="_blank">Find engineer</a></td></tr>
     <tr><td>EICR (Electrical)</td><td>£120–£250</td><td>Electrical Installation Condition Report</td></tr>
     <tr><td>EPC</td><td>£60–£120</td><td>Min rating E. Valid 10 years — check if current</td></tr>
     <tr><td>Smoke alarms</td><td>£30–£80</td><td>Every floor. Interlinked recommended</td></tr>

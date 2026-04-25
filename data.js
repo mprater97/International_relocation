@@ -42,7 +42,7 @@ const FORECAST_ITEMS = [
   {id:'ship',cat:'Shipping',desc:'PSS groupage — 2 bikes, 2 TVs, 11 cartons (door-to-door)',week:6,forecastLow:1533,forecastHigh:1533,forecast:1533,phase:1,defaultFund:'lump_sum'},
   {id:'ship_ins',cat:'Shipping',desc:'Shipping insurance',week:6,forecastLow:100,forecastHigh:300,forecast:200,phase:1,defaultFund:'lump_sum'},
   {id:'ship_bikes',cat:'Shipping',desc:'Bike shipping to AU',week:6,forecastLow:500,forecastHigh:1500,forecast:1000,phase:1,defaultFund:'lump_sum'},
-  {id:'gas_cert',cat:'UK Property',desc:'Gas Safety Certificate',week:5,forecastLow:60,forecastHigh:90,forecast:75,phase:2,defaultFund:'lump_sum'},
+  {id:'gas_cert',cat:'UK Property',desc:'Oil boiler service & safety certificate',week:5,forecastLow:60,forecastHigh:90,forecast:75,phase:2,defaultFund:'lump_sum'},
   {id:'eicr',cat:'UK Property',desc:'EICR electrical cert',week:5,forecastLow:120,forecastHigh:250,forecast:180,phase:2,defaultFund:'lump_sum'},
   {id:'epc',cat:'UK Property',desc:'EPC certificate',week:5,forecastLow:60,forecastHigh:120,forecast:80,phase:2,defaultFund:'lump_sum'},
   {id:'alarms',cat:'UK Property',desc:'Smoke/CO alarms',week:5,forecastLow:30,forecastHigh:80,forecast:50,phase:2,defaultFund:'lump_sum'},
