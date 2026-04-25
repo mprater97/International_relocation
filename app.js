@@ -118,15 +118,7 @@ let moneySub='overview';
 function renderMoney(){
   updateHeader();
   const el=document.getElementById('money');
-    // Always show summary
-  var budget=getBudget(),fc=totalFC(),inc=totalInc(),net=netSpend();
   el.innerHTML=`
-    <div class="sg">
-      <div class="sb blue"><div class="l">Lump Sum</div><div class="v">${fG(budget)}</div></div>
-      <div class="sb orange"><div class="l">Forecast</div><div class="v">${fG(fc)}</div></div>
-      <div class="sb green"><div class="l">Actual</div><div class="v">${fG(totalAct())}</div></div>
-      <div class="sb ${(budget-net)>0?'green':'red'}"><div class="l">Remaining</div><div class="v">${fG(budget-net)}</div></div>
-    </div>
     <div class="stabs">
       <div class="stab ${moneySub==='overview'?'active':''}" onclick="moneySub='overview';renderMoney()">Overview</div>
       <div class="stab ${moneySub==='costs'?'active':''}" onclick="moneySub='costs';renderMoney()">Costs</div>
