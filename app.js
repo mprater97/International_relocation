@@ -82,7 +82,7 @@ document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
   t.classList.add('active');document.getElementById(t.dataset.tab).classList.add('active');
-  ({plan:renderPlan,dash:renderDash,money:renderMoney,tasks:renderTasks,map:renderMap,todo:renderTodo,notes:renderNotes,settings:renderSettings})[t.dataset.tab]?.();
+  ({compare:renderCompare,plan:renderPlan,dash:renderDash,money:renderMoney,tasks:renderTasks,map:renderMap,todo:renderTodo,notes:renderNotes,settings:renderSettings})[t.dataset.tab]?.();
 }));
 
 function updateHeader(){
@@ -762,4 +762,4 @@ function restoreCustomItems(){
 }
 
 // ===== INIT =====
-restoreCustomItems();updateHeader();renderPlan();
+restoreCustomItems();updateHeader();renderCompare();
