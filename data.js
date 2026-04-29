@@ -199,6 +199,10 @@ const RISKS = [
 
 // Pre-loaded Melbourne pins (user can delete/add more)
 const DEFAULT_PINS = [
+  // WORK
+  {lat:-37.8178,lng:144.9581,cat:'work',title:'Amazon MEL12',note:'555 Collins St, Melbourne CBD. Your Melbourne office.',city:'melbourne'},
+  {lat:-33.8738,lng:151.2093,cat:'work',title:'Amazon SYD15',note:'2-26 Park St, Sydney CBD. Your Sydney office.',city:'sydney'},
+  // MELBOURNE SUBURBS
   {lat:-37.8782,lng:145.1628,cat:'housing',title:'Glen Waverley',note:'Target suburb — good schools, family-friendly, strong rental market'},
   {lat:-37.8667,lng:145.1292,cat:'housing',title:'Mount Waverley',note:'Target suburb — quieter, good primary schools'},
   {lat:-37.8136,lng:145.1218,cat:'housing',title:'Box Hill',note:'Target suburb — great transport links, diverse community'},
@@ -209,4 +213,23 @@ const DEFAULT_PINS = [
   {lat:-37.8750,lng:145.1600,cat:'school',title:'Glen Waverley Primary',note:'Good primary for 10yr old — check catchment'},
   {lat:-37.8560,lng:145.1480,cat:'school',title:'Pinewood Primary',note:'Alternative primary option'},
   {lat:-37.8228,lng:145.0593,cat:'transport',title:'Chadstone Shopping Centre',note:'Largest shopping centre in southern hemisphere'},
+
+  // SYDNEY SUBURBS
+  {lat:-33.7727,lng:151.0813,cat:'housing',title:'Epping',note:'Good schools, metro access, diverse. Rent $750-$950/wk',city:'sydney'},
+  {lat:-33.7833,lng:151.0500,cat:'housing',title:'Carlingford',note:'Family area, near selective schools. Rent $750-$950/wk',city:'sydney'},
+  {lat:-33.7630,lng:150.9927,cat:'housing',title:'Baulkham Hills',note:'Top selective school zone, safe. Rent $800-$1,000/wk',city:'sydney'},
+  {lat:-33.9644,lng:151.0990,cat:'housing',title:'Hurstville',note:'South, good transport, more affordable. Rent $700-$900/wk',city:'sydney'},
+  {lat:-33.7969,lng:151.1803,cat:'housing',title:'Chatswood',note:'North Shore, excellent amenities, pricey. Rent $900-$1,200/wk',city:'sydney'},
+  // SYDNEY SCHOOLS
+  {lat:-33.7500,lng:151.0450,cat:'school',title:'Cherrybrook Technology HS',note:'Best non-selective govt school in Sydney (88.93)',city:'sydney'},
+  {lat:-33.7700,lng:151.0800,cat:'school',title:'Epping Boys High School',note:'Good govt secondary in target area',city:'sydney'},
+  {lat:-33.7850,lng:151.0480,cat:'school',title:'Carlingford High School',note:'Govt secondary near Carlingford',city:'sydney'},
+  // SYDNEY ACTIVITIES
+  {lat:-33.9100,lng:151.1050,cat:'activity',title:'Sydney Ice Arena (Canterbury)',note:'Jack — ice skating & hockey programs',city:'sydney'},
+  {lat:-33.7780,lng:151.1230,cat:'activity',title:'Macquarie Ice Rink',note:'Jack — ice skating, north Sydney',city:'sydney'},
+  {lat:-33.8450,lng:151.1750,cat:'activity',title:'Sydney Trapeze School',note:'Bella — aerial silks, lyra, trapeze. ~$300-$500/term',city:'sydney'},
+  // MELBOURNE ACTIVITIES
+  {lat:-37.8155,lng:144.9378,cat:'activity',title:'O\'Brien Icehouse (Docklands)',note:'Jack — main Melbourne rink, hockey programs',city:'melbourne'},
+  {lat:-37.8990,lng:145.0890,cat:'activity',title:'Olympic Ice Skating Centre (Oakleigh)',note:'Jack — 15 min from Glen Waverley. Learn to skate + hockey',city:'melbourne'},
+  {lat:-37.7700,lng:144.9600,cat:'activity',title:'NICA (Brunswick)',note:'Bella & Jack — National Institute of Circus Arts. Best in AU for aerial.',city:'melbourne'},
 ];

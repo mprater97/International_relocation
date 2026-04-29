@@ -473,7 +473,7 @@ function renderSettings(){
 }
 
 // ===== MAP =====
-var mapInstance=null;var mapMarkers=[];
+var mapInstance=null;var mapMarkers=[];var mapCity='melbourne';
 var PIN_CATS=[
   {id:'housing',label:'🏠 Housing',color:'#3b82f6'},
   {id:'school',label:'🏫 School',color:'#22c55e'},
@@ -487,14 +487,19 @@ var PIN_CATS=[
 
 function renderMap(){
   var el=document.getElementById('map');
-  el.innerHTML='<div class="card"><h2>🗺️ Melbourne Map</h2><p class="tx tm mb2">Search for any address, school, or business. Click the map to drop a pin.</p><div class="flex g2 fw aic"><input type="text" id="mapSearch" placeholder="🔍 Search address, school, business..." style="flex:1;min-width:200px" onkeydown="if(event.key===\'Enter\')searchMap()"><button class="btn btn-p" onclick="searchMap()">Search</button></div><div id="searchResults" class="mt2"></div></div><div id="mapView"></div><div class="pin-form" id="pinForm" style="display:none"><h3>Add Pin</h3><div class="flex g2 fw aic mt2"><select id="pinCat">'+PIN_CATS.map(function(c){return'<option value="'+c.id+'">'+c.label+'</option>'}).join('')+'</select><input type="text" id="pinTitle" placeholder="Title (e.g. 42 Smith St)" style="flex:1;min-width:180px"><input type="text" id="pinNote" placeholder="Notes..." style="flex:1;min-width:180px"><button class="btn btn-p" onclick="savePin()">Save Pin</button><button class="btn btn-o" onclick="cancelPin()">Cancel</button></div></div><div class="card mt2" id="pinList"></div>';
+  el.innerHTML='<div class="card"><h2>🗺️ Map</h2>'+
+    '<div class="stabs mb2">'+
+    '<div class="stab '+(mapCity==='melbourne'?'active':'')+'" onclick="mapCity=\'melbourne\';renderMap()">🏙️ Melbourne</div>'+
+    '<div class="stab '+(mapCity==='sydney'?'active':'')+'" onclick="mapCity=\'sydney\';renderMap()">🌊 Sydney</div>'+
+    '</div>'+
+    '<p class="tx tm mb2">Search for any address, school, or business. Click the map to drop a pin.</p><p class="tx tm mb2">Search for any address, school, or business. Click the map to drop a pin.</p><div class="flex g2 fw aic"><input type="text" id="mapSearch" placeholder="🔍 Search address, school, business..." style="flex:1;min-width:200px" onkeydown="if(event.key===\'Enter\')searchMap()"><button class="btn btn-p" onclick="searchMap()">Search</button></div><div id="searchResults" class="mt2"></div></div><div id="mapView"></div><div class="pin-form" id="pinForm" style="display:none"><h3>Add Pin</h3><div class="flex g2 fw aic mt2"><select id="pinCat">'+PIN_CATS.map(function(c){return'<option value="'+c.id+'">'+c.label+'</option>'}).join('')+'</select><input type="text" id="pinTitle" placeholder="Title (e.g. 42 Smith St)" style="flex:1;min-width:180px"><input type="text" id="pinNote" placeholder="Notes..." style="flex:1;min-width:180px"><button class="btn btn-p" onclick="savePin()">Save Pin</button><button class="btn btn-o" onclick="cancelPin()">Cancel</button></div></div><div class="card mt2" id="pinList"></div>';
   setTimeout(initMap,100);
 }
 
 var pendingLatLng=null;
 function initMap(){
   if(mapInstance){mapInstance.remove();mapInstance=null}
-  mapInstance=L.map('mapView').setView([-37.88,145.08],12);
+  var center=mapCity==='sydney'?[-33.83,151.08]:[-37.88,145.08];mapInstance=L.map('mapView').setView(center,12);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
     attribution:'© OpenStreetMap contributors',maxZoom:19
   }).addTo(mapInstance);
@@ -541,7 +546,7 @@ function searchMap(){
   if(!q)return;
   var res=document.getElementById('searchResults');
   res.innerHTML='<p class="tx tm">Searching...</p>';
-  fetch('https://nominatim.openstreetmap.org/search?format=json&q='+encodeURIComponent(q+' Melbourne Australia')+'&limit=5&addressdetails=1')
+  fetch('https://nominatim.openstreetmap.org/search?format=json&q='+encodeURIComponent(q+' '+(mapCity==='sydney'?'Sydney':'Melbourne')+' Australia')+'&limit=5&addressdetails=1')
     .then(function(r){return r.json()})
     .then(function(data){
       if(!data.length){res.innerHTML='<p class="tx tm">No results found. Try a different search.</p>';return}
@@ -559,7 +564,7 @@ function searchMap(){
 function quickPin(lat,lng,name,idx){
   var cat=document.getElementById('srCat'+idx).value;
   if(!state.pins)state.pins=[];
-  state.pins.push({lat:lat,lng:lng,cat:cat,title:name,note:''});
+  state.pins.push({lat:lat,lng:lng,cat:cat,title:name,note:'',city:mapCity});
   save();loadPins();
   if(mapInstance)mapInstance.flyTo([lat,lng],15);
 }
@@ -588,7 +593,7 @@ function savePin(){
   var title=document.getElementById('pinTitle').value||'Untitled';
   var note=document.getElementById('pinNote').value;
   if(!state.pins)state.pins=[];
-  state.pins.push({lat:pendingLatLng.lat,lng:pendingLatLng.lng,cat:cat,title:title,note:note});
+  state.pins.push({lat:pendingLatLng.lat,lng:pendingLatLng.lng,cat:cat,title:title,note:note,city:mapCity});
   save();
   document.getElementById('pinForm').style.display='none';
   pendingLatLng=null;
