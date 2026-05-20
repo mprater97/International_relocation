@@ -31,7 +31,6 @@ const CHECKLIST = [
   {id:'c3_4',text:'Book skip or council bulk waste',phase:1,week:2,cost:'£150–£300',cat:'Declutter'},
   {id:'c3_5',text:'Remove 50–70% of household contents',phase:1,week:4,cost:'—',cat:'Declutter'},
   {id:'c4_1',text:'Get 3 shipping quotes',phase:1,week:3,cost:'Free',cat:'Shipping'},
-  {id:'c4_2',text:'Decide: groupage vs dedicated',phase:1,week:3,cost:'—',cat:'Shipping'},
   {id:'c4_3',text:'Create shipping inventory list',phase:1,week:4,cost:'Free',cat:'Shipping'},
   {id:'c5_1',text:'Open Wise account',phase:1,week:1,cost:'Free',cat:'Financial'},
   {id:'c5_2',text:'Open Revolut account',phase:1,week:1,cost:'Free',cat:'Financial'},
