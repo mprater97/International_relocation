@@ -164,7 +164,7 @@ function renderPointsAllocator(){
   services.forEach(function(s){
     var checked=selected[s.id];
     var verdict=s.market>(s.points*31*1.55)?'<span style="color:var(--green)">✅ Good value</span>':'<span style="color:var(--red)">❌ Take cash</span>';
-    var saving=s.market-s.cashCost;html+='<tr'+(checked?' style="background:rgba(34,197,94,.08)"':'')+'><td><input type="checkbox" '+(checked?'checked':'')+' onchange="togglePoint(this.checked,\''+s.id+'\')"></td><td style="font-weight:600">'+s.name+'</td><td>'+s.points+'</td><td>-$'+s.cashCost.toLocaleString()+'</td><td>~$'+s.market.toLocaleString()+'</td><td style="color:'+(saving>0?'var(--green)':'var(--red)')+'">$'+(saving>0?'+':'')+saving.toLocaleString()+'</td></tr>';
+    var saving=s.market-s.cashCost;html+='<tr'+(checked?' style="background:rgba(34,197,94,.08)"':'')+'><td><input type="checkbox" '+(checked?'checked':'')+' onchange="togglePoint(this.checked,\''+s.id+'\')"></td><td style="font-weight:600">'+s.name+'</td><td>'+s.points+' pts<br><span class="tx tm">($'+s.cashCost.toLocaleString()+' AUD)</span></td><td>-$'+s.cashCost.toLocaleString()+'</td><td>~$'+s.market.toLocaleString()+'</td><td style="color:'+(saving>0?'var(--green)':'var(--red)')+'">$'+(saving>0?'+':'')+saving.toLocaleString()+'</td></tr>';
   });
   html+='</table></div>';
   
