@@ -13,8 +13,8 @@ const FUNDING_SOURCES = [
 const DEFAULT_DEBTS = [
   {id:'debt_santander',desc:'Santander Loan (Car)',amount:6035,monthly:187.30,note:'Clear from car sale (~£14k)'},
   {id:'debt_mbna',desc:'MBNA (Car)',amount:7362,monthly:200,note:'Clear from car sale (~£14k)'},
-  {id:'debt_klarna',desc:'Klarna (Vic Plumb)',amount:798,monthly:46.98,note:'Pay off from lump sum'},
-  {id:'debt_vk12',desc:'VK12 bike finance',amount:751,monthly:83.56,note:'Keeping bikes — finance continues, shipping to AU'},
+  {id:'debt_klarna',desc:'Klarna (Vic Plumb)',amount:798,monthly:46.98,note:'Clear from car sale'},
+  {id:'debt_vk12',desc:'VK12 bike finance',amount:751,monthly:83.56,note:'Clear from car sale'},
 ];
 
 function getStartDate(){
@@ -66,7 +66,7 @@ const FORECAST_ITEMS = [
   {id:'au_pet_ins',type:'monthly',cat:'AU Insurance',desc:'AU pet insurance (new policy)',week:14,forecastLow:30,forecastHigh:80,forecast:50,phase:4,defaultFund:'lump_sum'},
   {id:'adapters',type:'oneoff',cat:'Misc',desc:'AU power adapters',week:10,forecastLow:10,forecastHigh:20,forecast:15,phase:3,defaultFund:'lump_sum'},
   // Debts to clear
-  {id:'debt_klarna_clear',type:'oneoff',cat:'Debts to Clear',desc:'Klarna (Vic Plumb)',week:4,forecastLow:798,forecastHigh:798,forecast:798,phase:1,defaultFund:'lump_sum'},
+  {id:'debt_klarna_clear',type:'oneoff',cat:'Debts to Clear',desc:'Klarna (Vic Plumb)',week:4,forecastLow:798,forecastHigh:798,forecast:798,phase:1,defaultFund:'sale_proceeds'},
   {id:'debt_car_finance',type:'oneoff',cat:'Debts to Clear',desc:'Car finance — Santander + MBNA',week:5,forecastLow:13397,forecastHigh:13397,forecast:13397,phase:2,defaultFund:'sale_proceeds'},
   // Company-funded items (tracked but not in personal budget)
   {id:'co_visa',type:'oneoff',cat:'Company Funded',desc:'Visa — all family',week:1,forecastLow:0,forecastHigh:0,forecast:0,phase:1,defaultFund:'company_direct'},
@@ -139,8 +139,8 @@ const UK_COST_ACTIONS = [
   {id:'m_lg_life',action:'KEEP',note:'Keep — cheap UK cover'},
   {id:'m_santander',action:'CLEAR',note:'Pay off from car sale (~£14k total)'},
   {id:'m_mbna',action:'CLEAR',note:'Pay off from car sale (~£14k total)'},
-  {id:'m_klarna',action:'CLEAR',note:'Pay off from lump sum'},
-  {id:'m_vk12',action:'KEEP',note:'Keeping bikes — taking to AU. Finance continues.'},
+  {id:'m_klarna',action:'CLEAR',note:'Clear from car sale'},
+  {id:'m_vk12',action:'CLEAR',note:'Clear from car sale'},
 ];
 const INCOME = {salary_aud:9571,rsu_aud:2500};
 
