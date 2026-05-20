@@ -129,6 +129,8 @@ const UK_POST_MOVE_MONTHLY_GBP = 1278.83; // mortgage + landlord ins + agent + L
 // Rental income covers this and gives surplus
 // Net: £1,400 - £1,278.83 = +£121.17/mo surplus = +$228 AUD/mo
 const UK_NET_MONTHLY_AUD = 228; // SURPLUS (positive = you gain money)
+const PERSONAL_SAVINGS_GBP = 3000; // £3,000 saved for covering shortfalls
+const PERSONAL_SAVINGS_AUD = 5640; // £3,000 × $1.88
 
 
 // What happens to each UK cost on move
