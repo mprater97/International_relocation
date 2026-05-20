@@ -1,6 +1,6 @@
 // ===== STATE =====
 let state=load();
-function defaults(){return{auStart:null,moveDate:null,lumpSum:30000,checked:{},actuals:{},funding:{},forecasts:{},contacts:{},decisions:{},weeklySpend:{},fx:[],income:[],debtPaid:{},debts:null,journal:{},riskStatus:{},docChecked:{},todos:[],customTasks:[],customCosts:[],customDocs:[],pins:[],_collapsed:{}}}
+function defaults(){return{auStart:null,moveDate:null,lumpSum:9610,checked:{},actuals:{},funding:{},forecasts:{},contacts:{},decisions:{},weeklySpend:{},fx:[],income:[],debtPaid:{},debts:null,journal:{},riskStatus:{},docChecked:{},todos:[],customTasks:[],customCosts:[],customDocs:[],pins:[],_collapsed:{}}}
 function load(){
   var d=defaults();
   try{var s=localStorage.getItem('relo_v3');if(s){var saved=JSON.parse(s);Object.keys(saved).forEach(function(k){d[k]=saved[k]})}}catch(e){}
@@ -53,7 +53,7 @@ function fG(v){return'£'+Math.round(v).toLocaleString()}
 function fA(v){return'$'+Math.round(v).toLocaleString()}
 function curWk(){const n=new Date(),d=Math.floor((n-getStart())/(7*864e5));return Math.max(1,Math.min(22,d+1))}
 function daysTo(s){if(!s)return null;return Math.ceil((new Date(s)-new Date())/(864e5))}
-function getBudget(){return state.lumpSum||30000}
+function getBudget(){return state.lumpSum||9610}
 function getDebts(){return(state.debts||DEFAULT_DEBTS).map(d=>{const paid=(state.debtPaid||{})[d.id]||0;const owed=d.amount||(d.monthly?(d.monthly*(d.monthsLeft||0)):0);return{...d,owed,paid,left:Math.max(0,owed-paid)}})}
 function debtLeft(){return getDebts().reduce((s,d)=>s+d.left,0)}
 function totalInc(){return(state.income||[]).reduce((s,e)=>s+e.amt,0)}
@@ -104,7 +104,7 @@ function renderDash(){
 
   el.innerHTML=`
     <div class="sg">
-      <div class="sb blue"><div class="l">Lump Sum</div><div class="v">${fG(budget)}</div></div>
+      <div class="sb blue"><div class="l">Relo Cash (USD)</div><div class="v">${fG(budget)}</div></div>
       <div class="sb orange"><div class="l">Forecast Out</div><div class="v">${fG(fc)}</div></div>
       <div class="sb green"><div class="l">Sales In</div><div class="v">${fG(inc)}</div></div>
       <div class="sb ${dl>0?'red':'green'}"><div class="l">Debt Left</div><div class="v">${fG(dl)}</div></div>
@@ -158,7 +158,7 @@ function moneyOverview(){
   const cf=cumFC(),ca=cumAct(),mx=Math.max(budget,...Object.values(cf),1);
   document.getElementById('moneySub').innerHTML=`
     <div class="sg">
-      <div class="sb blue"><div class="l">Lump Sum</div><div class="v"><input type="number" value="${budget}" style="width:100px;text-align:center;font-size:1.1rem;font-weight:700" oninput="state.lumpSum=+this.value;dbSave(renderMoney)"></div></div>
+      <div class="sb blue"><div class="l">Relo Cash (USD)</div><div class="v"><input type="number" value="${budget}" style="width:100px;text-align:center;font-size:1.1rem;font-weight:700" oninput="state.lumpSum=+this.value;dbSave(renderMoney)"></div></div>
       <div class="sb orange"><div class="l">Forecast</div><div class="v">${fG(fc)}</div></div>
       <div class="sb green"><div class="l">Actual</div><div class="v">${fG(totalAct())}</div></div>
       <div class="sb ${(budget-netSpend())>0?'green':'red'}"><div class="l">Remaining</div><div class="v">${fG(budget-netSpend())}</div></div>
