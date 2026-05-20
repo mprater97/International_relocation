@@ -1,5 +1,5 @@
 function renderCompare(){
-  document.getElementById('compare').innerHTML=
+  document.getElementById('locations').innerHTML=
     '<div class="card" style="border-left:4px solid var(--accent)">'+
     '<h2>🏙️ Melbourne — Location Guide</h2>'+
     '<p class="ts tm">$159k salary | 4-bed with garden | Beach lifestyle</p>'+
@@ -13,7 +13,7 @@ function renderCompare(){
   showCmp('suburbs');
 }
 function showCmp(id,btn){
-  if(btn){document.querySelectorAll('#compare .stab').forEach(function(s){s.classList.remove('active')});btn.classList.add('active')}
+  if(btn){document.querySelectorAll('#locations .stab').forEach(function(s){s.classList.remove('active')});btn.classList.add('active')}
   document.getElementById('cmpContent').innerHTML=CMP[id]||'';
 }
 var CMP={};
