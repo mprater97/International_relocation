@@ -3,10 +3,11 @@ const GBP_AUD = 1.88;
 let BUDGET = 9610; // USD relocation points cash value // editable via UI
 
 const FUNDING_SOURCES = [
-  {id:'lump_sum',label:'Company Lump Sum',color:'var(--accent)'},
-  {id:'company_direct',label:'Company Direct (not lump sum)',color:'#8b5cf6'},
-  {id:'sale_proceeds',label:'Sale Proceeds',color:'var(--orange)'},
-  {id:'credit',label:'Credit/Debt',color:'var(--red)'},
+  {id:'lump_sum',label:'Relo Points Cash',color:'var(--accent)'},
+  {id:'uk_wages',label:'UK Wages (before move)',color:'#8b5cf6'},
+  {id:'sale_proceeds',label:'Car Sale Proceeds',color:'var(--orange)'},
+  {id:'savings',label:'Personal Savings (£3k)',color:'var(--green)'},
+  {id:'company_direct',label:'Company Direct (visa/flights/housing)',color:'#06b6d4'},
   {id:'other',label:'Other',color:'var(--muted)'},
 ];
 
@@ -40,21 +41,21 @@ const FORECAST_ITEMS = [
   {id:'ship',type:'oneoff',cat:'Shipping',desc:'PSS groupage — 2 bikes, 2 TVs, 11 cartons (door-to-door)',week:6,forecastLow:1533,forecastHigh:1533,forecast:1533,phase:1,defaultFund:'lump_sum'},
   {id:'ship_ins',type:'oneoff',cat:'Shipping',desc:'Shipping insurance',week:6,forecastLow:100,forecastHigh:300,forecast:200,phase:1,defaultFund:'lump_sum'},
   {id:'ship_bikes',type:'oneoff',cat:'Shipping',desc:'Bike shipping to AU',week:6,forecastLow:500,forecastHigh:1500,forecast:1000,phase:1,defaultFund:'lump_sum'},
-  {id:'gas_cert',type:'oneoff',cat:'UK Property',desc:'Oil boiler service (£75 = ~$141 AUD)',week:5,forecastLow:113,forecastHigh:169,forecast:141,phase:2,defaultFund:'lump_sum'},
-  {id:'eicr',type:'oneoff',cat:'UK Property',desc:'EICR electrical cert (£180 = ~$338 AUD)',week:5,forecastLow:226,forecastHigh:470,forecast:338,phase:2,defaultFund:'lump_sum'},
-  {id:'epc',type:'oneoff',cat:'UK Property',desc:'EPC certificate (£80 = ~$150 AUD)',week:5,forecastLow:113,forecastHigh:226,forecast:150,phase:2,defaultFund:'lump_sum'},
-  {id:'alarms',type:'oneoff',cat:'UK Property',desc:'Smoke/CO alarms (£50 = ~$94 AUD)',week:5,forecastLow:56,forecastHigh:150,forecast:94,phase:2,defaultFund:'lump_sum'},
-  {id:'repairs',type:'oneoff',cat:'UK Property',desc:'Repairs & defects (£500 = ~$940 AUD)',week:6,forecastLow:376,forecastHigh:1880,forecast:940,phase:2,defaultFund:'lump_sum'},
-  {id:'paint',type:'oneoff',cat:'UK Property',desc:'Paint touch-up (£80 = ~$150 AUD)',week:6,forecastLow:94,forecastHigh:376,forecast:150,phase:2,defaultFund:'lump_sum'},
-  {id:'clean',type:'oneoff',cat:'UK Property',desc:'Professional deep clean (£200 = ~$376 AUD)',week:7,forecastLow:282,forecastHigh:564,forecast:376,phase:2,defaultFund:'lump_sum'},
-  {id:'photos',type:'oneoff',cat:'UK Property',desc:'Professional photos (£150 = ~$282 AUD)',week:7,forecastLow:188,forecastHigh:376,forecast:282,phase:2,defaultFund:'lump_sum'},
-  {id:'landlord_ins',type:'monthly',cat:'UK Property',desc:'Landlord insurance (annual ~£960)',week:3,forecastLow:800,forecastHigh:1000,forecast:960,phase:1,defaultFund:'lump_sum'},
-  {id:'agent_fee',type:'oneoff',cat:'UK Property',desc:'Letting agent setup fee (LAP £358 = ~$673 AUD)',week:4,forecastLow:600,forecastHigh:700,forecast:673,phase:1,defaultFund:'lump_sum'},
-  {id:'skip',type:'oneoff',cat:'Declutter',desc:'Skip / bulk waste (£200 = ~$376 AUD)',week:2,forecastLow:280,forecastHigh:560,forecast:376,phase:1,defaultFund:'lump_sum'},
-  {id:'fx_cost',type:'oneoff',cat:'Financial',desc:'FX conversion costs (~$752 AUD)',week:3,forecastLow:564,forecastHigh:1128,forecast:752,phase:1,defaultFund:'lump_sum'},
-  {id:'mail_redirect',type:'oneoff',cat:'UK Exit',desc:'Royal Mail redirect 12mo (£80 = ~$150 AUD)',week:8,forecastLow:110,forecastHigh:190,forecast:150,phase:2,defaultFund:'lump_sum'},
-  {id:'misc_exit',type:'oneoff',cat:'UK Exit',desc:'Misc UK exit costs (£200 = ~$376 AUD)',week:11,forecastLow:190,forecastHigh:560,forecast:376,phase:3,defaultFund:'lump_sum'},
-  {id:'poa',type:'oneoff',cat:'Legal',desc:'UK Power of Attorney (£200 = ~$376 AUD)',week:7,forecastLow:190,forecastHigh:560,forecast:376,phase:2,defaultFund:'lump_sum'},
+  {id:'gas_cert',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Oil boiler service (£75 = ~$141 AUD)',week:5,forecastLow:113,forecastHigh:169,forecast:141,phase:2,defaultFund:'lump_sum'},
+  {id:'eicr',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'EICR electrical cert (£180 = ~$338 AUD)',week:5,forecastLow:226,forecastHigh:470,forecast:338,phase:2,defaultFund:'lump_sum'},
+  {id:'epc',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'EPC certificate (£80 = ~$150 AUD)',week:5,forecastLow:113,forecastHigh:226,forecast:150,phase:2,defaultFund:'lump_sum'},
+  {id:'alarms',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Smoke/CO alarms (£50 = ~$94 AUD)',week:5,forecastLow:56,forecastHigh:150,forecast:94,phase:2,defaultFund:'lump_sum'},
+  {id:'repairs',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Repairs & defects (£500 = ~$940 AUD)',week:6,forecastLow:376,forecastHigh:1880,forecast:940,phase:2,defaultFund:'lump_sum'},
+  {id:'paint',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Paint touch-up (£80 = ~$150 AUD)',week:6,forecastLow:94,forecastHigh:376,forecast:150,phase:2,defaultFund:'lump_sum'},
+  {id:'clean',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Professional deep clean (£200 = ~$376 AUD)',week:7,forecastLow:282,forecastHigh:564,forecast:376,phase:2,defaultFund:'lump_sum'},
+  {id:'photos',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Professional photos (£150 = ~$282 AUD)',week:7,forecastLow:188,forecastHigh:376,forecast:282,phase:2,defaultFund:'lump_sum'},
+  {id:'landlord_ins',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Landlord insurance (annual ~£960)',week:3,forecastLow:800,forecastHigh:1000,forecast:960,phase:1,defaultFund:'lump_sum'},
+  {id:'agent_fee',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Letting agent setup fee (LAP £358 = ~$673 AUD)',week:4,forecastLow:600,forecastHigh:700,forecast:673,phase:1,defaultFund:'lump_sum'},
+  {id:'skip',type:'oneoff',defaultFund:'uk_wages',cat:'Declutter',desc:'Skip / bulk waste (£200 = ~$376 AUD)',week:2,forecastLow:280,forecastHigh:560,forecast:376,phase:1,defaultFund:'lump_sum'},
+  {id:'fx_cost',type:'oneoff',defaultFund:'uk_wages',cat:'Financial',desc:'FX conversion costs (~$752 AUD)',week:3,forecastLow:564,forecastHigh:1128,forecast:752,phase:1,defaultFund:'lump_sum'},
+  {id:'mail_redirect',type:'oneoff',defaultFund:'uk_wages',cat:'UK Exit',desc:'Royal Mail redirect 12mo (£80 = ~$150 AUD)',week:8,forecastLow:110,forecastHigh:190,forecast:150,phase:2,defaultFund:'lump_sum'},
+  {id:'misc_exit',type:'oneoff',defaultFund:'uk_wages',cat:'UK Exit',desc:'Misc UK exit costs (£200 = ~$376 AUD)',week:11,forecastLow:190,forecastHigh:560,forecast:376,phase:3,defaultFund:'lump_sum'},
+  {id:'poa',type:'oneoff',defaultFund:'uk_wages',cat:'Legal',desc:'UK Power of Attorney (£200 = ~$376 AUD)',week:7,forecastLow:190,forecastHigh:560,forecast:376,phase:2,defaultFund:'lump_sum'},
   {id:'au_bond',type:'oneoff',cat:'AU Housing',desc:'Rental bond (4 weeks)',week:15,forecastLow:2600,forecastHigh:3200,forecast:2800,phase:4,defaultFund:'lump_sum'},
   {id:'au_advance',type:'oneoff',cat:'AU Housing',desc:'Rent advance (2 weeks)',week:15,forecastLow:1300,forecastHigh:1600,forecast:1400,phase:4,defaultFund:'lump_sum'},
   {id:'au_uniform1',type:'oneoff',cat:'AU School',desc:'Uniform — 14yr old',week:15,forecastLow:150,forecastHigh:300,forecast:200,phase:4,defaultFund:'lump_sum'},
@@ -129,8 +130,8 @@ const UK_POST_MOVE_MONTHLY_GBP = 1278.83; // mortgage + landlord ins + agent + L
 // Rental income covers this and gives surplus
 // Net: £1,400 - £1,278.83 = +£121.17/mo surplus = +$228 AUD/mo
 const UK_NET_MONTHLY_AUD = 228; // SURPLUS (positive = you gain money)
-const PERSONAL_SAVINGS_GBP = 3000; // £3,000 saved for covering shortfalls
-const PERSONAL_SAVINGS_AUD = 5640; // £3,000 × $1.88
+const PERSONAL_SAVINGS_GBP = 3900; // £3,900 from first car sale + savings // £3,000 saved for covering shortfalls
+const PERSONAL_SAVINGS_AUD = 7332; // £3,900 × $1.88 // £3,000 × $1.88
 
 
 // What happens to each UK cost on move
