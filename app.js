@@ -768,3 +768,43 @@ function restoreCustomItems(){
 
 // ===== INIT =====
 restoreCustomItems();updateHeader();renderPlanNew();
+
+// ===== PLAN (Combined: Phases + Tasks + To-Do) =====
+var planSub='thisweek';
+function renderPlanNew(){
+  updateHeader();
+  var el=document.getElementById('plan');
+  if(!el)return;
+  var cw=curWk();
+  var thisWk=CHECKLIST.filter(function(c){return c.week===cw&&!state.checked[c.id]});
+  var overdue=CHECKLIST.filter(function(c){return c.week<cw&&!state.checked[c.id]});
+  var pct=pctDone();
+  el.innerHTML='<div class="sg"><div class="sb '+(pct>75?'green':pct>40?'yellow':'red')+'"><div class="l">Done</div><div class="v">'+pct+'%</div></div><div class="sb yellow"><div class="l">Overdue</div><div class="v">'+overdue.length+'</div></div><div class="sb blue"><div class="l">This Week</div><div class="v">'+thisWk.length+'</div></div><div class="sb blue"><div class="l">Week</div><div class="v">'+cw+'</div></div></div><div class="stabs"><div class="stab '+(planSub==='thisweek'?'active':'')+'" onclick="planSub=\'thisweek\';renderPlanNew()">⚡ This Week</div><div class="stab '+(planSub==='phase1'?'active':'')+'" onclick="planSub=\'phase1\';renderPlanNew()">🔵 P1</div><div class="stab '+(planSub==='phase2'?'active':'')+'" onclick="planSub=\'phase2\';renderPlanNew()">🟠 P2</div><div class="stab '+(planSub==='phase3'?'active':'')+'" onclick="planSub=\'phase3\';renderPlanNew()">🟡 P3</div><div class="stab '+(planSub==='phase4'?'active':'')+'" onclick="planSub=\'phase4\';renderPlanNew()">🟢 P4</div><div class="stab '+(planSub==='todo'?'active':'')+'" onclick="planSub=\'todo\';renderPlanNew()">📌 To-Do</div><div class="stab '+(planSub==='guide'?'active':'')+'" onclick="planSub=\'guide\';renderPlanNew()">📖 Guide</div></div><div id="planSub"></div>';
+  if(planSub==='thisweek')planThisWeek(cw,thisWk,overdue);
+  else if(planSub==='todo')renderTodo2();
+  else if(planSub==='guide')renderPlan();
+  else planPhase(parseInt(planSub.replace('phase','')));
+}
+function planThisWeek(cw,thisWk,overdue){
+  var html='<div class="card"><h2>⚡ Week '+cw+' — '+fd(wkDate(cw))+'</h2>';
+  if(thisWk.length){thisWk.forEach(function(t){html+='<div class="ci"><input type="checkbox" onchange="state.checked[\''+t.id+'\']=true;save();renderPlanNew()"><div class="ct">'+t.text+'<div class="cm"><span class="pl p'+t.phase+'">'+t.cat+'</span></div></div>'+(t.cost!=='—'&&t.cost!=='Free'?'<div class="cc">'+t.cost+'</div>':'')+'</div>'});}else{html+='<p class="tm ts">✅ All done this week!</p>';}
+  html+='</div>';
+  if(overdue.length){html+='<div class="card"><h2>🚨 Overdue ('+overdue.length+')</h2>';overdue.forEach(function(t){html+='<div class="ci"><input type="checkbox" onchange="state.checked[\''+t.id+'\']=true;save();renderPlanNew()"><div class="ct">'+t.text+'<div class="cm"><span class="pl p'+t.phase+'">Wk '+t.week+'</span> '+t.cat+'</div></div></div>';});html+='</div>';}
+  document.getElementById('planSub').innerHTML=html;
+}
+function planPhase(phase){
+  var items=CHECKLIST.filter(function(c){return c.phase===phase});
+  var done=items.filter(function(c){return state.checked[c.id]}).length;
+  var names=['','🔵 Phase 1: Foundations (Wk 1–4)','🟠 Phase 2: Lock & Prep (Wk 5–8)','🟡 Phase 3: Execution (Wk 9–12)','🟢 Phase 4: Arrival (Wk 13–16)'];
+  var html='<div class="card"><h2>'+names[phase]+'</h2><div class="pb mb2" style="height:10px"><div class="pf" style="width:'+(items.length?done/items.length*100:0)+'%;background:var(--green)"></div></div><p class="tx tm mb2">'+done+'/'+items.length+' complete</p>';
+  items.forEach(function(c){var ck=state.checked[c.id];html+='<div class="ci'+(ck?' done':'')+'"><input type="checkbox" '+(ck?'checked':'')+' onchange="state.checked[\''+c.id+'\']=!state.checked[\''+c.id+'\'];save();renderPlanNew()"><div class="ct">'+c.text+'<div class="cm">Wk '+c.week+' · '+c.cat+'</div></div>'+(c.cost!=='—'&&c.cost!=='Free'&&c.cost!=='Included'&&c.cost!=='Company'?'<div class="cc">'+c.cost+'</div>':'')+'</div>';});
+  html+='</div>';
+  document.getElementById('planSub').innerHTML=html;
+}
+function renderTodo2(){
+  var todos=state.todos||[];
+  var html='<div class="card"><h2>📌 To-Do List</h2><div class="flex g2 fw aic mb2"><input type="text" id="todoText" placeholder="What needs doing?" style="flex:1;min-width:200px" onkeydown="if(event.key===\'Enter\')addTodo()"><select id="todoCat" style="max-width:140px"><option>General</option><option>House Repairs</option><option>Packing</option><option>Admin</option><option>Shopping</option><option>Kids</option></select><select id="todoPri" style="max-width:100px"><option value="med">Medium</option><option value="high">High</option><option value="low">Low</option></select><button class="btn btn-p" onclick="addTodo()">+ Add</button></div>';
+  if(todos.length){todos.forEach(function(t,i){var pri=t.pri==='high'?'🔴':t.pri==='low'?'🟢':'🟡';html+='<div class="ci'+(t.done?' done':'')+'"><input type="checkbox" '+(t.done?'checked':'')+' onchange="state.todos['+i+'].done=!state.todos['+i+'].done;save();renderPlanNew()"><div class="ct">'+pri+' '+t.text+'<div class="cm">'+t.cat+'</div></div><button class="btn btn-o" style="padding:2px 6px" onclick="state.todos.splice('+i+',1);save();renderPlanNew()">✕</button></div>';});}else{html+='<p class="tm ts">No to-dos yet.</p>';}
+  html+='</div>';
+  document.getElementById('planSub').innerHTML=html;
+}
