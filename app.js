@@ -214,21 +214,12 @@ function moneyOverview(){
   document.getElementById('moneySub').innerHTML=renderPointsAllocator()+`
     <div class="sg">
       <div class="sb blue"><div class="l">Relo Cash (AUD)</div><div class="v"><input type="number" value="${budget}" style="width:100px;text-align:center;font-size:1.1rem;font-weight:700" oninput="state.lumpSum=+this.value;dbSave(renderMoney)"></div></div>
-      <div class="sb orange"><div class="l">Forecast</div><div class="v">${fG(fc)}</div></div>
-      <div class="sb green"><div class="l">Actual</div><div class="v">${fG(totalAct())}</div></div>
+      <div class="sb orange"><div class="l">Forecast Relo Costs</div><div class="v">${fG(fc)}</div></div>
+      <div class="sb green"><div class="l">Actual Spent</div><div class="v">${fG(totalAct())}</div></div>
       <div class="sb ${(budget-netSpend())>0?'green':'red'}"><div class="l">Remaining</div><div class="v">${fG(budget-netSpend())}</div></div>
     </div>
     <div class="card"><h2>📈 Forecast vs Actual</h2>
-      <div style="display:flex;align-items:flex-end;gap:2px;height:180px">
-        ${Array.from({length:16},(_,i)=>i+1).map(w=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center">
-          <div style="display:flex;align-items:flex-end;gap:1px;height:160px">
-            <div style="width:48%;height:${Math.round((cf[w]||0)/mx*150)}px;background:var(--accent);opacity:.35;border-radius:3px 3px 0 0"></div>
-            <div style="width:48%;height:${Math.round((ca[w]||0)/mx*150)}px;background:var(--green);border-radius:3px 3px 0 0"></div>
-          </div><div class="tx tm">${w}</div></div>`).join('')}
-      </div>
-      <div style="display:flex;gap:12px;justify-content:center;margin-top:6px" class="tx">
-        <span>🟦 Forecast</span><span>🟩 Actual</span>
-      </div>
+      
     </div>`;
 }
 
