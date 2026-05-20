@@ -1,6 +1,6 @@
 // ===== DATA MODEL =====
 const GBP_AUD = 1.92;
-let BUDGET = 30000; // editable via UI
+let BUDGET = 9610; // USD relocation points cash value // editable via UI
 
 const FUNDING_SOURCES = [
   {id:'lump_sum',label:'Company Lump Sum',color:'var(--accent)'},
@@ -82,12 +82,12 @@ const FORECAST_ITEMS = [
 ];
 
 const MONTHLY_AU = [
-  {id:'m_rent',desc:'Rent',monthly_aud:3200},
+  {id:'m_rent',desc:'Rent',monthly_aud:2686},
   {id:'m_groc',desc:'Groceries',monthly_aud:1400},
   {id:'m_transport',desc:'Transport/fuel',monthly_aud:500},
   {id:'m_util',desc:'Utilities + internet',monthly_aud:350},
-  {id:'m_health',desc:'Health insurance',monthly_aud:400},
-  {id:'m_mobile',desc:'Mobile phones',monthly_aud:120},
+  {id:'m_health',desc:'Health insurance',monthly_aud:80},
+  {id:'m_mobile',desc:'Mobile phones',monthly_aud:130},
   {id:'m_kids',desc:'Kids activities',monthly_aud:300},
 ];
 const MONTHLY_UK = [
@@ -145,7 +145,7 @@ const UK_COST_ACTIONS = [
   {id:'m_klarna',action:'CLEAR',note:'Pay off from lump sum'},
   {id:'m_vk12',action:'KEEP',note:'Keeping bikes — taking to AU. Finance continues.'},
 ];
-const INCOME = {salary_aud:10400,rsu_aud:2500};
+const INCOME = {salary_aud:9571,rsu_aud:2500};
 
 const COMPANY_COVERS = ['co_visa','co_flights','co_temp','co_tax'];
 const SEPARATE_IDS = ['sep_car','sep_furniture','sep_util'];
