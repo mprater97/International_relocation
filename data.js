@@ -86,7 +86,6 @@ const MONTHLY_AU = [
   {id:'m_internet',desc:'Internet (NBN)',monthly_aud:80},
   {id:'m_health',desc:'Health insurance (your 20% — Amazon pays 80%)',monthly_aud:80},
   {id:'m_mobile',desc:'Mobile phones (family)',monthly_aud:130},
-  {id:'m_id_mobile_au',desc:'ID Mobile UK contract (£30 = ~$58 AUD)',monthly_aud:58},
   {id:'m_streaming',desc:'Streaming (Netflix, Spotify etc)',monthly_aud:35},
   {id:'m_contents_ins',desc:'Contents / rental insurance',monthly_aud:40},
   {id:'m_kids',desc:'Kids activities (circus, hockey, trampoline)',monthly_aud:300},
@@ -124,6 +123,13 @@ const MONTHLY_UK = [
   {id:'m_agent_lap',desc:'LAP Letting Agent Plan',monthly_gbp:109},
 ];
 const UK_RENTAL_INCOME = 1400;
+
+// POST-MOVE UK ongoing costs (for disposable income calculation)
+const UK_POST_MOVE_MONTHLY_GBP = 1278.83; // mortgage + landlord ins + agent + L&G
+// Rental income covers this and gives surplus
+// Net: £1,400 - £1,278.83 = +£121.17/mo surplus = +$228 AUD/mo
+const UK_NET_MONTHLY_AUD = 228; // SURPLUS (positive = you gain money)
+
 
 // What happens to each UK cost on move
 const UK_COST_ACTIONS = [
