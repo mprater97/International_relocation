@@ -53,7 +53,13 @@ function fG(v){return'£'+Math.round(v).toLocaleString()}
 function fA(v){return'$'+Math.round(v).toLocaleString()}
 function curWk(){const n=new Date(),d=Math.floor((n-getStart())/(7*864e5));return Math.max(1,Math.min(22,d+1))}
 function daysTo(s){if(!s)return null;return Math.ceil((new Date(s)-new Date())/(864e5))}
-function getBudget(){return state.lumpSum||14900}
+function getBudget(){
+  var total=310;var used=0;
+  var services={temp30:70,temp45:105,temp60:140,shipping:190,flights:15,car:15,homefind:35};
+  if(state.pointsSelected){Object.keys(state.pointsSelected).forEach(function(k){if(state.pointsSelected[k]&&services[k])used+=services[k]})}
+  var remain=total-used;
+  return remain*48;
+}
 function getDebts(){return(state.debts||DEFAULT_DEBTS).map(d=>{const paid=(state.debtPaid||{})[d.id]||0;const owed=d.amount||(d.monthly?(d.monthly*(d.monthsLeft||0)):0);return{...d,owed,paid,left:Math.max(0,owed-paid)}})}
 function debtLeft(){return getDebts().reduce((s,d)=>s+d.left,0)}
 function totalInc(){return(state.income||[]).reduce((s,e)=>s+e.amt,0)}
