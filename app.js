@@ -1,6 +1,6 @@
 // ===== STATE =====
 let state=load();
-function defaults(){return{auStart:null,moveDate:null,lumpSum:9610,checked:{},actuals:{},funding:{},forecasts:{},contacts:{},decisions:{},weeklySpend:{},fx:[],income:[],debtPaid:{},debts:null,journal:{},riskStatus:{},docChecked:{},todos:[],customTasks:[],customCosts:[],customDocs:[],pins:[],_collapsed:{}}}
+function defaults(){return{auStart:null,moveDate:null,lumpSum:14900,checked:{},actuals:{},funding:{},forecasts:{},contacts:{},decisions:{},weeklySpend:{},fx:[],income:[],debtPaid:{},debts:null,journal:{},riskStatus:{},docChecked:{},todos:[],customTasks:[],customCosts:[],customDocs:[],pins:[],_collapsed:{}}}
 function load(){
   var d=defaults();
   try{var s=localStorage.getItem('relo_v3');if(s){var saved=JSON.parse(s);Object.keys(saved).forEach(function(k){d[k]=saved[k]})}}catch(e){}
@@ -53,7 +53,7 @@ function fG(v){return'£'+Math.round(v).toLocaleString()}
 function fA(v){return'$'+Math.round(v).toLocaleString()}
 function curWk(){const n=new Date(),d=Math.floor((n-getStart())/(7*864e5));return Math.max(1,Math.min(22,d+1))}
 function daysTo(s){if(!s)return null;return Math.ceil((new Date(s)-new Date())/(864e5))}
-function getBudget(){return state.lumpSum||9610}
+function getBudget(){return state.lumpSum||14900}
 function getDebts(){return(state.debts||DEFAULT_DEBTS).map(d=>{const paid=(state.debtPaid||{})[d.id]||0;const owed=d.amount||(d.monthly?(d.monthly*(d.monthsLeft||0)):0);return{...d,owed,paid,left:Math.max(0,owed-paid)}})}
 function debtLeft(){return getDebts().reduce((s,d)=>s+d.left,0)}
 function totalInc(){return(state.income||[]).reduce((s,e)=>s+e.amt,0)}
@@ -104,7 +104,7 @@ function renderDash(){
 
   el.innerHTML=`
     <div class="sg">
-      <div class="sb blue"><div class="l">Relo Cash (USD)</div><div class="v">${fG(budget)}</div></div>
+      <div class="sb blue"><div class="l">Relo Cash (AUD)</div><div class="v">${fG(budget)}</div></div>
       <div class="sb orange"><div class="l">Forecast Out</div><div class="v">${fG(fc)}</div></div>
       <div class="sb green"><div class="l">Sales In</div><div class="v">${fG(inc)}</div></div>
       <div class="sb ${dl>0?'red':'green'}"><div class="l">Debt Left</div><div class="v">${fG(dl)}</div></div>
@@ -153,12 +153,12 @@ function renderPointsAllocator(){
   var usedPts=0;var totalMarketValue=0;
   services.forEach(function(s){if(selected[s.id])usedPts+=s.points;if(selected[s.id])totalMarketValue+=s.market});
   var remainPts=310-usedPts;
-  var cashValue=remainPts*31;
-  var cashAUD=Math.round(cashValue*1.55);
+  var cashValue=remainPts*48;
+  var cashAUD=cashValue;
   var totalValue=totalMarketValue+cashAUD;
 
   var html='<div class="card"><h2>🎯 Points Allocator — 310 Total</h2>';
-  html+='<div class="sg"><div class="sb blue"><div class="l">Total Points</div><div class="v">310</div></div><div class="sb orange"><div class="l">Used</div><div class="v">'+usedPts+'</div></div><div class="sb green"><div class="l">Remaining</div><div class="v">'+remainPts+'</div></div><div class="sb green"><div class="l">Cash Value</div><div class="v">$'+cashValue+' USD</div></div></div>';
+  html+='<div class="sg"><div class="sb blue"><div class="l">Total Points</div><div class="v">310</div></div><div class="sb orange"><div class="l">Used</div><div class="v">'+usedPts+'</div></div><div class="sb green"><div class="l">Remaining</div><div class="v">'+remainPts+'</div></div><div class="sb green"><div class="l">Cash Value</div><div class="v">$'+cashValue+' AUD</div></div></div>';
   html+='<p class="tx tm mb2">Tick services you want. Remaining points convert to cash at $31 USD/point.</p>';
   html+='<div class="table-wrap"><table><tr><th>Use?</th><th>Service</th><th>Points</th><th>Market Value (AUD)</th><th>Worth it?</th></tr>';
   services.forEach(function(s){
@@ -171,10 +171,10 @@ function renderPointsAllocator(){
   html+='<div class="card mt2" style="border-left:4px solid var(--green)"><h2>💰 Your Allocation</h2>';
   html+='<div class="table-wrap"><table>';
   services.forEach(function(s){if(selected[s.id])html+='<tr><td>✅ '+s.name+'</td><td>'+s.points+' pts</td><td>~$'+s.market.toLocaleString()+' AUD value</td></tr>';});
-  html+='<tr style="font-weight:700"><td>Cash ('+remainPts+' pts × $31)</td><td>'+remainPts+' pts</td><td>$'+cashValue+' USD (~$'+cashAUD+' AUD)</td></tr>';
+  html+='<tr style="font-weight:700"><td>Cash ('+remainPts+' pts × $31)</td><td>'+remainPts+' pts</td><td>$'+cashValue+' AUD (~$'+cashAUD+' AUD)</td></tr>';
   html+='<tr style="font-weight:700;font-size:1.1rem;border-top:3px solid var(--border)"><td>TOTAL VALUE</td><td>310 pts</td><td style="color:var(--green)">~$'+totalValue.toLocaleString()+' AUD</td></tr>';
   html+='</table></div>';
-  html+='<p class="ts mt2">vs taking ALL cash: $9,610 USD (~$14,900 AUD)</p>';
+  html+='<p class="ts mt2">vs taking ALL cash: ~$14,900 AUD (310 pts × $48/pt)</p>';
   if(totalValue>14900)html+='<p class="ts" style="color:var(--green);font-weight:600">✅ Your selection gives you $'+(totalValue-14900).toLocaleString()+' MORE value than all-cash</p>';
   html+='</div></div>';
   return html;
@@ -207,7 +207,7 @@ function moneyOverview(){
   const cf=cumFC(),ca=cumAct(),mx=Math.max(budget,...Object.values(cf),1);
   document.getElementById('moneySub').innerHTML=renderPointsAllocator()+`
     <div class="sg">
-      <div class="sb blue"><div class="l">Relo Cash (USD)</div><div class="v"><input type="number" value="${budget}" style="width:100px;text-align:center;font-size:1.1rem;font-weight:700" oninput="state.lumpSum=+this.value;dbSave(renderMoney)"></div></div>
+      <div class="sb blue"><div class="l">Relo Cash (AUD)</div><div class="v"><input type="number" value="${budget}" style="width:100px;text-align:center;font-size:1.1rem;font-weight:700" oninput="state.lumpSum=+this.value;dbSave(renderMoney)"></div></div>
       <div class="sb orange"><div class="l">Forecast</div><div class="v">${fG(fc)}</div></div>
       <div class="sb green"><div class="l">Actual</div><div class="v">${fG(totalAct())}</div></div>
       <div class="sb ${(budget-netSpend())>0?'green':'red'}"><div class="l">Remaining</div><div class="v">${fG(budget-netSpend())}</div></div>

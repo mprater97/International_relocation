@@ -1,5 +1,5 @@
 // ===== DATA MODEL =====
-const GBP_AUD = 1.92;
+const GBP_AUD = 1.88;
 let BUDGET = 9610; // USD relocation points cash value // editable via UI
 
 const FUNDING_SOURCES = [
