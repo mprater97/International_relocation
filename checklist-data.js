@@ -147,4 +147,94 @@ const CHECKLIST = [
   {id:'csa_1',text:'Track shipment arrival',phase:4,week:20,cost:'Free',cat:'Shipping'},
   {id:'csa_2',text:'Unpack & check against inventory',phase:4,week:21,cost:'Free',cat:'Shipping'},
   {id:'csa_3',text:'File insurance claim if damage (within 14 days)',phase:4,week:21,cost:'Free',cat:'Shipping'},
+
+  // VISA & IMMIGRATION
+  {id:'v1',text:'Visa application submitted (company manages)',phase:1,week:1,cost:'Company',cat:'Visa'},
+  {id:'v2',text:'Biometrics appointment completed',phase:1,week:2,cost:'Free',cat:'Visa'},
+  {id:'v3',text:'Medical examination (if required)',phase:1,week:3,cost:'£200-£400',cat:'Visa'},
+  {id:'v4',text:'Visa grant notification received',phase:2,week:6,cost:'Free',cat:'Visa'},
+  {id:'v5',text:'Check visa conditions — work rights, travel, family',phase:2,week:6,cost:'Free',cat:'Visa'},
+
+  // AMAZON ONBOARDING
+  {id:'az1',text:'Accept offer letter (DEADLINE: 10 days from receipt)',phase:1,week:1,cost:'Free',cat:'Amazon'},
+  {id:'az2',text:'Choose relocation points allocation (3 weeks to decide)',phase:1,week:3,cost:'Free',cat:'Amazon'},
+  {id:'az3',text:'Contact Graebel relocation consultant',phase:1,week:2,cost:'Free',cat:'Amazon'},
+  {id:'az4',text:'Sign AU employment contract',phase:2,week:8,cost:'Free',cat:'Amazon'},
+  {id:'az5',text:'Complete background check / screening',phase:2,week:7,cost:'Free',cat:'Amazon'},
+  {id:'az6',text:'IT setup — laptop, badge, access arranged',phase:3,week:12,cost:'Free',cat:'Amazon'},
+  {id:'az7',text:'Confirm start date with manager (Jake Brown)',phase:2,week:8,cost:'Free',cat:'Amazon'},
+  {id:'az8',text:'Plan first week — office location, team intro, settling-in days',phase:3,week:12,cost:'Free',cat:'Amazon'},
+
+  // BANKING & CREDIT
+  {id:'bk1',text:'Open AU bank account from UK (CommBank pre-open)',phase:1,week:3,cost:'Free',cat:'Banking'},
+  {id:'bk2',text:'Verify bank account in-branch within 6 weeks of arrival',phase:4,week:14,cost:'Free',cat:'Banking'},
+  {id:'bk3',text:'Understand AU credit score starts at ZERO — no credit cards/finance initially',phase:2,week:6,cost:'Free',cat:'Banking'},
+  {id:'bk4',text:'Set up salary deposit to AU account',phase:4,week:13,cost:'Free',cat:'Banking'},
+  {id:'bk5',text:'Transfer emergency fund to AU account before arrival',phase:3,week:11,cost:'Free',cat:'Banking'},
+
+  // MEDICARE
+  {id:'mc1',text:'Register for Medicare (Yellow card — UK reciprocal agreement)',phase:4,week:13,cost:'Free',cat:'Medicare'},
+  {id:'mc2',text:'Bring UK passport + visa grant + proof of UK residence for Medicare registration',phase:3,week:12,cost:'Free',cat:'Medicare'},
+  {id:'mc3',text:'Enrol in Amazon GU Health plan (80% paid by Amazon)',phase:4,week:13,cost:'Free',cat:'Medicare'},
+
+  // SUPERANNUATION
+  {id:'sp1',text:'Choose super fund BEFORE first pay (AustralianSuper or Hostplus recommended)',phase:4,week:13,cost:'Free',cat:'Super'},
+  {id:'sp2',text:'Provide super fund details to Amazon payroll',phase:4,week:13,cost:'Free',cat:'Super'},
+
+  // RENTAL APPLICATION STRATEGY
+  {id:'ra1',text:'Prepare rental application pack: employment contract, 3 months bank statements, references, cover letter',phase:3,week:11,cost:'Free',cat:'AU Housing'},
+  {id:'ra2',text:'Write cover letter for rental applications (who you are, stable job, family)',phase:3,week:11,cost:'Free',cat:'AU Housing'},
+  {id:'ra3',text:'Set up 1Form/2Apply profile before arrival',phase:3,week:11,cost:'Free',cat:'AU Housing'},
+  {id:'ra4',text:'Research target suburbs — set Domain + Realestate.com.au alerts',phase:3,week:10,cost:'Free',cat:'AU Housing'},
+  {id:'ra5',text:'Budget for 4 weeks bond + 2 weeks advance rent upfront',phase:3,week:10,cost:'$4,000-6,000',cat:'AU Housing'},
+
+  // CAR BUYING
+  {id:'cb1',text:'Research cars on Carsales.com.au — target Toyota/Mazda/Hyundai $15-20k',phase:4,week:14,cost:'Free',cat:'AU Car'},
+  {id:'cb2',text:'Book RACV pre-purchase inspection on shortlisted cars',phase:4,week:15,cost:'$200-350',cat:'AU Car'},
+  {id:'cb3',text:'Check car has valid roadworthy certificate (RWC)',phase:4,week:15,cost:'Free',cat:'AU Car'},
+  {id:'cb4',text:'Transfer registration at VicRoads',phase:4,week:15,cost:'$50-100',cat:'AU Car'},
+  {id:'cb5',text:'Set up CityLink + EastLink toll accounts BEFORE driving',phase:4,week:15,cost:'Free',cat:'AU Car'},
+  {id:'cb6',text:'Get car insurance — compare on iSelect',phase:4,week:15,cost:'$100-200/mo',cat:'AU Car'},
+
+  // UTILITIES & INTERNET
+  {id:'ut1',text:'Check NBN availability at rental address (FTTP vs FTTN)',phase:4,week:15,cost:'Free',cat:'AU Setup'},
+  {id:'ut2',text:'Set up internet — Aussie Broadband or Superloop (allow 2 weeks lead time)',phase:4,week:14,cost:'$70-90/mo',cat:'AU Setup'},
+  {id:'ut3',text:'Set up electricity + gas — compare on Victorian Energy Compare',phase:4,week:15,cost:'Free setup',cat:'AU Setup'},
+  {id:'ut4',text:'Set up water account (usually landlord arranges)',phase:4,week:15,cost:'Free',cat:'AU Setup'},
+
+  // FIRST WEEK SURVIVAL
+  {id:'fw1',text:'Buy bedding + pillows (Kmart/Target — day 1)',phase:4,week:13,cost:'$200-400',cat:'First Week'},
+  {id:'fw2',text:'Buy kitchen essentials — kettle, pans, plates, cutlery (Kmart)',phase:4,week:13,cost:'$100-200',cat:'First Week'},
+  {id:'fw3',text:'Buy toiletries + cleaning supplies',phase:4,week:13,cost:'$50-100',cat:'First Week'},
+  {id:'fw4',text:'Buy AU power adapters (Type I) if not already',phase:4,week:13,cost:'$20-40',cat:'First Week'},
+  {id:'fw5',text:'Locate nearest Coles/Woolworths/Aldi for groceries',phase:4,week:13,cost:'Free',cat:'First Week'},
+  {id:'fw6',text:'Get Myki card for public transport',phase:4,week:13,cost:'$6',cat:'First Week'},
+
+  // FRANKIE JOB SEARCH
+  {id:'fj1',text:'Frankie: Apply for Working With Children Check (WWCC) — required for education roles',phase:4,week:14,cost:'Free (volunteers) or $35',cat:'Partner'},
+  {id:'fj2',text:'Frankie: Check qualification recognition — UK quals usually accepted',phase:3,week:10,cost:'Free',cat:'Partner'},
+  {id:'fj3',text:'Frankie: Update CV to Australian format',phase:3,week:10,cost:'Free',cat:'Partner'},
+  {id:'fj4',text:'Frankie: Register on Seek.com.au + Education dept careers',phase:4,week:14,cost:'Free',cat:'Partner'},
+  {id:'fj5',text:'Frankie: Join local community groups / expat networks',phase:4,week:14,cost:'Free',cat:'Partner'},
+
+  // KIDS ADJUSTMENT
+  {id:'ka1',text:'Contact target schools — confirm enrolment process + documents needed',phase:3,week:10,cost:'Free',cat:'AU School'},
+  {id:'ka2',text:'Ask school about buddy/mentor program for new students',phase:4,week:14,cost:'Free',cat:'AU School'},
+  {id:'ka3',text:'Enrol Bella in NICA or local circus class within first 2 weeks',phase:4,week:14,cost:'$250-450/term',cat:'Kids'},
+  {id:'ka4',text:'Enrol Jack in Oakleigh ice hockey program',phase:4,week:14,cost:'$200-800/season',cat:'Kids'},
+  {id:'ka5',text:'Enrol Jack in local skatepark group or Bounce Inc',phase:4,week:15,cost:'$50-200',cat:'Kids'},
+  {id:'ka6',text:'Set up video call schedule with UK friends for both kids',phase:4,week:13,cost:'Free',cat:'Kids'},
+
+  // UK PROPERTY ONGOING
+  {id:'up1',text:'Set up quarterly property inspection schedule with agent',phase:3,week:12,cost:'Included in agent fee',cat:'Property'},
+  {id:'up2',text:'Confirm emergency repair process with agent (who to call, spending limits)',phase:3,week:12,cost:'Free',cat:'Property'},
+  {id:'up3',text:'Set aside £1,000 emergency repair fund for UK property',phase:2,week:8,cost:'£1,000',cat:'Property'},
+  {id:'up4',text:'Diary: Gas safety cert renewal (annual)',phase:3,week:12,cost:'£60-90/yr',cat:'Property'},
+  {id:'up5',text:'Diary: Landlord insurance renewal (annual)',phase:3,week:12,cost:'£960/yr',cat:'Property'},
+
+  // ANNUAL CALENDAR
+  {id:'ac1',text:'Note: VIC school terms — Term 1 (Jan-Mar), Term 2 (Apr-Jun), Term 3 (Jul-Sep), Term 4 (Oct-Dec)',phase:4,week:14,cost:'Free',cat:'Admin'},
+  {id:'ac2',text:'Note: Car rego renewal — annual, set reminder',phase:4,week:15,cost:'$300-800/yr',cat:'Admin'},
+  {id:'ac3',text:'Note: RSU vesting dates — May, September, January',phase:1,week:1,cost:'Free',cat:'Financial'},
+  {id:'ac4',text:'Book UK flights for Christmas/summer visit (book 3+ months ahead)',phase:4,week:16,cost:'$4,000-6,000',cat:'Admin'},
 ];
