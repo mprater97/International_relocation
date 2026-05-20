@@ -840,10 +840,13 @@ function planThisWeek(cw,thisWk,overdue){
 }
 function planPhase(phase){
   var items=CHECKLIST.filter(function(c){return c.phase===phase});
-  var done=items.filter(function(c){return state.checked[c.id]}).length;
+  var pending=items.filter(function(c){return !state.checked[c.id]});
+  var completed=items.filter(function(c){return state.checked[c.id]});
   var names=['','🔵 Phase 1: Foundations (Wk 1–4)','🟠 Phase 2: Lock & Prep (Wk 5–8)','🟡 Phase 3: Execution (Wk 9–12)','🟢 Phase 4: Arrival (Wk 13–16)'];
-  var html='<div class="card"><h2>'+names[phase]+'</h2><div class="pb mb2" style="height:10px"><div class="pf" style="width:'+(items.length?done/items.length*100:0)+'%;background:var(--green)"></div></div><p class="tx tm mb2">'+done+'/'+items.length+' complete</p>';
-  items.forEach(function(c){var ck=state.checked[c.id];html+='<div class="ci'+(ck?' done':'')+'"><input type="checkbox" '+(ck?'checked':'')+' onchange="state.checked[\''+c.id+'\']=!state.checked[\''+c.id+'\'];save();renderPlanNew()"><div class="ct">'+c.text+'<div class="cm">Wk '+c.week+' · '+c.cat+'</div></div>'+(c.cost!=='—'&&c.cost!=='Free'&&c.cost!=='Included'&&c.cost!=='Company'?'<div class="cc">'+c.cost+'</div>':'')+'</div>';});
+  var html='<div class="card"><h2>'+names[phase]+'</h2><div class="pb mb2" style="height:10px"><div class="pf" style="width:'+(items.length?completed.length/items.length*100:0)+'%;background:var(--green)"></div></div><p class="tx tm mb2">'+completed.length+'/'+items.length+' complete</p>';
+  pending.forEach(function(c){html+='<div class="ci"><input type="checkbox" onchange="state.checked[\''+c.id+'\']=true;save();renderPlanNew()"><div class="ct">'+c.text+'<div class="cm">Wk '+c.week+' · '+c.cat+'</div></div>'+(c.cost!=='—'&&c.cost!=='Free'&&c.cost!=='Included'&&c.cost!=='Company'?'<div class="cc">'+c.cost+'</div>':'')+'</div>';});
+  if(completed.length){html+='<h3 class="mt3" style="color:var(--green)">✅ Completed ('+completed.length+')</h3>';
+  completed.forEach(function(c){html+='<div class="ci done"><input type="checkbox" checked onchange="state.checked[\''+c.id+'\']=false;save();renderPlanNew()"><div class="ct">'+c.text+'<div class="cm">Wk '+c.week+' · '+c.cat+'</div></div></div>';});}
   html+='</div>';
   document.getElementById('planSub').innerHTML=html;
 }
