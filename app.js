@@ -141,13 +141,13 @@ let moneySub='overview';
 // ===== POINTS ALLOCATOR =====
 function renderPointsAllocator(){
   var services=[
-    {id:'temp30',name:'Temp Housing 30 days',points:70,market:5000,cashCost:3360},
-    {id:'temp45',name:'Temp Housing 45 days',points:105,market:7500,cashCost:5040},
-    {id:'temp60',name:'Temp Housing 60 days',points:140,market:10000,cashCost:6720},
-    {id:'shipping',name:'Household Goods Shipment',points:190,market:2400,cashCost:9120},
-    {id:'flights',name:'Final Trip Airfare (family)',points:15,market:4000,cashCost:720},
-    {id:'car',name:'Rental Car 15 days',points:15,market:1500,cashCost:720},
-    {id:'homefind',name:'Home Finding Trip',points:35,market:2500,cashCost:1680},
+    {id:'temp30',name:'Temp Housing 30 days',points:70,market:3600,cashCost:3360},
+    {id:'temp45',name:'Temp Housing 45 days',points:105,market:5400,cashCost:5040},
+    {id:'temp60',name:'Temp Housing 60 days',points:140,market:7200,cashCost:6720},
+    {id:'shipping',name:'Household Goods Shipment',points:190,market:2882,cashCost:9120},
+    {id:'flights',name:'Final Trip Airfare (family of 4)',points:15,market:6542,cashCost:720},
+    {id:'car',name:'Rental Car 15 days',points:15,market:1050,cashCost:720},
+    {id:'homefind',name:'Home Finding Trip (3 days)',points:35,market:1000,cashCost:1680},
   ];
   var selected=state.pointsSelected||{};
   var usedPts=0;var totalMarketValue=0;
