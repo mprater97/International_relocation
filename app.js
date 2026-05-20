@@ -137,6 +137,55 @@ function renderDash(){
 
 // ===== MONEY =====
 let moneySub='overview';
+
+// ===== POINTS ALLOCATOR =====
+function renderPointsAllocator(){
+  var services=[
+    {id:'temp30',name:'Temp Housing 30 days',points:70,market:5000},
+    {id:'temp45',name:'Temp Housing 45 days',points:105,market:7500},
+    {id:'temp60',name:'Temp Housing 60 days',points:140,market:10000},
+    {id:'shipping',name:'Household Goods Shipment',points:190,market:2400},
+    {id:'flights',name:'Final Trip Airfare (family)',points:15,market:4000},
+    {id:'car',name:'Rental Car 15 days',points:15,market:1500},
+    {id:'homefind',name:'Home Finding Trip',points:35,market:2500},
+  ];
+  var selected=state.pointsSelected||{};
+  var usedPts=0;var totalMarketValue=0;
+  services.forEach(function(s){if(selected[s.id])usedPts+=s.points;if(selected[s.id])totalMarketValue+=s.market});
+  var remainPts=310-usedPts;
+  var cashValue=remainPts*31;
+  var cashAUD=Math.round(cashValue*1.55);
+  var totalValue=totalMarketValue+cashAUD;
+
+  var html='<div class="card"><h2>🎯 Points Allocator — 310 Total</h2>';
+  html+='<div class="sg"><div class="sb blue"><div class="l">Total Points</div><div class="v">310</div></div><div class="sb orange"><div class="l">Used</div><div class="v">'+usedPts+'</div></div><div class="sb green"><div class="l">Remaining</div><div class="v">'+remainPts+'</div></div><div class="sb green"><div class="l">Cash Value</div><div class="v">$'+cashValue+' USD</div></div></div>';
+  html+='<p class="tx tm mb2">Tick services you want. Remaining points convert to cash at $31 USD/point.</p>';
+  html+='<div class="table-wrap"><table><tr><th>Use?</th><th>Service</th><th>Points</th><th>Market Value (AUD)</th><th>Worth it?</th></tr>';
+  services.forEach(function(s){
+    var checked=selected[s.id];
+    var verdict=s.market>(s.points*31*1.55)?'<span style="color:var(--green)">✅ Good value</span>':'<span style="color:var(--red)">❌ Take cash</span>';
+    html+='<tr'+(checked?' style="background:rgba(34,197,94,.08)"':'')+'><td><input type="checkbox" '+(checked?'checked':'')+' onchange="togglePoint(this.checked,\''+s.id+'\')"></td><td style="font-weight:600">'+s.name+'</td><td>'+s.points+'</td><td>~$'+s.market.toLocaleString()+' AUD</td><td>'+verdict+'</td></tr>';
+  });
+  html+='</table></div>';
+  
+  html+='<div class="card mt2" style="border-left:4px solid var(--green)"><h2>💰 Your Allocation</h2>';
+  html+='<div class="table-wrap"><table>';
+  services.forEach(function(s){if(selected[s.id])html+='<tr><td>✅ '+s.name+'</td><td>'+s.points+' pts</td><td>~$'+s.market.toLocaleString()+' AUD value</td></tr>';});
+  html+='<tr style="font-weight:700"><td>Cash ('+remainPts+' pts × $31)</td><td>'+remainPts+' pts</td><td>$'+cashValue+' USD (~$'+cashAUD+' AUD)</td></tr>';
+  html+='<tr style="font-weight:700;font-size:1.1rem;border-top:3px solid var(--border)"><td>TOTAL VALUE</td><td>310 pts</td><td style="color:var(--green)">~$'+totalValue.toLocaleString()+' AUD</td></tr>';
+  html+='</table></div>';
+  html+='<p class="ts mt2">vs taking ALL cash: $9,610 USD (~$14,900 AUD)</p>';
+  if(totalValue>14900)html+='<p class="ts" style="color:var(--green);font-weight:600">✅ Your selection gives you $'+(totalValue-14900).toLocaleString()+' MORE value than all-cash</p>';
+  html+='</div></div>';
+  return html;
+}
+
+function togglePoint(checked,id){
+  if(!state.pointsSelected)state.pointsSelected={};
+  state.pointsSelected[id]=checked;
+  save();renderMoney();
+}
+
 function renderMoney(){
   updateHeader();
   const el=document.getElementById('money');
@@ -156,7 +205,7 @@ function renderMoney(){
 function moneyOverview(){
   const budget=getBudget(),fc=totalFC(),inc=totalInc();
   const cf=cumFC(),ca=cumAct(),mx=Math.max(budget,...Object.values(cf),1);
-  document.getElementById('moneySub').innerHTML=`
+  document.getElementById('moneySub').innerHTML=renderPointsAllocator()+`
     <div class="sg">
       <div class="sb blue"><div class="l">Relo Cash (USD)</div><div class="v"><input type="number" value="${budget}" style="width:100px;text-align:center;font-size:1.1rem;font-weight:700" oninput="state.lumpSum=+this.value;dbSave(renderMoney)"></div></div>
       <div class="sb orange"><div class="l">Forecast</div><div class="v">${fG(fc)}</div></div>
