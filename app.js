@@ -141,13 +141,13 @@ let moneySub='overview';
 // ===== POINTS ALLOCATOR =====
 function renderPointsAllocator(){
   var services=[
-    {id:'temp30',name:'Temp Housing 30 days',points:70,market:5000},
-    {id:'temp45',name:'Temp Housing 45 days',points:105,market:7500},
-    {id:'temp60',name:'Temp Housing 60 days',points:140,market:10000},
-    {id:'shipping',name:'Household Goods Shipment',points:190,market:2400},
-    {id:'flights',name:'Final Trip Airfare (family)',points:15,market:4000},
-    {id:'car',name:'Rental Car 15 days',points:15,market:1500},
-    {id:'homefind',name:'Home Finding Trip',points:35,market:2500},
+    {id:'temp30',name:'Temp Housing 30 days',points:70,market:5000,cashCost:3360},
+    {id:'temp45',name:'Temp Housing 45 days',points:105,market:7500,cashCost:5040},
+    {id:'temp60',name:'Temp Housing 60 days',points:140,market:10000,cashCost:6720},
+    {id:'shipping',name:'Household Goods Shipment',points:190,market:2400,cashCost:9120},
+    {id:'flights',name:'Final Trip Airfare (family)',points:15,market:4000,cashCost:720},
+    {id:'car',name:'Rental Car 15 days',points:15,market:1500,cashCost:720},
+    {id:'homefind',name:'Home Finding Trip',points:35,market:2500,cashCost:1680},
   ];
   var selected=state.pointsSelected||{};
   var usedPts=0;var totalMarketValue=0;
@@ -160,11 +160,11 @@ function renderPointsAllocator(){
   var html='<div class="card"><h2>🎯 Points Allocator — 310 Total</h2>';
   html+='<div class="sg"><div class="sb blue"><div class="l">Total Points</div><div class="v">310</div></div><div class="sb orange"><div class="l">Used</div><div class="v">'+usedPts+'</div></div><div class="sb green"><div class="l">Remaining</div><div class="v">'+remainPts+'</div></div><div class="sb green"><div class="l">Cash Value</div><div class="v">$'+cashValue+' AUD</div></div></div>';
   html+='<p class="tx tm mb2">Tick services you want. Remaining points convert to cash at $31 USD/point.</p>';
-  html+='<div class="table-wrap"><table><tr><th>Use?</th><th>Service</th><th>Points</th><th>Market Value (AUD)</th><th>Worth it?</th></tr>';
+  html+='<div class="table-wrap"><table><tr><th>Use?</th><th>Service</th><th>Points</th><th>Cash Cost<br>(off $14,900)</th><th>Market Value<br>(what you get)</th><th>Saving</th></tr>';
   services.forEach(function(s){
     var checked=selected[s.id];
     var verdict=s.market>(s.points*31*1.55)?'<span style="color:var(--green)">✅ Good value</span>':'<span style="color:var(--red)">❌ Take cash</span>';
-    html+='<tr'+(checked?' style="background:rgba(34,197,94,.08)"':'')+'><td><input type="checkbox" '+(checked?'checked':'')+' onchange="togglePoint(this.checked,\''+s.id+'\')"></td><td style="font-weight:600">'+s.name+'</td><td>'+s.points+'</td><td>~$'+s.market.toLocaleString()+' AUD</td><td>'+verdict+'</td></tr>';
+    var saving=s.market-s.cashCost;html+='<tr'+(checked?' style="background:rgba(34,197,94,.08)"':'')+'><td><input type="checkbox" '+(checked?'checked':'')+' onchange="togglePoint(this.checked,\''+s.id+'\')"></td><td style="font-weight:600">'+s.name+'</td><td>'+s.points+'</td><td>-$'+s.cashCost.toLocaleString()+'</td><td>~$'+s.market.toLocaleString()+'</td><td style="color:'+(saving>0?'var(--green)':'var(--red)')+'">$'+(saving>0?'+':'')+saving.toLocaleString()+'</td></tr>';
   });
   html+='</table></div>';
   
