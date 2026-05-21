@@ -16,7 +16,7 @@ function renderCompare(){
 }
 function showCmp(id,btn){
   if(btn){document.querySelectorAll('#locations .stab').forEach(function(s){s.classList.remove('active')});btn.classList.add('active')}
-  if(id==='shortlist'){renderShortlist()}else{document.getElementById('cmpContent').innerHTML=CMP[id]||'';}
+  if(id==='shortlist'){renderShortlist()}else if(id==='suburbs'){renderSuburbsInteractive()}else{document.getElementById('cmpContent').innerHTML=CMP[id]||'';}
 }
 var CMP={};
 
@@ -91,44 +91,113 @@ function removeFromShortlist(i){
 }
 
 
-CMP.suburbs='<div class="card"><h2>🏘️ Melbourne Suburbs — 3/4 Bed with Garden</h2><p class="tx tm mb2">All pricing for houses with gardens. Train commute to MEL12 (555 Collins St).</p><div class="table-wrap"><table><tr><th>Tier</th><th>Suburb</th><th>3-bed/wk</th><th>4-bed/wk</th><th>Train CBD</th><th>Beach</th><th>Garden</th><th>Vibe</th></tr><tr style="background:var(--card2)" colspan="8"><td colspan="8" style="font-weight:700">🏖️ BUDGET — Beach Lifestyle</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Seaford+Victoria+Australia/@-38.1000,145.1340,13z" target="_blank" style="color:var(--accent)">Seaford 📍</a></td><td>$520–580</td><td>$580–650</td><td>50 min</td><td>ON beach</td><td>Yes</td><td>Beach village, foreshore trail, relaxed</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Carrum+Victoria+Australia/@-38.0750,145.1230,13z" target="_blank" style="color:var(--accent)">Carrum 📍</a></td><td>$530–590</td><td>$600–680</td><td>48 min</td><td>ON beach</td><td>Yes</td><td>Quiet beach, Patterson River, family</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Frankston+Victoria+Australia/@-38.1430,145.1260,13z" target="_blank" style="color:var(--accent)">Frankston 📍</a></td><td>$500–600</td><td>$580–680</td><td>55 min</td><td>ON beach</td><td>Yes</td><td>Coastal town, cafes, markets, improving</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Frankston South+Victoria+Australia/@-38.1600,145.1300,13z" target="_blank" style="color:var(--accent)">Frankston South 📍</a></td><td>$580–650</td><td>$650–750</td><td>58 min</td><td>5 min</td><td>Yes</td><td>Leafy, quiet, larger properties</td></tr><tr style="background:var(--card2)"><td colspan="8" style="font-weight:700">🏡 BUDGET — Inland (Near Beach)</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Langwarrin+Victoria+Australia/@-38.1670,145.1700,13z" target="_blank" style="color:var(--accent)">Langwarrin 📍</a></td><td>$480–550</td><td>$550–630</td><td>60 min</td><td>12 min</td><td>Yes ★</td><td>New estates, big gardens, parks, space</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Karingal+Victoria+Australia/@-38.1500,145.1500,13z" target="_blank" style="color:var(--accent)">Karingal 📍</a></td><td>$460–520</td><td>$530–600</td><td>58 min</td><td>10 min</td><td>Yes</td><td>Affordable, near Frankston shops</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Cranbourne+Victoria+Australia/@-38.0990,145.2830,13z" target="_blank" style="color:var(--accent)">Cranbourne 📍</a></td><td>$450–520</td><td>$520–600</td><td>55 min</td><td>25 min</td><td>Yes ★</td><td>Very affordable, new estates, growing</td></tr><tr style="background:var(--card2)"><td colspan="8" style="font-weight:700">🌊 MID-RANGE — Bayside</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Mordialloc+Victoria+Australia/@-37.9870,145.0870,13z" target="_blank" style="color:var(--accent)">Mordialloc 📍</a></td><td>$600–680</td><td>$680–780</td><td>38 min</td><td>ON beach</td><td>Some</td><td>Beach + creek, cafes, pier, family</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Aspendale+Victoria+Australia/@-38.0250,145.1030,13z" target="_blank" style="color:var(--accent)">Aspendale 📍</a></td><td>$620–700</td><td>$700–800</td><td>40 min</td><td>ON beach</td><td>Some</td><td>Quiet beach, Edithvale wetlands</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Mentone+Victoria+Australia/@-37.9830,145.0670,13z" target="_blank" style="color:var(--accent)">Mentone 📍</a></td><td>$650–750</td><td>$750–880</td><td>35 min</td><td>5 min</td><td>Yes</td><td>Village feel, cafes, leafy streets</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Cheltenham+Victoria+Australia/@-37.9570,145.0530,13z" target="_blank" style="color:var(--accent)">Cheltenham 📍</a></td><td>$620–700</td><td>$700–800</td><td>32 min</td><td>8 min</td><td>Yes</td><td>Central, good access everywhere</td></tr><tr style="background:var(--card2)"><td colspan="8" style="font-weight:700">🏫 MID-RANGE — Eastern (Best Schools)</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Glen Waverley+Victoria+Australia/@-37.8780,145.1630,13z" target="_blank" style="color:var(--accent)">Glen Waverley 📍</a></td><td>$650–750</td><td>$750–900</td><td>40 min</td><td>30 min</td><td>Yes</td><td>Top schools (91.40), Asian food hub</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Mt Waverley+Victoria+Australia/@-37.8770,145.1290,13z" target="_blank" style="color:var(--accent)">Mt Waverley 📍</a></td><td>$600–680</td><td>$680–780</td><td>35 min</td><td>30 min</td><td>Yes</td><td>Leafy, quieter, good primaries</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Box Hill+Victoria+Australia/@-37.8190,145.1220,13z" target="_blank" style="color:var(--accent)">Box Hill 📍</a></td><td>$550–630</td><td>$630–720</td><td>25 min</td><td>35 min</td><td>Some</td><td>Asian hub, great food, direct train</td></tr><tr style="background:var(--card2)"><td colspan="8" style="font-weight:700">💎 PREMIUM — Bayside</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Sandringham+Victoria+Australia/@-37.9510,145.0100,13z" target="_blank" style="color:var(--accent)">Sandringham 📍</a></td><td>$750–880</td><td>$880–1050</td><td>28 min</td><td>ON beach</td><td>Yes</td><td>Village, beach, leafy, family</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Brighton+Victoria+Australia/@-37.9070,144.9870,13z" target="_blank" style="color:var(--accent)">Brighton 📍</a></td><td>$850–1000</td><td>$1000–1300</td><td>25 min</td><td>ON beach</td><td>Yes</td><td>Iconic bathing boxes, upmarket</td></tr><tr style="background:var(--card2)"><td colspan="8" style="font-weight:700">🍷 PENINSULA — Lifestyle</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Mornington+Victoria+Australia/@-38.2180,145.0380,13z" target="_blank" style="color:var(--accent)">Mornington 📍</a></td><td>$580–680</td><td>$680–800</td><td>70 min</td><td>ON beach</td><td>Yes ★</td><td>Village, wineries, pier, markets</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Mt Martha+Victoria+Australia/@-38.2700,145.0200,13z" target="_blank" style="color:var(--accent)">Mt Martha 📍</a></td><td>$620–700</td><td>$700–850</td><td>75 min</td><td>ON beach</td><td>Yes ★</td><td>Quiet, beautiful beaches, bushland</td></tr></table></div><p class="ts mt2">★ = Particularly good for large gardens/outdoor space</p></div>';
 
-CMP.suburbs+='<div class="card"><h2>🏆 Top Picks — Best Balance</h2><div class="table-wrap"><table><tr><th>Rank</th><th>Area</th><th>4-bed/wk</th><th>Why</th></tr><tr style="background:rgba(34,197,94,.05)"><td>🥇</td><td style="font-weight:600">Mordialloc / Aspendale</td><td>$680–800</td><td>ON beach + 15 min Oakleigh rink + 35 min NICA + 15 min Chadstone + 38 min train CBD</td></tr><tr><td>🥈</td><td style="font-weight:600">Seaford / Carrum</td><td>$580–680</td><td>ON beach + best budget + 20 min rink + 48 min train + relaxed village</td></tr><tr><td>🥉</td><td style="font-weight:600">Mentone / Cheltenham</td><td>$700–880</td><td>5-8 min beach + 10 min rink + 30 min NICA + 32 min train + village feel</td></tr></table></div></div>';
+var SUBURBS_DATA=[
+  {name:'Seaford',pc:'3198',bed3:'520–580',bed4:'580–650',train:50,beach:'ON beach',garden:'Yes',vibe:'Beach village, foreshore trail, relaxed',lat:-38.1,lng:145.134},
+  {name:'Carrum',pc:'3197',bed3:'530–590',bed4:'600–680',train:48,beach:'ON beach',garden:'Yes',vibe:'Quiet beach, Patterson River, family',lat:-38.075,lng:145.123},
+  {name:'Frankston',pc:'3199',bed3:'500–600',bed4:'580–680',train:55,beach:'ON beach',garden:'Yes',vibe:'Coastal town, cafes, markets, improving',lat:-38.143,lng:145.126},
+  {name:'Frankston South',pc:'3199',bed3:'580–650',bed4:'650–750',train:58,beach:'5 min',garden:'Yes',vibe:'Leafy, quiet, larger properties',lat:-38.16,lng:145.13},
+  {name:'Langwarrin',pc:'3910',bed3:'480–550',bed4:'550–630',train:60,beach:'12 min',garden:'Yes ★',vibe:'New estates, big gardens, parks, space',lat:-38.167,lng:145.17},
+  {name:'Karingal',pc:'3199',bed3:'460–520',bed4:'530–600',train:58,beach:'10 min',garden:'Yes',vibe:'Affordable, near Frankston shops',lat:-38.15,lng:145.15},
+  {name:'Cranbourne',pc:'3977',bed3:'450–520',bed4:'520–600',train:55,beach:'25 min',garden:'Yes ★',vibe:'Very affordable, new estates, growing',lat:-38.099,lng:145.283},
+  {name:'Mordialloc',pc:'3195',bed3:'600–680',bed4:'680–780',train:38,beach:'ON beach',garden:'Some',vibe:'Beach + creek, cafes, pier, family',lat:-37.987,lng:145.087},
+  {name:'Aspendale',pc:'3195',bed3:'620–700',bed4:'700–800',train:40,beach:'ON beach',garden:'Some',vibe:'Quiet beach, Edithvale wetlands',lat:-38.025,lng:145.103},
+  {name:'Mentone',pc:'3194',bed3:'650–750',bed4:'750–880',train:35,beach:'5 min',garden:'Yes',vibe:'Village feel, cafes, leafy streets',lat:-37.983,lng:145.067},
+  {name:'Cheltenham',pc:'3192',bed3:'620–700',bed4:'700–800',train:32,beach:'8 min',garden:'Yes',vibe:'Central, good access everywhere',lat:-37.957,lng:145.053},
+  {name:'Glen Waverley',pc:'3150',bed3:'650–750',bed4:'750–900',train:40,beach:'30 min',garden:'Yes',vibe:'Top schools (91.40), Asian food hub',lat:-37.878,lng:145.163},
+  {name:'Mt Waverley',pc:'3149',bed3:'600–680',bed4:'680–780',train:35,beach:'30 min',garden:'Yes',vibe:'Leafy, quieter, good primaries',lat:-37.877,lng:145.129},
+  {name:'Box Hill',pc:'3128',bed3:'550–630',bed4:'630–720',train:25,beach:'35 min',garden:'Some',vibe:'Asian hub, great food, direct train',lat:-37.819,lng:145.122},
+  {name:'Sandringham',pc:'3191',bed3:'750–880',bed4:'880–1050',train:28,beach:'ON beach',garden:'Yes',vibe:'Village, beach, leafy, family',lat:-37.951,lng:145.01},
+  {name:'Brighton',pc:'3186',bed3:'850–1000',bed4:'1000–1300',train:25,beach:'ON beach',garden:'Yes',vibe:'Iconic bathing boxes, upmarket',lat:-37.907,lng:144.987},
+  {name:'Mornington',pc:'3931',bed3:'580–680',bed4:'680–800',train:70,beach:'ON beach',garden:'Yes ★',vibe:'Village, wineries, pier, markets',lat:-38.218,lng:145.038},
+  {name:'Mt Martha',pc:'3934',bed3:'620–700',bed4:'700–850',train:75,beach:'ON beach',garden:'Yes ★',vibe:'Quiet, beautiful beaches, bushland',lat:-38.27,lng:145.02},
+];
 
-CMP.suburbs+='<div class="card"><h2>🔍 Browse Real Listings</h2><p class="tx tm mb2">Tap to see current 3-4 bed houses for rent in each area on Domain.com.au</p><div class="table-wrap"><table><tr><th>Suburb</th><th>3+ Bed Houses</th><th>4+ Bed Houses</th></tr><tr><td style="font-weight:600">Seaford</td><td><a href="https://www.domain.com.au/rent/seaford-vic-3198/?bedrooms=3-any&propertytype=house" target="_blank" style="color:var(--accent)">View 3-bed →</a></td><td><a href="https://www.domain.com.au/rent/seaford-vic-3198/?bedrooms=4-any&propertytype=house" target="_blank" style="color:var(--accent)">View 4-bed →</a></td></tr><tr><td style="font-weight:600">Frankston</td><td><a href="https://www.domain.com.au/rent/frankston-vic-3199/?bedrooms=3-any&propertytype=house" target="_blank" style="color:var(--accent)">View 3-bed →</a></td><td><a href="https://www.domain.com.au/rent/frankston-vic-3199/?bedrooms=4-any&propertytype=house" target="_blank" style="color:var(--accent)">View 4-bed →</a></td></tr><tr><td style="font-weight:600">Langwarrin</td><td><a href="https://www.domain.com.au/rent/langwarrin-vic-3910/?bedrooms=3-any&propertytype=house" target="_blank" style="color:var(--accent)">View 3-bed →</a></td><td><a href="https://www.domain.com.au/rent/langwarrin-vic-3910/?bedrooms=4-any&propertytype=house" target="_blank" style="color:var(--accent)">View 4-bed →</a></td></tr><tr><td style="font-weight:600">Mordialloc</td><td><a href="https://www.domain.com.au/rent/mordialloc-vic-3195/?bedrooms=3-any&propertytype=house" target="_blank" style="color:var(--accent)">View 3-bed →</a></td><td><a href="https://www.domain.com.au/rent/mordialloc-vic-3195/?bedrooms=4-any&propertytype=house" target="_blank" style="color:var(--accent)">View 4-bed →</a></td></tr><tr><td style="font-weight:600">Mentone</td><td><a href="https://www.domain.com.au/rent/mentone-vic-3194/?bedrooms=3-any&propertytype=house" target="_blank" style="color:var(--accent)">View 3-bed →</a></td><td><a href="https://www.domain.com.au/rent/mentone-vic-3194/?bedrooms=4-any&propertytype=house" target="_blank" style="color:var(--accent)">View 4-bed →</a></td></tr><tr><td style="font-weight:600">Cheltenham</td><td><a href="https://www.domain.com.au/rent/cheltenham-vic-3192/?bedrooms=3-any&propertytype=house" target="_blank" style="color:var(--accent)">View 3-bed →</a></td><td><a href="https://www.domain.com.au/rent/cheltenham-vic-3192/?bedrooms=4-any&propertytype=house" target="_blank" style="color:var(--accent)">View 4-bed →</a></td></tr><tr><td style="font-weight:600">Glen Waverley</td><td><a href="https://www.domain.com.au/rent/glen-waverley-vic-3150/?bedrooms=3-any&propertytype=house" target="_blank" style="color:var(--accent)">View 3-bed →</a></td><td><a href="https://www.domain.com.au/rent/glen-waverley-vic-3150/?bedrooms=4-any&propertytype=house" target="_blank" style="color:var(--accent)">View 4-bed →</a></td></tr><tr><td style="font-weight:600">Brighton</td><td><a href="https://www.domain.com.au/rent/brighton-vic-3186/?bedrooms=3-any&propertytype=house" target="_blank" style="color:var(--accent)">View 3-bed →</a></td><td><a href="https://www.domain.com.au/rent/brighton-vic-3186/?bedrooms=4-any&propertytype=house" target="_blank" style="color:var(--accent)">View 4-bed →</a></td></tr><tr><td style="font-weight:600">Mornington</td><td><a href="https://www.domain.com.au/rent/mornington-vic-3931/?bedrooms=3-any&propertytype=house" target="_blank" style="color:var(--accent)">View 3-bed →</a></td><td><a href="https://www.domain.com.au/rent/mornington-vic-3931/?bedrooms=4-any&propertytype=house" target="_blank" style="color:var(--accent)">View 4-bed →</a></td></tr></table></div><p class="ts mt2">💡 Also check: <a href="https://www.realestate.com.au/rent/in-melbourne+-+southern,+vic/list-1?bedrooms=3-any&propertyType=house" target="_blank" style="color:var(--accent)">Realestate.com.au — Melbourne South houses →</a></p></div>';
-
-CMP.suburbs+='<div class="card"><h2>➕ Add to Shortlist</h2><p class="tx tm mb2">Select a suburb, enter the actual rent, tick features, score it.</p><div class="flex g2 fw aic mb2"><select id="qaSuburb" style="max-width:200px"><option value="">Pick suburb...</option><option>Seaford</option><option>Carrum</option><option>Frankston</option><option>Frankston South</option><option>Langwarrin</option><option>Karingal</option><option>Cranbourne</option><option>Mordialloc</option><option>Aspendale</option><option>Mentone</option><option>Cheltenham</option><option>Glen Waverley</option><option>Mt Waverley</option><option>Box Hill</option><option>Sandringham</option><option>Brighton</option><option>Mornington</option><option>Mt Martha</option><option value="other">Other...</option></select><input type="text" id="qaCustom" placeholder="Or type suburb" style="max-width:150px"><input type="number" id="qaRent" placeholder="Actual rent $/wk" style="max-width:130px"><input type="text" id="qaLink" placeholder="Listing URL" style="flex:1;min-width:150px"></div><div class="flex g2 fw aic mb2"><span class="tx">Features:</span><label style="font-size:.82rem"><input type="checkbox" id="qaBeach"> Beach</label><label style="font-size:.82rem"><input type="checkbox" id="qaGarden"> Garden</label><label style="font-size:.82rem"><input type="checkbox" id="qaTrain"> Direct train</label><label style="font-size:.82rem"><input type="checkbox" id="qaShops"> Shops nearby</label><label style="font-size:.82rem"><input type="checkbox" id="qaCafes"> Cafes</label><label style="font-size:.82rem"><input type="checkbox" id="qaPark"> Parks</label><label style="font-size:.82rem"><input type="checkbox" id="qaSchool"> Good school</label><label style="font-size:.82rem"><input type="checkbox" id="qa4bed"> 4-bed</label></div><div class="flex g2 fw aic mb2"><span class="tx">Quick score:</span><span class="tx">Beach</span><select id="qaS1" style="width:45px"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select><span class="tx">Commute</span><select id="qaS2" style="width:45px"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select><span class="tx">Schools</span><select id="qaS3" style="width:45px"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select><span class="tx">Lifestyle</span><select id="qaS4" style="width:45px"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select><span class="tx">Value</span><select id="qaS5" style="width:45px"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div><button class="btn btn-p" onclick="quickAddShortlist()">⭐ Add to Shortlist</button></div>';
-
-
-
-function quickAddShortlist(){
-  var suburb=document.getElementById('qaSuburb').value;
-  var custom=document.getElementById('qaCustom').value;
-  var name=suburb==='other'||!suburb?custom:suburb;
-  if(!name)return;
-  var rent=+(document.getElementById('qaRent').value)||0;
-  var link=document.getElementById('qaLink').value;
-  var features=[];
-  if(document.getElementById('qaBeach').checked)features.push('Beach');
-  if(document.getElementById('qaGarden').checked)features.push('Garden');
-  if(document.getElementById('qaTrain').checked)features.push('Train');
-  if(document.getElementById('qaShops').checked)features.push('Shops');
-  if(document.getElementById('qaCafes').checked)features.push('Cafes');
-  if(document.getElementById('qaPark').checked)features.push('Parks');
-  if(document.getElementById('qaSchool').checked)features.push('School');
-  if(document.getElementById('qa4bed').checked)features.push('4-bed');
-  var scores={
-    beach:+(document.getElementById('qaS1').value),
-    commute:+(document.getElementById('qaS2').value),
-    schools:+(document.getElementById('qaS3').value),
-    lifestyle:+(document.getElementById('qaS4').value),
-    value:+(document.getElementById('qaS5').value)
-  };
-  if(!state.shortlist)state.shortlist=[];
-  state.shortlist.push({name:name,rent:rent,link:link,notes:features.join(', '),scores:scores});
-  save();
-  alert('✅ '+name+' added to shortlist!');
+function renderSuburbsInteractive(){
+  var sd=state.suburbData||{};
+  var html='<div class="card"><h2>🏘️ Melbourne Suburbs</h2><p class="tx tm mb2">Enter actual prices, select features, add to shortlist.</p></div>';
+  
+  var tiers=[
+    {name:'🏖️ BUDGET — Beach',suburbs:['Seaford','Carrum','Frankston','Frankston South']},
+    {name:'🏡 BUDGET — Inland',suburbs:['Langwarrin','Karingal','Cranbourne']},
+    {name:'🌊 MID — Bayside',suburbs:['Mordialloc','Aspendale','Mentone','Cheltenham']},
+    {name:'🏫 MID — Eastern',suburbs:['Glen Waverley','Mt Waverley','Box Hill']},
+    {name:'💎 PREMIUM',suburbs:['Sandringham','Brighton']},
+    {name:'🍷 PENINSULA',suburbs:['Mornington','Mt Martha']},
+  ];
+  
+  tiers.forEach(function(tier){
+    html+='<div class="card"><h3>'+tier.name+'</h3><div class="table-wrap"><table><tr><th>Suburb</th><th>Guide Price</th><th>Your Price</th><th>Train</th><th>Features</th><th>Listing</th><th></th></tr>';
+    tier.suburbs.forEach(function(sname){
+      var s=SUBURBS_DATA.find(function(x){return x.name===sname});
+      if(!s)return;
+      var d=sd[s.name]||{};
+      var mapUrl='https://www.google.com/maps/search/'+s.name.replace(/ /g,'+')+'+Victoria+Australia/@'+s.lat+','+s.lng+',13z';
+      var domainUrl='https://www.domain.com.au/rent/'+s.name.toLowerCase().replace(/ /g,'-')+'-vic-'+s.pc+'/?bedrooms=3-any&propertytype=house';
+      
+      html+='<tr>';
+      html+='<td style="font-weight:600"><a href="'+mapUrl+'" target="_blank" style="color:var(--accent)">'+s.name+' 📍</a><br><span class="tx tm">'+s.vibe+'</span></td>';
+      html+='<td class="tx">3b: $'+s.bed3+'<br>4b: $'+s.bed4+'</td>';
+      html+='<td><input type="number" class="ism" value="'+(d.price||'')+'" placeholder="$/wk" oninput="saveSuburbField(\''+s.name+'\',\'price\',+this.value)"></td>';
+      html+='<td><input type="number" class="ism" style="width:50px" value="'+(d.train||s.train)+'" oninput="saveSuburbField(\''+s.name+'\',\'train\',+this.value)"> min</td>';
+      html+='<td style="font-size:.7rem">';
+      var features=['Beach','Garden','Train','Cafes','Shops','School','Parks','4-bed'];
+      features.forEach(function(f){
+        var checked=(d.features||{})[f];
+        html+='<label><input type="checkbox" '+(checked?'checked':'')+' onchange="saveSuburbFeature(\''+s.name+'\',\''+f+'\',this.checked)">'+f+' </label>';
+      });
+      html+='</td>';
+      html+='<td><input type="text" value="'+(d.link||'')+'" placeholder="URL" style="max-width:80px;font-size:.7rem" oninput="saveSuburbField(\''+s.name+'\',\'link\',this.value)">'+(d.link?'<br><a href="'+d.link+'" target="_blank" class="tx" style="color:var(--accent)">View →</a>':'')+'</td>';
+      html+='<td><button class="btn btn-p" style="padding:4px 8px;font-size:.7rem" onclick="addSuburbToShortlist(\''+s.name+'\')">⭐ Add</button></td>';
+      html+='</tr>';
+    });
+    html+='</table></div></div>';
+  });
+  
+  // Browse listings links
+  html+='<div class="card"><h2>🔍 Browse Listings</h2><p class="tx tm mb2">Open Domain.com.au to find actual properties.</p><div class="flex g2 fw">';
+  SUBURBS_DATA.forEach(function(s){
+    var url='https://www.domain.com.au/rent/'+s.name.toLowerCase().replace(/ /g,'-')+'-vic-'+s.pc+'/?bedrooms=3-any&propertytype=house';
+    html+='<a href="'+url+'" target="_blank" class="btn btn-o" style="font-size:.75rem;padding:6px 10px">'+s.name+' →</a>';
+  });
+  html+='</div></div>';
+  
+  document.getElementById('cmpContent').innerHTML=html;
 }
+
+function saveSuburbField(name,field,val){
+  if(!state.suburbData)state.suburbData={};
+  if(!state.suburbData[name])state.suburbData[name]={};
+  state.suburbData[name][field]=val;
+  save();
+}
+function saveSuburbFeature(name,feature,checked){
+  if(!state.suburbData)state.suburbData={};
+  if(!state.suburbData[name])state.suburbData[name]={};
+  if(!state.suburbData[name].features)state.suburbData[name].features={};
+  state.suburbData[name].features[feature]=checked;
+  save();
+}
+function addSuburbToShortlist(name){
+  var s=SUBURBS_DATA.find(function(x){return x.name===name});
+  var d=(state.suburbData||{})[name]||{};
+  if(!state.shortlist)state.shortlist=[];
+  var features=[];
+  if(d.features){Object.keys(d.features).forEach(function(k){if(d.features[k])features.push(k)})}
+  state.shortlist.push({
+    name:name,
+    rent:d.price||0,
+    link:d.link||'',
+    notes:features.join(', '),
+    scores:{beach:0,commute:0,schools:0,lifestyle:0,value:0}
+  });
+  save();
+  alert('⭐ '+name+' added to shortlist! Go to Shortlist tab to score it.');
+}
+
+
+
+
 
 CMP.budget='<div class="card"><h2>💰 Monthly Budget — $159k Salary (4-Bed with Garden)</h2><p class="tx tm mb2">Net: $9,571/mo. Amazon pays 80% health insurance. School fees: FREE (VIC).</p><div class="table-wrap"><table><tr><th>Suburb</th><th>4-bed/wk</th><th>Rent/mo</th><th>Disposable/mo</th><th>Disposable/yr</th></tr><tr style="background:rgba(34,197,94,.05)"><td style="font-weight:600"><a href="https://www.google.com/maps/search/Langwarrin+Victoria+Australia/@-38.1670,145.1700,13z" target="_blank" style="color:var(--accent)">Langwarrin 📍</a></td><td>$590</td><td>$2,556</td><td style="color:var(--green)">$4,123</td><td style="color:var(--green)">$49,476</td></tr><tr><td style="font-weight:600"><a href="https://www.google.com/maps/search/Seaford+Victoria+Australia/@-38.1000,145.1340,13z" target="_blank" style="color:var(--accent)">Seaford 📍</a></td><td>$620</td><td>$2,686</td><td style="color:var(--green)">$3,993</td><td style="color:var(--green)">$47,916</td></tr><tr><td style="font-weight:600"><a href="https://www.google.com/maps/search/Frankston+Victoria+Australia/@-38.1430,145.1260,13z" target="_blank" style="color:var(--accent)">Frankston 📍</a></td><td>$630</td><td>$2,730</td><td style="color:var(--green)">$3,949</td><td style="color:var(--green)">$47,388</td></tr><tr><td style="font-weight:600"><a href="https://www.google.com/maps/search/Mordialloc+Victoria+Australia/@-37.9870,145.0870,13z" target="_blank" style="color:var(--accent)">Mordialloc 📍</a></td><td>$730</td><td>$3,163</td><td style="color:var(--green)">$3,516</td><td style="color:var(--green)">$42,192</td></tr><tr><td style="font-weight:600"><a href="https://www.google.com/maps/search/Mentone+Victoria+Australia/@-37.9830,145.0670,13z" target="_blank" style="color:var(--accent)">Mentone 📍</a></td><td>$800</td><td>$3,466</td><td style="color:var(--green)">$3,213</td><td style="color:var(--green)">$38,556</td></tr><tr><td style="font-weight:600"><a href="https://www.google.com/maps/search/Glen Waverley+Victoria+Australia/@-37.8780,145.1630,13z" target="_blank" style="color:var(--accent)">Glen Waverley 📍</a></td><td>$820</td><td>$3,553</td><td style="color:var(--green)">$3,126</td><td style="color:var(--green)">$37,512</td></tr><tr><td style="font-weight:600"><a href="https://www.google.com/maps/search/Sandringham+Victoria+Australia/@-37.9510,145.0100,13z" target="_blank" style="color:var(--accent)">Sandringham 📍</a></td><td>$950</td><td>$4,116</td><td style="color:var(--orange)">$2,563</td><td style="color:var(--orange)">$30,756</td></tr><tr><td style="font-weight:600"><a href="https://www.google.com/maps/search/Brighton+Victoria+Australia/@-37.9070,144.9870,13z" target="_blank" style="color:var(--accent)">Brighton 📍</a></td><td>$1100</td><td>$4,766</td><td style="color:var(--orange)">$1,913</td><td style="color:var(--orange)">$22,956</td></tr></table></div><p class="ts mt2">Includes: rent, groceries ($1,400), car ($500), utilities ($350), health copay ($80), phones ($130), kids activities ($300), UK costs net (-£37 surplus), flights ($417/mo amortised). School fees: $0 (VIC free for 482 visa).</p></div>';
 
