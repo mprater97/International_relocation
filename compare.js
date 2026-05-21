@@ -113,6 +113,27 @@ var SUBURBS_DATA=[
   {name:'Mt Martha',cafes:'Quiet local cafes, near Mornington Main St',shops:'Near Mornington Central',outdoors:'Beautiful beaches, bushland walks, Briars wildlife',community:'Quiet, nature-focused, families',school:'Mornington SC',schoolRating:'VCE median 27 — Good',schoolLink:'https://www.findmyschool.vic.gov.au',pc:'3934',bed3:'620–700',bed4:'700–850',train:75,beach:'ON beach',garden:'Yes ★',vibe:'Quiet, beautiful beaches, bushland',lat:-38.27,lng:145.02},
 ];
 
+var SCHOOL_INFO={
+  'Seaford':{students:'~800',type:'Co-ed Yr 7–12',extra:'Specialist basketball & volleyball programs'},
+  'Carrum':{students:'~1,100',type:'Co-ed Yr 7–12',extra:'Strong outdoor ed, marine studies'},
+  'Frankston':{students:'~1,800',type:'Co-ed Yr 7–12',extra:'Large school, accelerated learning program, strong sport'},
+  'Frankston South':{students:'~1,800',type:'Co-ed Yr 7–12',extra:'Large school, accelerated learning program, strong sport'},
+  'Karingal':{students:'~1,800',type:'Co-ed Yr 7–12',extra:'Large school, accelerated learning program, strong sport'},
+  'Langwarrin':{students:'~1,200',type:'Co-ed Yr 7–12',extra:'Arts focus, good pastoral care'},
+  'Cranbourne':{students:'~900',type:'Co-ed Yr 7–12',extra:'Growing area, new facilities'},
+  'Mordialloc':{students:'~1,400',type:'Co-ed Yr 7–12',extra:'Strong music program, good results'},
+  'Aspendale':{students:'~700',type:'Co-ed Yr 7–12',extra:'Smaller school, personal attention'},
+  'Mentone':{students:'~900 / ~1,400',type:'Girls only (Mentone) or Co-ed (Parkdale)',extra:'Mentone Girls: strong academics, STEM focus. Parkdale: strong music'},
+  'Cheltenham':{students:'~600',type:'Co-ed Yr 7–12',extra:'Smaller, community feel, good support'},
+  'Glen Waverley':{students:'~2,100',type:'Co-ed Yr 7–12',extra:'Top public school in area. Accelerated program, languages, STEM. Very competitive zone'},
+  'Mt Waverley':{students:'~1,500',type:'Co-ed Yr 7–12',extra:'Strong academics, music program, good pastoral care'},
+  'Box Hill':{students:'~1,000',type:'Co-ed Yr 7–12',extra:'Diverse, strong ESL support, arts'},
+  'Sandringham':{students:'~1,200',type:'Co-ed Yr 7–12',extra:'Beach location, outdoor ed, performing arts'},
+  'Brighton':{students:'~1,100',type:'Co-ed Yr 7–12',extra:'Strong academics, sport, close to private school alternatives'},
+  'Mornington':{students:'~1,400',type:'Co-ed Yr 7–12',extra:'Peninsula school, outdoor ed, marine studies, surfing program'},
+  'Mt Martha':{students:'~1,400',type:'Co-ed Yr 7–12',extra:'Peninsula school, outdoor ed, marine studies, surfing program'},
+};
+
 function renderSuburbsInteractive(){
   var sd=state.suburbData||{};
   var html='<div class="card"><h2>🏘️ Melbourne Suburbs — All Info</h2><p class="tx tm mb2">Each suburb has everything: price, school, lifestyle, budget. Tap ℹ️ to expand details.</p></div>';
@@ -179,7 +200,13 @@ function renderSuburbsInteractive(){
       html+='<div style="margin:4px 0"><strong>🛍️ Shopping:</strong> '+s.shops+'</div>';
       html+='<div style="margin:4px 0"><strong>🌳 Outdoors:</strong> '+s.outdoors+'</div>';
       html+='<div style="margin:4px 0"><strong>👨‍👩‍👧‍👦 Community:</strong> '+s.community+'</div>';
-      html+='<div style="margin:8px 0;padding:8px;background:rgba(255,255,255,.03);border-radius:6px"><strong>🏫 School Detail:</strong> '+s.school+' — '+s.schoolRating+'<br><span class="tx tm">VCE median score: 25=Average, 28=Good, 30+=Very Good, 33+=Excellent. State avg ~27.</span><br><a href="https://www.findmyschool.vic.gov.au" target="_blank" style="color:var(--accent);font-size:.75rem">Find My School (catchment zones) →</a> · <a href="https://bettereducation.com.au/school/Secondary/vic/vic_top_secondary_schools.aspx" target="_blank" style="color:var(--accent);font-size:.75rem">VIC School Rankings →</a></div>';
+      var si=SCHOOL_INFO[s.name]||{};
+      html+='<div style="margin:8px 0;padding:8px;background:rgba(255,255,255,.03);border-radius:6px"><strong>🏫 School Detail:</strong> <a href="'+s.schoolLink+'" target="_blank" style="color:var(--accent)">'+s.school+'</a><br>';
+      html+='<span class="tx">'+s.schoolRating+'</span><br>';
+      if(si.students)html+='<span class="tx tm">👥 '+si.students+' students · '+si.type+'</span><br>';
+      if(si.extra)html+='<span class="tx tm">✨ '+si.extra+'</span><br>';
+      html+='<span class="tx tm" style="margin-top:4px;display:block">Score guide: 25=Average, 28=Good, 30+=Very Good, 33+=Excellent (state avg ~27)</span>';
+      html+='<div style="margin-top:4px"><a href="https://www.findmyschool.vic.gov.au" target="_blank" style="color:var(--accent);font-size:.75rem">Find My School (catchment) →</a> · <a href="https://bettereducation.com.au/school/Secondary/vic/vic_top_secondary_schools.aspx" target="_blank" style="color:var(--accent);font-size:.75rem">Rankings →</a> · <a href="'+s.schoolLink+'" target="_blank" style="color:var(--accent);font-size:.75rem">Google →</a></div></div>';
       html+='</div></details>';
       html+='</div>';
     });
