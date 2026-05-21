@@ -93,24 +93,24 @@ function removeFromShortlist(i){
 
 
 var SUBURBS_DATA=[
-  {name:'Seaford',pc:'3198',bed3:'520–580',bed4:'580–650',train:50,beach:'ON beach',garden:'Yes',vibe:'Beach village, foreshore trail, relaxed',lat:-38.1,lng:145.134},
-  {name:'Carrum',pc:'3197',bed3:'530–590',bed4:'600–680',train:48,beach:'ON beach',garden:'Yes',vibe:'Quiet beach, Patterson River, family',lat:-38.075,lng:145.123},
-  {name:'Frankston',pc:'3199',bed3:'500–600',bed4:'580–680',train:55,beach:'ON beach',garden:'Yes',vibe:'Coastal town, cafes, markets, improving',lat:-38.143,lng:145.126},
-  {name:'Frankston South',pc:'3199',bed3:'580–650',bed4:'650–750',train:58,beach:'5 min',garden:'Yes',vibe:'Leafy, quiet, larger properties',lat:-38.16,lng:145.13},
-  {name:'Langwarrin',pc:'3910',bed3:'480–550',bed4:'550–630',train:60,beach:'12 min',garden:'Yes ★',vibe:'New estates, big gardens, parks, space',lat:-38.167,lng:145.17},
-  {name:'Karingal',pc:'3199',bed3:'460–520',bed4:'530–600',train:58,beach:'10 min',garden:'Yes',vibe:'Affordable, near Frankston shops',lat:-38.15,lng:145.15},
-  {name:'Cranbourne',pc:'3977',bed3:'450–520',bed4:'520–600',train:55,beach:'25 min',garden:'Yes ★',vibe:'Very affordable, new estates, growing',lat:-38.099,lng:145.283},
-  {name:'Mordialloc',pc:'3195',bed3:'600–680',bed4:'680–780',train:38,beach:'ON beach',garden:'Some',vibe:'Beach + creek, cafes, pier, family',lat:-37.987,lng:145.087},
-  {name:'Aspendale',pc:'3195',bed3:'620–700',bed4:'700–800',train:40,beach:'ON beach',garden:'Some',vibe:'Quiet beach, Edithvale wetlands',lat:-38.025,lng:145.103},
-  {name:'Mentone',pc:'3194',bed3:'650–750',bed4:'750–880',train:35,beach:'5 min',garden:'Yes',vibe:'Village feel, cafes, leafy streets',lat:-37.983,lng:145.067},
-  {name:'Cheltenham',pc:'3192',bed3:'620–700',bed4:'700–800',train:32,beach:'8 min',garden:'Yes',vibe:'Central, good access everywhere',lat:-37.957,lng:145.053},
-  {name:'Glen Waverley',pc:'3150',bed3:'650–750',bed4:'750–900',train:40,beach:'30 min',garden:'Yes',vibe:'Top schools (91.40), Asian food hub',lat:-37.878,lng:145.163},
-  {name:'Mt Waverley',pc:'3149',bed3:'600–680',bed4:'680–780',train:35,beach:'30 min',garden:'Yes',vibe:'Leafy, quieter, good primaries',lat:-37.877,lng:145.129},
-  {name:'Box Hill',pc:'3128',bed3:'550–630',bed4:'630–720',train:25,beach:'35 min',garden:'Some',vibe:'Asian hub, great food, direct train',lat:-37.819,lng:145.122},
-  {name:'Sandringham',pc:'3191',bed3:'750–880',bed4:'880–1050',train:28,beach:'ON beach',garden:'Yes',vibe:'Village, beach, leafy, family',lat:-37.951,lng:145.01},
-  {name:'Brighton',pc:'3186',bed3:'850–1000',bed4:'1000–1300',train:25,beach:'ON beach',garden:'Yes',vibe:'Iconic bathing boxes, upmarket',lat:-37.907,lng:144.987},
-  {name:'Mornington',pc:'3931',bed3:'580–680',bed4:'680–800',train:70,beach:'ON beach',garden:'Yes ★',vibe:'Village, wineries, pier, markets',lat:-38.218,lng:145.038},
-  {name:'Mt Martha',pc:'3934',bed3:'620–700',bed4:'700–850',train:75,beach:'ON beach',garden:'Yes ★',vibe:'Quiet, beautiful beaches, bushland',lat:-38.27,lng:145.02},
+  {name:'Seaford',school:'Monterey SC',schoolRating:'Good',schoolLink:'https://www.google.com/search?q=Monterey+Secondary+College+Frankston+North',pc:'3198',bed3:'520–580',bed4:'580–650',train:50,beach:'ON beach',garden:'Yes',vibe:'Beach village, foreshore trail, relaxed',lat:-38.1,lng:145.134},
+  {name:'Carrum',school:'Patterson River SC',schoolRating:'Good',schoolLink:'https://www.google.com/search?q=Patterson+River+Secondary+College',pc:'3197',bed3:'530–590',bed4:'600–680',train:48,beach:'ON beach',garden:'Yes',vibe:'Quiet beach, Patterson River, family',lat:-38.075,lng:145.123},
+  {name:'Frankston',school:'Frankston High',schoolRating:'Good',schoolLink:'https://www.google.com/search?q=Frankston+High+School',pc:'3199',bed3:'500–600',bed4:'580–680',train:55,beach:'ON beach',garden:'Yes',vibe:'Coastal town, cafes, markets, improving',lat:-38.143,lng:145.126},
+  {name:'Frankston South',school:'Frankston High',schoolRating:'Good',schoolLink:'https://www.google.com/search?q=Frankston+High+School',pc:'3199',bed3:'580–650',bed4:'650–750',train:58,beach:'5 min',garden:'Yes',vibe:'Leafy, quiet, larger properties',lat:-38.16,lng:145.13},
+  {name:'Langwarrin',school:'Elisabeth Murdoch College',schoolRating:'Good',schoolLink:'https://www.google.com/search?q=Elisabeth+Murdoch+College+Langwarrin',pc:'3910',bed3:'480–550',bed4:'550–630',train:60,beach:'12 min',garden:'Yes ★',vibe:'New estates, big gardens, parks, space',lat:-38.167,lng:145.17},
+  {name:'Karingal',school:'Frankston High',schoolRating:'Good',schoolLink:'https://www.google.com/search?q=Frankston+High+School',pc:'3199',bed3:'460–520',bed4:'530–600',train:58,beach:'10 min',garden:'Yes',vibe:'Affordable, near Frankston shops',lat:-38.15,lng:145.15},
+  {name:'Cranbourne',school:'Cranbourne SC',schoolRating:'Average',schoolLink:'https://www.google.com/search?q=Cranbourne+Secondary+College',pc:'3977',bed3:'450–520',bed4:'520–600',train:55,beach:'25 min',garden:'Yes ★',vibe:'Very affordable, new estates, growing',lat:-38.099,lng:145.283},
+  {name:'Mordialloc',school:'Parkdale SC',schoolRating:'Good',schoolLink:'https://www.google.com/search?q=Parkdale+Secondary+College',pc:'3195',bed3:'600–680',bed4:'680–780',train:38,beach:'ON beach',garden:'Some',vibe:'Beach + creek, cafes, pier, family',lat:-37.987,lng:145.087},
+  {name:'Aspendale',school:'Mordialloc College',schoolRating:'Good',schoolLink:'https://www.google.com/search?q=Mordialloc+College',pc:'3195',bed3:'620–700',bed4:'700–800',train:40,beach:'ON beach',garden:'Some',vibe:'Quiet beach, Edithvale wetlands',lat:-38.025,lng:145.103},
+  {name:'Mentone',school:'Mentone Girls / Parkdale SC',schoolRating:'Very Good',schoolLink:'https://www.google.com/search?q=Mentone+Girls+Secondary+College',pc:'3194',bed3:'650–750',bed4:'750–880',train:35,beach:'5 min',garden:'Yes',vibe:'Village feel, cafes, leafy streets',lat:-37.983,lng:145.067},
+  {name:'Cheltenham',school:'Cheltenham SC',schoolRating:'Good',schoolLink:'https://www.google.com/search?q=Cheltenham+Secondary+College',pc:'3192',bed3:'620–700',bed4:'700–800',train:32,beach:'8 min',garden:'Yes',vibe:'Central, good access everywhere',lat:-37.957,lng:145.053},
+  {name:'Glen Waverley',school:'Glen Waverley SC',schoolRating:'Excellent (91.40)',schoolLink:'https://www.google.com/search?q=Glen+Waverley+Secondary+College',pc:'3150',bed3:'650–750',bed4:'750–900',train:40,beach:'30 min',garden:'Yes',vibe:'Top schools (91.40), Asian food hub',lat:-37.878,lng:145.163},
+  {name:'Mt Waverley',school:'Mt Waverley SC',schoolRating:'Very Good',schoolLink:'https://www.google.com/search?q=Mount+Waverley+Secondary+College',pc:'3149',bed3:'600–680',bed4:'680–780',train:35,beach:'30 min',garden:'Yes',vibe:'Leafy, quieter, good primaries',lat:-37.877,lng:145.129},
+  {name:'Box Hill',school:'Box Hill High',schoolRating:'Good',schoolLink:'https://www.google.com/search?q=Box+Hill+High+School',pc:'3128',bed3:'550–630',bed4:'630–720',train:25,beach:'35 min',garden:'Some',vibe:'Asian hub, great food, direct train',lat:-37.819,lng:145.122},
+  {name:'Sandringham',school:'Sandringham College',schoolRating:'Very Good',schoolLink:'https://www.google.com/search?q=Sandringham+College',pc:'3191',bed3:'750–880',bed4:'880–1050',train:28,beach:'ON beach',garden:'Yes',vibe:'Village, beach, leafy, family',lat:-37.951,lng:145.01},
+  {name:'Brighton',school:'Brighton SC',schoolRating:'Very Good',schoolLink:'https://www.google.com/search?q=Brighton+Secondary+College',pc:'3186',bed3:'850–1000',bed4:'1000–1300',train:25,beach:'ON beach',garden:'Yes',vibe:'Iconic bathing boxes, upmarket',lat:-37.907,lng:144.987},
+  {name:'Mornington',school:'Mornington SC',schoolRating:'Good',schoolLink:'https://www.google.com/search?q=Mornington+Secondary+College',pc:'3931',bed3:'580–680',bed4:'680–800',train:70,beach:'ON beach',garden:'Yes ★',vibe:'Village, wineries, pier, markets',lat:-38.218,lng:145.038},
+  {name:'Mt Martha',school:'Mornington SC',schoolRating:'Good',schoolLink:'https://www.google.com/search?q=Mornington+Secondary+College',pc:'3934',bed3:'620–700',bed4:'700–850',train:75,beach:'ON beach',garden:'Yes ★',vibe:'Quiet, beautiful beaches, bushland',lat:-38.27,lng:145.02},
 ];
 
 function renderSuburbsInteractive(){
@@ -127,7 +127,7 @@ function renderSuburbsInteractive(){
   ];
   
   tiers.forEach(function(tier){
-    html+='<div class="card"><h3>'+tier.name+'</h3><div class="table-wrap"><table><tr><th>Suburb</th><th>Guide Price</th><th>Your Price</th><th>Train</th><th>Features</th><th>Listing</th><th></th></tr>';
+    html+='<div class="card"><h3>'+tier.name+'</h3><div class="table-wrap"><table><tr><th>Suburb</th><th>Guide Price</th><th>Your Price</th><th>Train</th><th>School</th><th>Features</th><th>Listing</th><th></th></tr>';
     tier.suburbs.forEach(function(sname){
       var s=SUBURBS_DATA.find(function(x){return x.name===sname});
       if(!s)return;
@@ -140,6 +140,7 @@ function renderSuburbsInteractive(){
       html+='<td class="tx">3b: $'+s.bed3+'<br>4b: $'+s.bed4+'</td>';
       html+='<td><input type="number" class="ism" value="'+(d.price||'')+'" placeholder="$/wk" oninput="saveSuburbField(\''+s.name+'\',\'price\',+this.value)"></td>';
       html+='<td><input type="number" class="ism" style="width:50px" value="'+(d.train||s.train)+'" oninput="saveSuburbField(\''+s.name+'\',\'train\',+this.value)"> min</td>';
+      html+='<td style="font-size:.75rem"><a href="'+s.schoolLink+'" target="_blank" style="color:var(--accent)">'+s.school+'</a><br><span class="tx tm">'+s.schoolRating+'</span></td>';
       html+='<td style="font-size:.7rem">';
       var features=['Beach','Garden','Direct Train','Cafes','Shops','Good School','Parks','4-bed','Quiet','Family Area','Dog Friendly','Bike Paths','Pool','Near Work','New Build'];
       features.forEach(function(f){
