@@ -5,7 +5,7 @@ function renderCompare(){
     '<p class="ts tm">$159k salary | 4-bed with garden | Beach lifestyle</p>'+
     '<div class="stabs mt2">'+
     '<div class="stab active" onclick="showCmp(\'suburbs\',this)">🏘️ Suburbs</div>'+
-    '<div class="stab" onclick="showCmp(\'budget\',this)">💰 Budget</div>'+
+    '<div class="stab" onclick="showCmp(\'costs\',this)">💰 Living Costs</div>'+
     
     '<div class="stab" onclick="showCmp(\'shortlist\',this)">⭐ Shortlist</div>'+
     '<div class="stab" onclick="showCmp(\'frankie\',this)">💼 Frankie</div>'+
