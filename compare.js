@@ -141,12 +141,12 @@ function renderSuburbsInteractive(){
       html+='<td><input type="number" class="ism" value="'+(d.price||'')+'" placeholder="$/wk" oninput="saveSuburbField(\''+s.name+'\',\'price\',+this.value)"></td>';
       html+='<td><input type="number" class="ism" style="width:50px" value="'+(d.train||s.train)+'" oninput="saveSuburbField(\''+s.name+'\',\'train\',+this.value)"> min</td>';
       html+='<td style="font-size:.7rem">';
-      var features=['Beach','Garden','Train','Cafes','Shops','School','Parks','4-bed'];
+      var features=['Beach','Garden','Direct Train','Cafes','Shops','Good School','Parks','4-bed','Quiet','Family Area','Dog Friendly','Bike Paths','Pool','Near Work','New Build'];
       features.forEach(function(f){
         var checked=(d.features||{})[f];
         html+='<label><input type="checkbox" '+(checked?'checked':'')+' onchange="saveSuburbFeature(\''+s.name+'\',\''+f+'\',this.checked)">'+f+' </label>';
       });
-      html+='</td>';
+      html+='<br><input type="text" value="'+(d.custom||'')+' " placeholder="+ Custom..." style="font-size:.7rem;margin-top:2px;width:90%" oninput="saveSuburbField(\''+s.name+'\',\'custom\',this.value)"></td>';
       html+='<td><input type="text" value="'+(d.link||'')+'" placeholder="URL" style="max-width:80px;font-size:.7rem" oninput="saveSuburbField(\''+s.name+'\',\'link\',this.value)">'+(d.link?'<br><a href="'+d.link+'" target="_blank" class="tx" style="color:var(--accent)">View →</a>':'')+'</td>';
       html+='<td><button class="btn btn-p" style="padding:4px 8px;font-size:.7rem" onclick="addSuburbToShortlist(\''+s.name+'\')">⭐ Add</button></td>';
       html+='</tr>';
@@ -184,6 +184,7 @@ function addSuburbToShortlist(name){
   if(!state.shortlist)state.shortlist=[];
   var features=[];
   if(d.features){Object.keys(d.features).forEach(function(k){if(d.features[k])features.push(k)})}
+  if(d.custom)features.push(d.custom);
   state.shortlist.push({
     name:name,
     rent:d.price||0,
