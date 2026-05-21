@@ -7,6 +7,7 @@ function renderCompare(){
     '<div class="stab active" onclick="showCmp(\'suburbs\',this)">🏘️ Suburbs</div>'+
     '<div class="stab" onclick="showCmp(\'budget\',this)">💰 Budget</div>'+
     
+    '<div class="stab" onclick="showCmp(\'shortlist\',this)">⭐ Shortlist</div>'+
     '<div class="stab" onclick="showCmp(\'lifestyle\',this)">🌏 Lifestyle</div>'+
     '<div class="stab" onclick="showCmp(\'frankie\',this)">💼 Frankie</div>'+
     '<div class="stab" onclick="showCmp(\'sydney\',this)">🌊 vs Sydney</div>'+
@@ -15,9 +16,80 @@ function renderCompare(){
 }
 function showCmp(id,btn){
   if(btn){document.querySelectorAll('#locations .stab').forEach(function(s){s.classList.remove('active')});btn.classList.add('active')}
-  document.getElementById('cmpContent').innerHTML=CMP[id]||'';
+  if(id==='shortlist'){renderShortlist()}else{document.getElementById('cmpContent').innerHTML=CMP[id]||'';}
 }
 var CMP={};
+
+CMP.shortlist='';
+function renderShortlist(){
+  var areas=state.shortlist||[];
+  var html='<div class="card"><h2>⭐ My Suburb Shortlist</h2><p class="tx tm mb2">Add areas, rate them, enter real prices. Score out of 5 for each feature.</p>';
+  
+  // Add new area form
+  html+='<div class="flex g2 fw aic mb2"><input type="text" id="slName" placeholder="Suburb name" style="flex:1;min-width:150px"><input type="number" id="slRent" placeholder="Actual rent $/wk" style="max-width:130px"><input type="text" id="slLink" placeholder="Listing URL (optional)" style="flex:1;min-width:150px"><button class="btn btn-p" onclick="addToShortlist()">+ Add</button></div>';
+  
+  if(areas.length){
+    html+='<div class="table-wrap"><table><tr><th>Suburb</th><th>Rent/wk</th><th>Beach</th><th>Commute</th><th>Schools</th><th>Lifestyle</th><th>Value</th><th>Total</th><th>Notes</th><th></th></tr>';
+    areas.sort(function(a,b){return (b.scores||{}).total-(a.scores||{}).total});
+    areas.forEach(function(a,i){
+      var s=a.scores||{beach:0,commute:0,schools:0,lifestyle:0,value:0};
+      s.total=(s.beach||0)+(s.commute||0)+(s.schools||0)+(s.lifestyle||0)+(s.value||0);
+      html+='<tr><td style="font-weight:600">'+(a.link?'<a href="'+a.link+'" target="_blank" style="color:var(--accent)">'+a.name+' →</a>':a.name)+'</td>';
+      html+='<td><input type="number" class="ism" value="'+(a.rent||'')+'" placeholder="$" oninput="updateShortlist('+i+',\'rent\',+this.value)"></td>';
+      ['beach','commute','schools','lifestyle','value'].forEach(function(k){
+        html+='<td><select onchange="updateShortlistScore('+i+',\''+k+'\',+this.value)" style="width:50px"><option value="0" '+(s[k]===0?'selected':'')+'>-</option><option value="1" '+(s[k]===1?'selected':'')+'>1</option><option value="2" '+(s[k]===2?'selected':'')+'>2</option><option value="3" '+(s[k]===3?'selected':'')+'>3</option><option value="4" '+(s[k]===4?'selected':'')+'>4</option><option value="5" '+(s[k]===5?'selected':'')+'>5</option></select></td>';
+      });
+      html+='<td style="font-weight:700;color:'+(s.total>=20?'var(--green)':s.total>=15?'var(--accent)':'var(--muted)')+'">'+s.total+'/25</td>';
+      html+='<td><input type="text" value="'+(a.notes||'')+'" placeholder="Notes..." oninput="updateShortlist('+i+',\'notes\',this.value)" style="min-width:120px"></td>';
+      html+='<td><button class="btn btn-o" style="padding:2px 6px;color:var(--red)" onclick="removeFromShortlist('+i+')">✕</button></td></tr>';
+    });
+    html+='</table></div>';
+    
+    // Show winner
+    if(areas.length>1){
+      var sorted=areas.slice().sort(function(a,b){var sa=(a.scores||{});var sb=(b.scores||{});return((sb.beach||0)+(sb.commute||0)+(sb.schools||0)+(sb.lifestyle||0)+(sb.value||0))-((sa.beach||0)+(sa.commute||0)+(sa.schools||0)+(sa.lifestyle||0)+(sa.value||0))});
+      var winner=sorted[0];
+      var ws=winner.scores||{};
+      var wtotal=(ws.beach||0)+(ws.commute||0)+(ws.schools||0)+(ws.lifestyle||0)+(ws.value||0);
+      if(wtotal>0)html+='<div class="card mt2" style="border-left:4px solid var(--green)"><h3 style="color:var(--green)">🏆 Current Leader: '+winner.name+' ('+wtotal+'/25)</h3></div>';
+    }
+  } else {
+    html+='<p class="tm ts">No areas shortlisted yet. Add suburbs above to start comparing.</p>';
+  }
+  html+='</div>';
+  
+  // Scoring guide
+  html+='<div class="card"><h3>Scoring Guide</h3><div class="table-wrap"><table><tr><th>Score</th><th>Beach</th><th>Commute</th><th>Schools</th><th>Lifestyle</th><th>Value</th></tr><tr><td>5</td><td>On the beach</td><td>&lt;30 min train</td><td>Top rated (91+)</td><td>Cafes, shops, community all excellent</td><td>Under $550/wk 4-bed</td></tr><tr><td>4</td><td>5 min drive</td><td>30–40 min</td><td>Good rated</td><td>Most things nearby</td><td>$550–650/wk</td></tr><tr><td>3</td><td>10–15 min drive</td><td>40–50 min</td><td>Average</td><td>Some things nearby</td><td>$650–750/wk</td></tr><tr><td>2</td><td>20+ min drive</td><td>50–60 min</td><td>Below average</td><td>Limited nearby</td><td>$750–900/wk</td></tr><tr><td>1</td><td>30+ min drive</td><td>60+ min</td><td>Poor</td><td>Very limited</td><td>$900+/wk</td></tr></table></div></div>';
+  
+  document.getElementById('cmpContent').innerHTML=html;
+}
+
+function addToShortlist(){
+  var name=document.getElementById('slName').value;
+  if(!name)return;
+  var rent=+(document.getElementById('slRent').value)||0;
+  var link=document.getElementById('slLink').value;
+  if(!state.shortlist)state.shortlist=[];
+  state.shortlist.push({name:name,rent:rent,link:link,notes:'',scores:{beach:0,commute:0,schools:0,lifestyle:0,value:0}});
+  save();showCmp('shortlist');
+}
+function updateShortlist(i,field,val){
+  if(!state.shortlist||!state.shortlist[i])return;
+  state.shortlist[i][field]=val;
+  save();
+}
+function updateShortlistScore(i,field,val){
+  if(!state.shortlist||!state.shortlist[i])return;
+  if(!state.shortlist[i].scores)state.shortlist[i].scores={};
+  state.shortlist[i].scores[field]=val;
+  save();showCmp('shortlist');
+}
+function removeFromShortlist(i){
+  if(!state.shortlist)return;
+  state.shortlist.splice(i,1);
+  save();showCmp('shortlist');
+}
+
 
 CMP.suburbs='<div class="card"><h2>🏘️ Melbourne Suburbs — 3/4 Bed with Garden</h2><p class="tx tm mb2">All pricing for houses with gardens. Train commute to MEL12 (555 Collins St).</p><div class="table-wrap"><table><tr><th>Tier</th><th>Suburb</th><th>3-bed/wk</th><th>4-bed/wk</th><th>Train CBD</th><th>Beach</th><th>Garden</th><th>Vibe</th></tr><tr style="background:var(--card2)" colspan="8"><td colspan="8" style="font-weight:700">🏖️ BUDGET — Beach Lifestyle</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Seaford+Victoria+Australia/@-38.1000,145.1340,13z" target="_blank" style="color:var(--accent)">Seaford 📍</a></td><td>$520–580</td><td>$580–650</td><td>50 min</td><td>ON beach</td><td>Yes</td><td>Beach village, foreshore trail, relaxed</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Carrum+Victoria+Australia/@-38.0750,145.1230,13z" target="_blank" style="color:var(--accent)">Carrum 📍</a></td><td>$530–590</td><td>$600–680</td><td>48 min</td><td>ON beach</td><td>Yes</td><td>Quiet beach, Patterson River, family</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Frankston+Victoria+Australia/@-38.1430,145.1260,13z" target="_blank" style="color:var(--accent)">Frankston 📍</a></td><td>$500–600</td><td>$580–680</td><td>55 min</td><td>ON beach</td><td>Yes</td><td>Coastal town, cafes, markets, improving</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Frankston South+Victoria+Australia/@-38.1600,145.1300,13z" target="_blank" style="color:var(--accent)">Frankston South 📍</a></td><td>$580–650</td><td>$650–750</td><td>58 min</td><td>5 min</td><td>Yes</td><td>Leafy, quiet, larger properties</td></tr><tr style="background:var(--card2)"><td colspan="8" style="font-weight:700">🏡 BUDGET — Inland (Near Beach)</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Langwarrin+Victoria+Australia/@-38.1670,145.1700,13z" target="_blank" style="color:var(--accent)">Langwarrin 📍</a></td><td>$480–550</td><td>$550–630</td><td>60 min</td><td>12 min</td><td>Yes ★</td><td>New estates, big gardens, parks, space</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Karingal+Victoria+Australia/@-38.1500,145.1500,13z" target="_blank" style="color:var(--accent)">Karingal 📍</a></td><td>$460–520</td><td>$530–600</td><td>58 min</td><td>10 min</td><td>Yes</td><td>Affordable, near Frankston shops</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Cranbourne+Victoria+Australia/@-38.0990,145.2830,13z" target="_blank" style="color:var(--accent)">Cranbourne 📍</a></td><td>$450–520</td><td>$520–600</td><td>55 min</td><td>25 min</td><td>Yes ★</td><td>Very affordable, new estates, growing</td></tr><tr style="background:var(--card2)"><td colspan="8" style="font-weight:700">🌊 MID-RANGE — Bayside</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Mordialloc+Victoria+Australia/@-37.9870,145.0870,13z" target="_blank" style="color:var(--accent)">Mordialloc 📍</a></td><td>$600–680</td><td>$680–780</td><td>38 min</td><td>ON beach</td><td>Some</td><td>Beach + creek, cafes, pier, family</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Aspendale+Victoria+Australia/@-38.0250,145.1030,13z" target="_blank" style="color:var(--accent)">Aspendale 📍</a></td><td>$620–700</td><td>$700–800</td><td>40 min</td><td>ON beach</td><td>Some</td><td>Quiet beach, Edithvale wetlands</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Mentone+Victoria+Australia/@-37.9830,145.0670,13z" target="_blank" style="color:var(--accent)">Mentone 📍</a></td><td>$650–750</td><td>$750–880</td><td>35 min</td><td>5 min</td><td>Yes</td><td>Village feel, cafes, leafy streets</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Cheltenham+Victoria+Australia/@-37.9570,145.0530,13z" target="_blank" style="color:var(--accent)">Cheltenham 📍</a></td><td>$620–700</td><td>$700–800</td><td>32 min</td><td>8 min</td><td>Yes</td><td>Central, good access everywhere</td></tr><tr style="background:var(--card2)"><td colspan="8" style="font-weight:700">🏫 MID-RANGE — Eastern (Best Schools)</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Glen Waverley+Victoria+Australia/@-37.8780,145.1630,13z" target="_blank" style="color:var(--accent)">Glen Waverley 📍</a></td><td>$650–750</td><td>$750–900</td><td>40 min</td><td>30 min</td><td>Yes</td><td>Top schools (91.40), Asian food hub</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Mt Waverley+Victoria+Australia/@-37.8770,145.1290,13z" target="_blank" style="color:var(--accent)">Mt Waverley 📍</a></td><td>$600–680</td><td>$680–780</td><td>35 min</td><td>30 min</td><td>Yes</td><td>Leafy, quieter, good primaries</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Box Hill+Victoria+Australia/@-37.8190,145.1220,13z" target="_blank" style="color:var(--accent)">Box Hill 📍</a></td><td>$550–630</td><td>$630–720</td><td>25 min</td><td>35 min</td><td>Some</td><td>Asian hub, great food, direct train</td></tr><tr style="background:var(--card2)"><td colspan="8" style="font-weight:700">💎 PREMIUM — Bayside</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Sandringham+Victoria+Australia/@-37.9510,145.0100,13z" target="_blank" style="color:var(--accent)">Sandringham 📍</a></td><td>$750–880</td><td>$880–1050</td><td>28 min</td><td>ON beach</td><td>Yes</td><td>Village, beach, leafy, family</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Brighton+Victoria+Australia/@-37.9070,144.9870,13z" target="_blank" style="color:var(--accent)">Brighton 📍</a></td><td>$850–1000</td><td>$1000–1300</td><td>25 min</td><td>ON beach</td><td>Yes</td><td>Iconic bathing boxes, upmarket</td></tr><tr style="background:var(--card2)"><td colspan="8" style="font-weight:700">🍷 PENINSULA — Lifestyle</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Mornington+Victoria+Australia/@-38.2180,145.0380,13z" target="_blank" style="color:var(--accent)">Mornington 📍</a></td><td>$580–680</td><td>$680–800</td><td>70 min</td><td>ON beach</td><td>Yes ★</td><td>Village, wineries, pier, markets</td></tr><tr><td></td><td style="font-weight:600"><a href="https://www.google.com/maps/search/Mt Martha+Victoria+Australia/@-38.2700,145.0200,13z" target="_blank" style="color:var(--accent)">Mt Martha 📍</a></td><td>$620–700</td><td>$700–850</td><td>75 min</td><td>ON beach</td><td>Yes ★</td><td>Quiet, beautiful beaches, bushland</td></tr></table></div><p class="ts mt2">★ = Particularly good for large gardens/outdoor space</p></div>';
 
