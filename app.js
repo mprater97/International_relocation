@@ -59,7 +59,7 @@ function getBudget(){
   var services={temp30:70,temp45:105,temp60:140,shipping:190,flights:15,car:15,homefind:35};
   if(state.pointsSelected){Object.keys(state.pointsSelected).forEach(function(k){if(state.pointsSelected[k]&&services[k])used+=services[k]})}
   var remain=total-used;
-  return remain*48;
+  return Math.round(remain*48.05);
 }
 function getDebts(){return(state.debts||DEFAULT_DEBTS).map(d=>{const paid=(state.debtPaid||{})[d.id]||0;const owed=d.amount||(d.monthly?(d.monthly*(d.monthsLeft||0)):0);return{...d,owed,paid,left:Math.max(0,owed-paid)}})}
 function debtLeft(){return getDebts().reduce((s,d)=>s+d.left,0)}
@@ -148,13 +148,13 @@ let moneySub='overview';
 // ===== POINTS ALLOCATOR =====
 function renderPointsAllocator(){
   var services=[
-    {id:'temp30',name:'Temp Housing 30 days',points:70,market:3600,cashCost:3360},
-    {id:'temp45',name:'Temp Housing 45 days',points:105,market:5400,cashCost:5040},
-    {id:'temp60',name:'Temp Housing 60 days',points:140,market:7200,cashCost:6720},
-    {id:'shipping',name:'Household Goods Shipment',points:190,market:2882,cashCost:9120},
-    {id:'flights',name:'Final Trip Airfare (family of 4)',points:15,market:6542,cashCost:720},
-    {id:'car',name:'Rental Car 15 days',points:15,market:1050,cashCost:720},
-    {id:'homefind',name:'Home Finding Trip (3 days)',points:35,market:1000,cashCost:1680},
+    {id:'temp30',name:'Temp Housing 30 days',points:70,market:3600,cashCost:3364},
+    {id:'temp45',name:'Temp Housing 45 days',points:105,market:5400,cashCost:5045},
+    {id:'temp60',name:'Temp Housing 60 days',points:140,market:7200,cashCost:6727},
+    {id:'shipping',name:'Household Goods Shipment',points:190,market:2882,cashCost:9130},
+    {id:'flights',name:'Final Trip Airfare (family of 4)',points:15,market:6542,cashCost:721},
+    {id:'car',name:'Rental Car 15 days',points:15,market:1050,cashCost:721},
+    {id:'homefind',name:'Home Finding Trip (3 days)',points:35,market:1000,cashCost:1682},
   ];
   var selected=state.pointsSelected||{};
   var usedPts=0;var totalMarketValue=0;
@@ -181,7 +181,7 @@ function renderPointsAllocator(){
   html+='<tr style="font-weight:700"><td>Cash ('+remainPts+' pts × $31)</td><td>'+remainPts+' pts</td><td>$'+cashValue+' AUD (~$'+cashAUD+' AUD)</td></tr>';
   html+='<tr style="font-weight:700;font-size:1.1rem;border-top:3px solid var(--border)"><td>TOTAL VALUE</td><td>310 pts</td><td style="color:var(--green)">~$'+totalValue.toLocaleString()+' (£'+Math.round(totalValue*0.532).toLocaleString()+')</td></tr>';
   html+='</table></div>';
-  html+='<p class="ts mt2">vs taking ALL cash: ~$14,900 (£7,927)</p>';
+  html+='<p class="ts mt2">vs taking ALL cash: ~$14,896 (£7,925)</p>';
   if(totalValue>14900)html+='<p class="ts" style="color:var(--green);font-weight:600">✅ Your selection gives you $'+(totalValue-14900).toLocaleString()+' MORE value than all-cash</p>';
   html+='</div></div>';
   return html;
