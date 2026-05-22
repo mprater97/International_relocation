@@ -819,7 +819,7 @@ function restoreCustomItems(){
 }
 
 // ===== INIT =====
-restoreCustomItems();updateHeader();renderPlanNew();
+restoreCustomItems();updateHeader();planSub='thisweek';renderPlanNew();
 
 // ===== PLAN (Combined: Phases + Tasks + To-Do) =====
 var planSub='thisweek';
