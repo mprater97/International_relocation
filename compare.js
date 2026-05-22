@@ -162,7 +162,7 @@ function initSuburbMap(){
       var s=SUBURBS_DATA.find(function(x){return x.name===sname});
       if(!s)return;
       var bed4mo=Math.round(parseInt(s.bed4)*52/12);
-      var icon=L.divIcon({html:'<div style="background:'+color+';width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,.3)"></div>',iconSize:[14,14],iconAnchor:[7,7],className:''});
+      var icon=L.divIcon({html:'<div style="background:'+color+';padding:2px 6px;border-radius:10px;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,.3);font-size:10px;font-weight:700;color:#fff;white-space:nowrap">£'+Math.round(bed4mo*0.532)+'</div>',iconSize:[50,20],iconAnchor:[25,10],className:''});
       var marker=L.marker([s.lat,s.lng],{icon:icon}).addTo(map);
       marker.bindPopup('<div style="min-width:200px"><strong>'+s.name+'</strong><br><span style="font-size:.85rem">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')<br>Train: '+s.train+' min | Beach: '+s.beach+'<br>School: '+s.school+' ('+s.schoolRating+')</span><br><button onclick="showSuburbDetail(\''+s.name+'\')" style="margin-top:4px;padding:4px 8px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.75rem">View full details</button></div>');
     });
