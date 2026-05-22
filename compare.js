@@ -206,6 +206,16 @@ function renderSuburbsInteractive(){
   var sd=state.suburbData||{};
   var html='<div class="card"><h2>🏘️ Melbourne Suburbs</h2><div class="flex g2 mb2"><button class="btn '+(suburbView==='map'?'btn-p':'btn-o')+'" onclick="suburbView=\'map\';renderSuburbsInteractive()">🗺️ Map View</button><button class="btn '+(suburbView==='list'?'btn-p':'btn-o')+'" onclick="suburbView=\'list\';renderSuburbsInteractive()">📋 List View</button></div></div>';
   if(suburbView==='map'){
+    html+='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:.75rem">';
+    html+='<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#22c55e"></span> Budget Beach</span>';
+    html+='<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#16a34a"></span> Budget Inland</span>';
+    html+='<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#3b82f6"></span> Inner (Amazon)</span>';
+    html+='<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#06b6d4"></span> Mid Bayside</span>';
+    html+='<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#8b5cf6"></span> Mid Eastern</span>';
+    html+='<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#f59e0b"></span> Premium</span>';
+    html+='<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ec4899"></span> Peninsula</span>';
+    html+='<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ef4444"></span> 🏢 Office</span>';
+    html+='</div>';
     html+='<div id="suburbMap" style="height:60vh;min-height:350px;border-radius:14px;margin-bottom:16px"></div>';
     html+='<div id="suburbMapInfo" class="card" style="display:none"></div>';
     document.getElementById('cmpContent').innerHTML=html;
