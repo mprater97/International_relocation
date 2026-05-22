@@ -50,6 +50,7 @@ function wkDate(w){const d=new Date(getStart());d.setDate(d.getDate()+(w-1)*7);r
 function fd(d){return d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}
 function fdf(d){return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}
 function fG(v){var gbp=Math.round(v*0.532);return'$'+Math.round(v).toLocaleString()+' (£'+gbp.toLocaleString()+')'}
+function fGBP(v){var aud=Math.round(v*1.88);return'£'+Math.round(v).toLocaleString()+' ($'+aud.toLocaleString()+')'}
 function fA(v){var gbp=Math.round(v*0.532);return'$'+Math.round(v).toLocaleString()+' (£'+gbp.toLocaleString()+')'}
 function curWk(){const n=new Date(),d=Math.floor((n-getStart())/(7*864e5));return Math.max(1,Math.min(22,d+1))}
 function daysTo(s){if(!s)return null;return Math.ceil((new Date(s)-new Date())/(864e5))}
@@ -170,7 +171,7 @@ function renderPointsAllocator(){
   services.forEach(function(s){
     var checked=selected[s.id];
     var verdict=s.market>(s.points*31*1.55)?'<span style="color:var(--green)">✅ Good value</span>':'<span style="color:var(--red)">❌ Take cash</span>';
-    var actualCost=(state.pointsActual||{})[s.id]||0;var effectiveMarket=actualCost||s.market;var saving=effectiveMarket-s.cashCost;html+='<tr'+(checked?' style="background:rgba(34,197,94,.08)"':'')+'><td><input type="checkbox" '+(checked?'checked':'')+' onchange="togglePoint(this.checked,\''+s.id+'\')"></td><td style="font-weight:600">'+s.name+'</td><td>'+s.points+' pts<br><span class="tx tm">($'+s.cashCost.toLocaleString()+' AUD)</span></td><td>-$'+s.cashCost.toLocaleString()+'</td><td>~$'+s.market.toLocaleString()+'</td><td><input type="number" class="ism" value="'+(actualCost||'')+'" placeholder="$" onchange="savePointsActual(\''+s.id+'\',+this.value);renderMoney()"></td><td style="color:'+(saving>0?'var(--green)':'var(--red)')+'">$'+(saving>0?'+':'')+saving.toLocaleString()+'</td></tr>';
+    var actualCost=(state.pointsActual||{})[s.id]||0;var effectiveMarket=actualCost||s.market;var saving=effectiveMarket-s.cashCost;html+='<tr'+(checked?' style="background:rgba(34,197,94,.08)"':'')+'><td><input type="checkbox" '+(checked?'checked':'')+' onchange="togglePoint(this.checked,\''+s.id+'\')"></td><td style="font-weight:600">'+s.name+'</td><td>'+s.points+' pts<br><span class="tx tm">($'+s.cashCost.toLocaleString()+' AUD)</span></td><td>-$'+s.cashCost.toLocaleString()+' (£'+Math.round(s.cashCost*0.532).toLocaleString()+')</td><td>~$'+s.market.toLocaleString()+' (£'+Math.round(s.market*0.532).toLocaleString()+')</td><td><input type="number" class="ism" value="'+(actualCost||'')+'" placeholder="$" onchange="savePointsActual(\''+s.id+'\',+this.value);renderMoney()"></td><td style="color:'+(saving>0?'var(--green)':'var(--red)')+'">$'+(saving>0?'+':'')+saving.toLocaleString()+' (£'+(saving>0?'+':'')+Math.round(saving*0.532).toLocaleString()+')</td></tr>';
   });
   html+='</table></div>';
   
@@ -178,9 +179,9 @@ function renderPointsAllocator(){
   html+='<div class="table-wrap"><table>';
   services.forEach(function(s){if(selected[s.id])html+='<tr><td>✅ '+s.name+'</td><td>'+s.points+' pts</td><td>~$'+s.market.toLocaleString()+' AUD value</td></tr>';});
   html+='<tr style="font-weight:700"><td>Cash ('+remainPts+' pts × $31)</td><td>'+remainPts+' pts</td><td>$'+cashValue+' AUD (~$'+cashAUD+' AUD)</td></tr>';
-  html+='<tr style="font-weight:700;font-size:1.1rem;border-top:3px solid var(--border)"><td>TOTAL VALUE</td><td>310 pts</td><td style="color:var(--green)">~$'+totalValue.toLocaleString()+' AUD</td></tr>';
+  html+='<tr style="font-weight:700;font-size:1.1rem;border-top:3px solid var(--border)"><td>TOTAL VALUE</td><td>310 pts</td><td style="color:var(--green)">~$'+totalValue.toLocaleString()+' (£'+Math.round(totalValue*0.532).toLocaleString()+')</td></tr>';
   html+='</table></div>';
-  html+='<p class="ts mt2">vs taking ALL cash: ~$14,900 AUD (310 pts × $48/pt)</p>';
+  html+='<p class="ts mt2">vs taking ALL cash: ~$14,900 (£7,927)</p>';
   if(totalValue>14900)html+='<p class="ts" style="color:var(--green);font-weight:600">✅ Your selection gives you $'+(totalValue-14900).toLocaleString()+' MORE value than all-cash</p>';
   html+='</div></div>';
   return html;
@@ -266,8 +267,8 @@ function moneyDebts(){
       ${debts.map(d=>`<tr>
         <td>${d.desc}${d.monthly?' <span class="tx tm">(${fG(d.monthly)}/mo)</span>':''}</td>
         <td><input type="number" class="ism" value="${d.owed}" oninput="updDebt('${d.id}',+this.value)"></td>
-        <td><input type="number" class="ism" value="${d.paid||''}" placeholder="0" oninput="if(!state.debtPaid)state.debtPaid={};state.debtPaid['${d.id}']=+this.value;save();document.getElementById('dl_${d.id}').textContent=fG(Math.max(0,${d.owed}-(+this.value)))"></td>
-        <td id="dl_${d.id}" style="font-weight:600;color:${d.left>0?'var(--red)':'var(--green)'}">${fG(d.left)}</td>
+        <td><input type="number" class="ism" value="${d.paid||''}" placeholder="0" oninput="if(!state.debtPaid)state.debtPaid={};state.debtPaid['${d.id}']=+this.value;save();document.getElementById('dl_${d.id}').textContent=fGBP(Math.max(0,${d.owed}-(+this.value)))"></td>
+        <td id="dl_${d.id}" style="font-weight:600;color:${d.left>0?'var(--red)':'var(--green)'}">${fGBP(d.left)}</td>
         <td class="tx tm">${d.note||''}</td></tr>`).join('')}</table></div>
       <h3>Add New Debt</h3>
       <div class="flex g2 fw aic">
