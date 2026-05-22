@@ -179,25 +179,28 @@ function showSuburbDetail(name){
   var si=SCHOOL_INFO[name]||{};
   var d=(state.suburbData||{})[name]||{};
   var bed4mo=Math.round(parseInt(s.bed4)*52/12);
+  var bed3mo=Math.round(parseInt(s.bed3)*52/12);
   var disposable=9571-bed4mo-3515;
+  var mapUrl='https://www.google.com/maps/search/'+s.name.replace(/ /g,'+')+'+Victoria+Australia/@'+s.lat+','+s.lng+',14z';
+  var domainUrl='https://www.domain.com.au/rent/'+s.name.toLowerCase().replace(/ /g,'-')+'-vic-'+s.pc+'/?bedrooms=3-any&propertytype=house';
   var el=document.getElementById('suburbMapInfo');
   if(!el)return;
   el.style.display='block';
-  el.innerHTML='<div class="flex jcb aic"><h3>'+s.name+'</h3><button class="btn btn-o" style="padding:2px 8px" onclick="this.parentElement.parentElement.style.display=\'none\'">✕</button></div>'+
-    '<p class="tx tm">'+s.vibe+'</p>'+
-    '<div style="margin:8px 0;font-size:.85rem">'+
-    '<div>💰 <strong>4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')</strong></div>'+
-    '<div>🚆 Train to CBD: '+s.train+' min</div>'+
-    '<div>🏖️ Beach: '+s.beach+'</div>'+
-    '<div>🏫 '+s.school+' — '+s.schoolRating+'</div>'+
-    (si.extra?'<div>✨ '+si.extra+'</div>':'')+
-    '<div>☕ '+s.cafes+'</div>'+
-    '<div>🛍️ '+s.shops+'</div>'+
-    '<div>🌳 '+s.outdoors+'</div>'+
-    '<div>👨‍👩‍👧‍👦 '+s.community+'</div>'+
-    '<div style="margin-top:4px">💰 Disposable: ~$'+disposable+'/mo (£'+Math.round(disposable*0.532)+')</div>'+
+  el.innerHTML='<div class="flex jcb aic"><h2 style="margin:0">'+s.name+'</h2><button class="btn btn-o" style="padding:4px 10px" onclick="this.parentElement.parentElement.style.display=\'none\'">✕ Close</button></div>'+
+    '<p class="ts tm">'+s.vibe+'</p>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">'+
+    '<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem">💰 Rent</h3><div style="font-size:.9rem"><strong>4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')</strong><br>3-bed: $'+bed3mo+'/mo (£'+Math.round(bed3mo*0.532)+')<br><span class="tx tm">($'+s.bed4+'/wk | $'+s.bed3+'/wk)</span></div></div>'+
+    '<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem">💰 Budget</h3><div style="font-size:.9rem">Disposable: <strong>$'+disposable+'/mo (£'+Math.round(disposable*0.532)+')</strong><br><span class="tx tm">After all expenses on $159k salary</span></div></div>'+
     '</div>'+
-    '<button class="btn btn-p" style="margin-top:8px;font-size:.8rem" onclick="addSuburbToShortlist(\''+name+'\')">⭐ Add to Shortlist</button>';
+    '<div class="card" style="margin:8px 0;padding:12px"><h3 style="font-size:.9rem">🚆 Location</h3><div style="font-size:.85rem">Train to CBD (MEL12): <strong>'+s.train+' min</strong><br>Beach: <strong>'+s.beach+'</strong><br>Garden: '+s.garden+'</div></div>'+
+    '<div class="card" style="margin:8px 0;padding:12px"><h3 style="font-size:.9rem">🏫 School</h3><div style="font-size:.85rem"><a href="'+s.schoolLink+'" target="_blank" style="color:var(--accent)"><strong>'+s.school+'</strong></a><br>'+s.schoolRating+'<br>'+(si.students?'👥 '+si.students+' · '+si.type+'<br>':'')+( si.extra?'✨ '+si.extra:'')+'</div></div>'+
+    '<div class="card" style="margin:8px 0;padding:12px"><h3 style="font-size:.9rem">☕ Lifestyle</h3><div style="font-size:.85rem"><strong>Cafes:</strong> '+s.cafes+'<br><strong>Shopping:</strong> '+s.shops+'<br><strong>Outdoors:</strong> '+s.outdoors+'<br><strong>Community:</strong> '+s.community+'</div></div>'+
+    '<div class="flex g2 fw" style="margin-top:12px">'+
+    '<a href="'+mapUrl+'" target="_blank" class="btn btn-o" style="font-size:.78rem">📍 Google Maps</a>'+
+    '<a href="'+domainUrl+'" target="_blank" class="btn btn-o" style="font-size:.78rem">🏠 Browse Listings</a>'+
+    '<a href="'+s.schoolLink+'" target="_blank" class="btn btn-o" style="font-size:.78rem">🏫 School Info</a>'+
+    '<button class="btn btn-p" style="font-size:.78rem" onclick="addSuburbToShortlist(\''+name+'\')">⭐ Add to Shortlist</button>'+
+    '</div>';
   el.scrollIntoView({behavior:'smooth'});
 }
 
