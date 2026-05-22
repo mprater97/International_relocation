@@ -204,7 +204,14 @@ function showSuburbDetail(name){
 
 function renderSuburbsInteractive(){
   var sd=state.suburbData||{};
-  var html='<div class="card"><h2>🏘️ Melbourne Suburbs — All Info</h2><p class="tx tm mb2">Each suburb has everything: price, school, lifestyle, budget. Tap ℹ️ to expand details.</p></div>';
+  var html='<div class="card"><h2>🏘️ Melbourne Suburbs</h2><div class="flex g2 mb2"><button class="btn '+(suburbView==='map'?'btn-p':'btn-o')+'" onclick="suburbView=\'map\';renderSuburbsInteractive()">🗺️ Map View</button><button class="btn '+(suburbView==='list'?'btn-p':'btn-o')+'" onclick="suburbView=\'list\';renderSuburbsInteractive()">📋 List View</button></div></div>';
+  if(suburbView==='map'){
+    html+='<div id="suburbMap" style="height:60vh;min-height:350px;border-radius:14px;margin-bottom:16px"></div>';
+    html+='<div id="suburbMapInfo" class="card" style="display:none"></div>';
+    document.getElementById('cmpContent').innerHTML=html;
+    setTimeout(initSuburbMap,100);
+    return;
+  }
   
   
   // Local tips card
