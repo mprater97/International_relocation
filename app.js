@@ -49,8 +49,8 @@ function getStart(){if(state.auStart){const d=new Date(state.auStart);d.setDate(
 function wkDate(w){const d=new Date(getStart());d.setDate(d.getDate()+(w-1)*7);return d}
 function fd(d){return d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}
 function fdf(d){return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}
-function fG(v){var gbp=Math.round(v*0.532);return'£'+gbp.toLocaleString()+' ($'+Math.round(v).toLocaleString()+' AUD)'}
-function fA(v){return'$'+Math.round(v).toLocaleString()+' AUD'}
+function fG(v){var gbp=Math.round(v*0.532);return'$'+Math.round(v).toLocaleString()+' (£'+gbp.toLocaleString()+')'}
+function fA(v){var gbp=Math.round(v*0.532);return'$'+Math.round(v).toLocaleString()+' (£'+gbp.toLocaleString()+')'}
 function curWk(){const n=new Date(),d=Math.floor((n-getStart())/(7*864e5));return Math.max(1,Math.min(22,d+1))}
 function daysTo(s){if(!s)return null;return Math.ceil((new Date(s)-new Date())/(864e5))}
 function getBudget(){

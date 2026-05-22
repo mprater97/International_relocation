@@ -110,8 +110,8 @@ var SUBURBS_DATA=[
   {name:'Brighton',cafes:'Church St cafes, Bay St restaurants, wine bars',shops:'Church St boutiques, Bay St, 15 min Chadstone',outdoors:'Brighton Beach (bathing boxes), Half Moon Bay, coastal walk',community:'Upmarket, leafy, private schools nearby',school:'Brighton SC',schoolRating:'VCE median 32 — Very Good',schoolLink:'https://www.findmyschool.vic.gov.au',pc:'3186',bed3:'850–1000',bed4:'1000–1300',train:25,beach:'ON beach',garden:'Yes',vibe:'Iconic bathing boxes, upmarket',lat:-37.907,lng:144.987},
   {name:'Mornington',cafes:'Main St cafes, wineries, breweries, brunch culture',shops:'Main St boutiques, Mornington Central',outdoors:'Beach, Mills Beach, pier, coastal walks, hot springs nearby',community:'Peninsula village, markets, wineries, strong community',school:'Mornington SC',schoolRating:'VCE median 27 — Good',schoolLink:'https://www.findmyschool.vic.gov.au',pc:'3931',bed3:'580–680',bed4:'680–800',train:70,beach:'ON beach',garden:'Yes ★',vibe:'Village, wineries, pier, markets',lat:-38.218,lng:145.038},
   {name:'Mt Martha',cafes:'Quiet local cafes, near Mornington Main St',shops:'Near Mornington Central',outdoors:'Beautiful beaches, bushland walks, Briars wildlife',community:'Quiet, nature-focused, families',school:'Mornington SC',schoolRating:'VCE median 27 — Good',schoolLink:'https://www.findmyschool.vic.gov.au',pc:'3934',bed3:'620–700',bed4:'700–850',train:75,beach:'ON beach',garden:'Yes ★',vibe:'Quiet, beautiful beaches, bushland',lat:-38.27,lng:145.02},
-  {name:'Richmond',pc:'3121',bed3:'600-750',bed4:'750-950',train:5,beach:'20 min',garden:'Some',vibe:'Amazon popular. Cafes, shops, parks. Inner city but residential',lat:-37.818,lng:144.998,school:'Richmond High',schoolRating:'VCE median 28 — Good',schoolLink:'https://www.google.com/search?q=Richmond+High+School+Melbourne',cafes:'Bridge Rd + Swan St — huge cafe scene, Vietnamese food hub',shops:'Bridge Rd, Victoria Gardens centre',outdoors:'Yarra River trails, Burnley Park, Botanic Gardens nearby',community:'Young professionals + families, diverse, Amazon crowd'},
-  {name:'Windsor',pc:'3181',bed3:'550-700',bed4:'700-900',train:8,beach:'15 min (St Kilda)',garden:'Some',vibe:'Quieter than St Kilda. Nice pubs, cafes, parks',lat:-37.856,lng:144.991,school:'Albert Park College',schoolRating:'VCE median 29 — Good',schoolLink:'https://www.google.com/search?q=Albert+Park+College+Melbourne',cafes:'Chapel St south — quieter cafes, wine bars, brunch',shops:'Chapel St, Prahran Market',outdoors:'Albert Park Lake (F1 track!), Fawkner Park, St Kilda beach 15 min',community:'Quieter St Kilda alternative, families + young professionals'}
+  {name:'Richmond',pc:'3121',bed3:'600–750',bed4:'750–950',train:5,beach:'20 min',garden:'Some',vibe:'Amazon popular. Cafes, shops, parks. Inner city but residential',lat:-37.818,lng:144.998,school:'Richmond High',schoolRating:'VCE median 28 — Good',schoolLink:'https://www.google.com/search?q=Richmond+High+School+Melbourne',cafes:'Bridge Rd + Swan St — huge cafe scene, Vietnamese food hub',shops:'Bridge Rd, Victoria Gardens centre',outdoors:'Yarra River trails, Burnley Park, Botanic Gardens nearby',community:'Young professionals + families, diverse, Amazon crowd'},
+  {name:'Windsor',pc:'3181',bed3:'550–700',bed4:'700–900',train:8,beach:'15 min (St Kilda)',garden:'Some',vibe:'Quieter than St Kilda. Nice pubs, cafes, parks',lat:-37.856,lng:144.991,school:'Albert Park College',schoolRating:'VCE median 29 — Good',schoolLink:'https://www.google.com/search?q=Albert+Park+College+Melbourne',cafes:'Chapel St south — quieter cafes, wine bars, brunch',shops:'Chapel St, Prahran Market',outdoors:'Albert Park Lake (F1 track!), Fawkner Park, St Kilda beach 15 min',community:'Quieter St Kilda alternative, families + young professionals'}
 ];
 
 var SCHOOL_INFO={
@@ -181,14 +181,14 @@ function renderSuburbsInteractive(){
       html+='<div class="flex jcb aic fw" style="gap:8px">';
       html+='<div><a href="'+mapUrl+'" target="_blank" style="color:var(--accent);font-weight:700;font-size:1rem">'+s.name+' 📍</a>';
       html+='<div class="tx tm">'+s.vibe+'</div></div>';
-      html+='<div style="text-align:right"><div style="font-weight:700">4-bed: $'+s.bed4+'/wk</div><div class="tx tm">3-bed: $'+s.bed3+'/wk</div>';
+      var bed4mid=parseInt(s.bed4);var bed3mid=parseInt(s.bed3);html+='<div style="text-align:right"><div style="font-weight:700">4-bed: $'+s.bed4+'/wk (£'+Math.round(bed4mid*0.532)+')</div><div class="tx tm">3-bed: $'+s.bed3+'/wk (£'+Math.round(bed3mid*0.532)+')</div>';
       html+='<div class="tx tm">'+s.train+' min train · '+s.beach+'</div></div>';
       html+='</div>';
       
       // Quick stats row
       html+='<div class="flex g2 fw mt2" style="font-size:.78rem">';
       html+='<span>🏫 <a href="'+(s.schoolLink||'')+'" target="_blank" style="color:var(--accent)">'+( s.school||'—')+'</a> ('+( s.schoolRating||'—')+')</span>';
-      html+='<span>💰 ~$'+disposable+'/mo disposable</span>';
+      html+='<span>💰 ~$'+disposable+'/mo (£'+Math.round(disposable*0.532)+') disposable</span>';
       html+='</div>';
       
       // Expandable detail
