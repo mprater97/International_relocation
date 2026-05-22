@@ -214,9 +214,9 @@ function showSuburbDetail(name){
       var lifestyle=Math.round((s.walk+(s.safety||3))/2);
       var financial=parseInt(s.bed4)<=600?5:parseInt(s.bed4)<=700?4:parseInt(s.bed4)<=850?3:parseInt(s.bed4)<=1000?2:1;
       var social=s.walk>=4?4:s.walk>=3?3:2;
-      var weighted=((commute*30+family*25+lifestyle*20+financial*15+social*10)/100*5).toFixed(1);
+      var weighted=((family*30+lifestyle*25+financial*20+commute*15+social*10)/100*5).toFixed(1);
       return '<div class="card" style="margin:8px 0;padding:12px"><h3 style="font-size:.9rem">🎯 Weighted Score — '+weighted+'/5</h3>'+
-        '<div style="font-size:.75rem;color:var(--muted);margin-bottom:6px">Commute 30% | Family & Safety 25% | Lifestyle 20% | Financial 15% | Social 10%</div>'+
+        '<div style="font-size:.75rem;color:var(--muted);margin-bottom:6px">Family & Safety 30% | Lifestyle 25% | Financial 20% | Commute 15% | Social 10%</div>'+
         '<div style="font-size:.85rem;display:grid;grid-template-columns:1fr 1fr;gap:4px">'+
         '<div>🚆 Commute: '+commute+'/5</div>'+
         '<div>👨‍👩‍👧‍👦 Family: '+family+'/5</div>'+
