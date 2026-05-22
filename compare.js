@@ -137,6 +137,71 @@ var SCHOOL_INFO={
   'Mt Martha':{students:'~1,400',type:'Co-ed Yr 7–12 (Yr 7–12, both kids attend)',extra:'Same as Mornington SC — surfing program, outdoor ed, marine studies. Peninsula lifestyle school'},
 };
 
+
+var suburbView='list';
+function initSuburbMap(){
+  var mapEl=document.getElementById('suburbMap');
+  if(!mapEl||!window.L)return;
+  var map=L.map('suburbMap').setView([-37.95,145.05],11);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:16}).addTo(map);
+  
+  var colors={'🏖️ BUDGET — Beach':'#22c55e','🏡 BUDGET — Inland':'#16a34a','🏙️ INNER — Amazon Popular':'#3b82f6','🌊 MID — Bayside':'#06b6d4','🏫 MID — Eastern':'#8b5cf6','💎 PREMIUM':'#f59e0b','🍷 PENINSULA':'#ec4899'};
+  var tiers=[
+    {name:'🏖️ BUDGET — Beach',suburbs:['Seaford','Carrum','Frankston','Frankston South']},
+    {name:'🏡 BUDGET — Inland',suburbs:['Langwarrin','Karingal','Cranbourne']},
+    {name:'🏙️ INNER — Amazon Popular',suburbs:['Richmond','Windsor']},
+    {name:'🌊 MID — Bayside',suburbs:['Mordialloc','Aspendale','Mentone','Cheltenham']},
+    {name:'🏫 MID — Eastern',suburbs:['Glen Waverley','Mt Waverley','Box Hill']},
+    {name:'💎 PREMIUM',suburbs:['Sandringham','Brighton']},
+    {name:'🍷 PENINSULA',suburbs:['Mornington','Mt Martha']},
+  ];
+  
+  tiers.forEach(function(tier){
+    var color=colors[tier.name]||'#94a3b8';
+    tier.suburbs.forEach(function(sname){
+      var s=SUBURBS_DATA.find(function(x){return x.name===sname});
+      if(!s)return;
+      var bed4mo=Math.round(parseInt(s.bed4)*52/12);
+      var icon=L.divIcon({html:'<div style="background:'+color+';width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,.3)"></div>',iconSize:[14,14],iconAnchor:[7,7],className:''});
+      var marker=L.marker([s.lat,s.lng],{icon:icon}).addTo(map);
+      marker.bindPopup('<div style="min-width:200px"><strong>'+s.name+'</strong><br><span style="font-size:.85rem">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')<br>Train: '+s.train+' min | Beach: '+s.beach+'<br>School: '+s.school+' ('+s.schoolRating+')</span><br><button onclick="showSuburbDetail(\''+s.name+'\')" style="margin-top:4px;padding:4px 8px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.75rem">View full details</button></div>');
+    });
+  });
+  
+  // Add MEL12 office marker
+  var officeIcon=L.divIcon({html:'<div style="background:#ef4444;width:18px;height:18px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font-size:10px">🏢</div>',iconSize:[18,18],iconAnchor:[9,9],className:''});
+  L.marker([-37.8178,144.9581],{icon:officeIcon}).addTo(map).bindPopup('<strong>Amazon MEL12</strong><br>555 Collins St, Melbourne CBD');
+}
+
+function showSuburbDetail(name){
+  var s=SUBURBS_DATA.find(function(x){return x.name===name});
+  if(!s)return;
+  var si=SCHOOL_INFO[name]||{};
+  var d=(state.suburbData||{})[name]||{};
+  var bed4mo=Math.round(parseInt(s.bed4)*52/12);
+  var disposable=9571-bed4mo-3515;
+  var el=document.getElementById('suburbMapInfo');
+  if(!el)return;
+  el.style.display='block';
+  el.innerHTML='<div class="flex jcb aic"><h3>'+s.name+'</h3><button class="btn btn-o" style="padding:2px 8px" onclick="this.parentElement.parentElement.style.display=\'none\'">✕</button></div>'+
+    '<p class="tx tm">'+s.vibe+'</p>'+
+    '<div style="margin:8px 0;font-size:.85rem">'+
+    '<div>💰 <strong>4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')</strong></div>'+
+    '<div>🚆 Train to CBD: '+s.train+' min</div>'+
+    '<div>🏖️ Beach: '+s.beach+'</div>'+
+    '<div>🏫 '+s.school+' — '+s.schoolRating+'</div>'+
+    (si.extra?'<div>✨ '+si.extra+'</div>':'')+
+    '<div>☕ '+s.cafes+'</div>'+
+    '<div>🛍️ '+s.shops+'</div>'+
+    '<div>🌳 '+s.outdoors+'</div>'+
+    '<div>👨‍👩‍👧‍👦 '+s.community+'</div>'+
+    '<div style="margin-top:4px">💰 Disposable: ~$'+disposable+'/mo (£'+Math.round(disposable*0.532)+')</div>'+
+    '</div>'+
+    '<button class="btn btn-p" style="margin-top:8px;font-size:.8rem" onclick="addSuburbToShortlist(\''+name+'\')">⭐ Add to Shortlist</button>';
+  el.scrollIntoView({behavior:'smooth'});
+}
+
+
 function renderSuburbsInteractive(){
   var sd=state.suburbData||{};
   var html='<div class="card"><h2>🏘️ Melbourne Suburbs — All Info</h2><p class="tx tm mb2">Each suburb has everything: price, school, lifestyle, budget. Tap ℹ️ to expand details.</p></div>';
@@ -231,6 +296,8 @@ function renderSuburbsInteractive(){
     });
     html+='</div>';
   });
+  
+  // end list view
   
   // Browse listings
   html+='<div class="card"><h3>🔍 Browse Listings on Domain.com.au</h3><div class="flex g2 fw">';
