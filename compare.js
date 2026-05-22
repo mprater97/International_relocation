@@ -208,6 +208,26 @@ function showSuburbDetail(name){
     '<div style="margin-top:6px;color:var(--green)"><strong>✅ Pros:</strong> '+s.pros+'</div>'+
     '<div style="color:var(--orange)"><strong>⚠️ Cons:</strong> '+s.cons+'</div>'+
     '</div></div>'+
+    (function(){
+      var commute=s.train<=15?5:s.train<=30?4:s.train<=45?3:s.train<=60?2:1;
+      var family=s.familyScore;
+      var lifestyle=Math.round((s.walk+(s.safety||3))/2);
+      var financial=parseInt(s.bed4)<=600?5:parseInt(s.bed4)<=700?4:parseInt(s.bed4)<=850?3:parseInt(s.bed4)<=1000?2:1;
+      var social=s.walk>=4?4:s.walk>=3?3:2;
+      var weighted=((commute*30+family*25+lifestyle*20+financial*15+social*10)/100*5).toFixed(1);
+      return '<div class="card" style="margin:8px 0;padding:12px"><h3 style="font-size:.9rem">🎯 Weighted Score — '+weighted+'/5</h3>'+
+        '<div style="font-size:.75rem;color:var(--muted);margin-bottom:6px">Commute 30% | Family & Safety 25% | Lifestyle 20% | Financial 15% | Social 10%</div>'+
+        '<div style="font-size:.85rem;display:grid;grid-template-columns:1fr 1fr;gap:4px">'+
+        '<div>🚆 Commute: '+commute+'/5</div>'+
+        '<div>👨‍👩‍👧‍👦 Family: '+family+'/5</div>'+
+        '<div>☕ Lifestyle: '+lifestyle+'/5</div>'+
+        '<div>💰 Financial: '+financial+'/5</div>'+
+        '<div>🤝 Social: '+social+'/5</div>'+
+        '</div>'+
+        '<div class="pb mt2" style="height:12px"><div class="pf" style="width:'+(weighted/5*100)+'%;background:var(--green)"></div></div>'+
+        '<div style="font-size:.7rem;color:var(--muted);margin-top:4px">Friction check: '+(s.walk>=4&&s.train<=40?'✅ Low daily friction — walkable + reasonable commute':s.walk>=3&&s.train<=55?'⚡ Moderate friction — some car dependency':'⚠️ Higher friction — car essential, longer commute')+'</div>'+
+        '</div>';
+    })()+
     '<div class="flex g2 fw" style="margin-top:12px">'+
     '<a href="'+mapUrl+'" target="_blank" class="btn btn-o" style="font-size:.78rem">📍 Google Maps</a>'+
     '<a href="'+domainUrl+'" target="_blank" class="btn btn-o" style="font-size:.78rem">🏠 Browse Listings</a>'+
