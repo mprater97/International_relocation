@@ -182,7 +182,7 @@ function renderSuburbsInteractive(){
       html+='<div class="flex jcb aic fw" style="gap:8px">';
       html+='<div><a href="'+mapUrl+'" target="_blank" style="color:var(--accent);font-weight:700;font-size:1rem">'+s.name+' 📍</a>';
       html+='<div class="tx tm">'+s.vibe+'</div></div>';
-      var bed4mid=parseInt(s.bed4);var bed3mid=parseInt(s.bed3);html+='<div style="text-align:right"><div style="font-weight:700">4-bed: $'+s.bed4+'/wk (£'+Math.round(bed4mid*0.532)+')</div><div class="tx tm">3-bed: $'+s.bed3+'/wk (£'+Math.round(bed3mid*0.532)+')</div>';
+      var bed4mid=parseInt(s.bed4);var bed3mid=parseInt(s.bed3);var bed4mo=Math.round(bed4mid*52/12);var bed3mo=Math.round(bed3mid*52/12);html+='<div style="text-align:right"><div style="font-weight:700">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')</div><div class="tx tm">3-bed: $'+bed3mo+'/mo (£'+Math.round(bed3mo*0.532)+')</div><div class="tx tm" style="font-size:.65rem">($'+s.bed4+'/wk)</div>';
       html+='<div class="tx tm">'+s.train+' min train · '+s.beach+'</div></div>';
       html+='</div>';
       
