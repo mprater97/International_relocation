@@ -216,18 +216,69 @@ function renderMoney(){
 }
 
 function moneyOverview(){
-  const budget=getBudget(),fc=totalFC(),inc=totalInc();
-  const cf=cumFC(),ca=cumAct(),mx=Math.max(budget,...Object.values(cf),1);
-  document.getElementById('moneySub').innerHTML=renderPointsAllocator()+`
-    <div class="sg">
-      <div class="sb blue"><div class="l">Relo Cash (AUD)</div><div class="v"><input type="number" value="${budget}" style="width:100px;text-align:center;font-size:1.1rem;font-weight:700" oninput="state.lumpSum=+this.value;dbSave(renderMoney)"></div></div>
-      <div class="sb orange"><div class="l">Forecast Relo Costs</div><div class="v">${fG(fc)}</div></div>
-      <div class="sb green"><div class="l">Actual Spent</div><div class="v">${fG(totalAct())}</div></div>
-      <div class="sb ${(budget-netSpend())>0?'green':'red'}"><div class="l">Remaining</div><div class="v">${fG(budget-netSpend())}</div></div>
-    </div>
-    <div class="card"><h2>📈 Forecast vs Actual</h2>
-      
-    </div>`;
+  var budget=getBudget(),fc=totalFC();
+  var selectedServices=state.pointsSelected||{};
+  var servicesData={temp30:{pts:70,market:3600},temp45:{pts:105,market:5400},temp60:{pts:140,market:7200},shipping:{pts:190,market:2882},flights:{pts:15,market:6542},car:{pts:15,market:1050},homefind:{pts:35,market:1000}};
+  var pointsMarketCost=0;
+  Object.keys(selectedServices).forEach(function(k){if(selectedServices[k]&&servicesData[k])pointsMarketCost+=servicesData[k].market});
+  
+  var debtTotal=14946;var debtAud=Math.round(debtTotal*1.88);
+  var ukPrepCosts=6134;var auSetupCosts=12138;
+  var totalCosts=debtAud+ukPrepCosts+auSetupCosts;
+  
+  var carSale2=Math.round(14000*1.88);var carSale1=Math.round(3900*1.88);
+  var homeSales=Math.round(1500*1.88);var wagesSaved=Math.round(1000*1.88);
+  var pointsCash=budget;
+  var totalIncome=carSale2+carSale1+homeSales+wagesSaved+pointsCash;
+  var netPosition=totalIncome-totalCosts+pointsMarketCost;
+  
+  var html=renderPointsAllocator();
+  
+  html+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:16px">';
+  
+  // COSTS
+  html+='<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem;color:var(--orange)">📤 Forecast Costs</h3>';
+  html+='<div style="font-size:.78rem;line-height:2">';
+  html+='<div>Debts (£14,946): '+fG(debtAud)+'</div>';
+  html+='<div>UK property prep: '+fG(ukPrepCosts)+'</div>';
+  html+='<div>AU setup: '+fG(auSetupCosts)+'</div>';
+  if(pointsMarketCost>0)html+='<div style="color:var(--green)">Covered by points: -'+fG(pointsMarketCost)+'</div>';
+  html+='<div style="font-weight:700;border-top:1px solid var(--border);margin-top:4px;padding-top:4px">Total: '+fG(totalCosts-pointsMarketCost)+'</div>';
+  html+='</div></div>';
+  
+  // INCOME
+  html+='<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem;color:var(--green)">📥 Forecast Income</h3>';
+  html+='<div style="font-size:.78rem;line-height:2">';
+  html+='<div>Car sale 2 (£14k): '+fG(carSale2)+'</div>';
+  html+='<div>Car sale 1 (£3.9k): '+fG(carSale1)+'</div>';
+  html+='<div>Home sales (£1.5k): '+fG(homeSales)+'</div>';
+  html+='<div>Wages saved (£1k): '+fG(wagesSaved)+'</div>';
+  html+='<div>Points cash: '+fG(pointsCash)+'</div>';
+  html+='<div style="font-weight:700;border-top:1px solid var(--border);margin-top:4px;padding-top:4px">Total: '+fG(totalIncome)+'</div>';
+  html+='</div></div>';
+  
+  // POINTS
+  html+='<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem;color:var(--accent)">🎯 Points Summary</h3>';
+  html+='<div style="font-size:.78rem;line-height:2">';
+  if(selectedServices.temp30)html+='<div>✅ Housing 30d: '+fG(3600)+'</div>';
+  if(selectedServices.temp45)html+='<div>✅ Housing 45d: '+fG(5400)+'</div>';
+  if(selectedServices.temp60)html+='<div>✅ Housing 60d: '+fG(7200)+'</div>';
+  if(selectedServices.shipping)html+='<div>✅ Shipping: '+fG(2882)+'</div>';
+  if(selectedServices.flights)html+='<div>✅ Flights: '+fG(6542)+'</div>';
+  if(selectedServices.car)html+='<div>✅ Rental car: '+fG(1050)+'</div>';
+  if(selectedServices.homefind)html+='<div>✅ Home finding: '+fG(1000)+'</div>';
+  if(!Object.values(selectedServices).some(function(v){return v}))html+='<div class="tm">No services selected</div>';
+  html+='<div style="border-top:1px solid var(--border);margin-top:4px;padding-top:4px">Services: '+fG(pointsMarketCost)+'</div>';
+  html+='<div>Cash left: '+fG(pointsCash)+'</div>';
+  html+='</div></div>';
+  
+  html+='</div>';
+  
+  // NET POSITION
+  html+='<div class="card mt2" style="text-align:center;border-left:4px solid '+(netPosition>=0?'var(--green)':'var(--red)')+'"><h3>Net Position: <span style="color:'+(netPosition>=0?'var(--green)':'var(--red)')+'">'+fG(netPosition)+'</span></h3>';
+  html+='<p class="tx tm">'+(netPosition>=0?'✅ Fully funded':'⚠️ Shortfall — need additional funds')+'</p></div>';
+  
+  document.getElementById('moneySub').innerHTML=html;
 }
 
 function moneyCosts(){
