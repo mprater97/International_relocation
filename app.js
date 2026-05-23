@@ -242,7 +242,7 @@ function moneyOverview(){
   
   var html=renderPointsAllocator();
   
-  html+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:16px">';
+  html+='<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px">';
   
   // COSTS
   html+='<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem;color:var(--orange)">📤 Forecast Costs</h3>';
