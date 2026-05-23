@@ -229,38 +229,38 @@ function moneyOverview(){
   
   // COSTS
   html+='<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem;color:var(--orange)">📤 Forecast Costs</h3>';
-  html+='<div style="font-size:.78rem;line-height:2">';
-  html+='<div>Debts (£14,946): '+fG(debtAud)+'</div>';
-  html+='<div>UK property prep: '+fG(ukPrepCosts)+'</div>';
-  html+='<div>AU setup: '+fG(auSetupCosts)+'</div>';
-  if(pointsMarketCost>0)html+='<div style="color:var(--green)">Covered by points: -'+fG(pointsMarketCost)+'</div>';
-  html+='<div style="font-weight:700;border-top:1px solid var(--border);margin-top:4px;padding-top:4px">Total: '+fG(totalCosts-pointsMarketCost)+'</div>';
+  html+='<div style="display:flex;flex-direction:column;gap:6px">';
+  html+='<div style="background:rgba(239,68,68,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Debts to clear</span><strong>'+fGBP(debtTotal)+'</strong></div>';
+  html+='<div style="background:rgba(239,68,68,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>UK property prep</span><strong>'+fG(ukPrepCosts)+'</strong></div>';
+  html+='<div style="background:rgba(239,68,68,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>AU setup (bond, ship, dog)</span><strong>'+fG(auSetupCosts)+'</strong></div>';
+  if(pointsMarketCost>0)html+='<div style="background:rgba(34,197,94,.1);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;color:var(--green)"><span>Covered by points</span><strong>-'+fG(pointsMarketCost)+'</strong></div>';
+  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>TOTAL COSTS</span><span style="color:var(--orange)">'+fG(totalCosts-pointsMarketCost)+'</span></div>';
   html+='</div></div>';
   
   // INCOME
   html+='<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem;color:var(--green)">📥 Forecast Income</h3>';
-  html+='<div style="font-size:.78rem;line-height:2">';
-  html+='<div>Car sale 2 (£14k): '+fG(carSale2)+'</div>';
-  html+='<div>Car sale 1 (£3.9k): '+fG(carSale1)+'</div>';
-  html+='<div>Home sales (£1.5k): '+fG(homeSales)+'</div>';
-  html+='<div>Wages saved (£1k): '+fG(wagesSaved)+'</div>';
-  html+='<div>Points cash: '+fG(pointsCash)+'</div>';
-  html+='<div style="font-weight:700;border-top:1px solid var(--border);margin-top:4px;padding-top:4px">Total: '+fG(totalIncome)+'</div>';
+  html+='<div style="display:flex;flex-direction:column;gap:6px">';
+  html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Car sale 2 (£14k)</span><strong>'+fG(carSale2)+'</strong></div>';
+  html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Car sale 1 (£3.9k)</span><strong>'+fG(carSale1)+'</strong></div>';
+  html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Home item sales (£1.5k)</span><strong>'+fG(homeSales)+'</strong></div>';
+  html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Wages saved (£1k)</span><strong>'+fG(wagesSaved)+'</strong></div>';
+  html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Points cash</span><strong>'+fG(pointsCash)+'</strong></div>';
+  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>TOTAL INCOME</span><span style="color:var(--green)">'+fG(totalIncome)+'</span></div>';
   html+='</div></div>';
   
   // POINTS
   html+='<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem;color:var(--accent)">🎯 Points Summary</h3>';
-  html+='<div style="font-size:.78rem;line-height:2">';
-  if(selectedServices.temp30)html+='<div>✅ Housing 30d: '+fG(3600)+'</div>';
-  if(selectedServices.temp45)html+='<div>✅ Housing 45d: '+fG(5400)+'</div>';
-  if(selectedServices.temp60)html+='<div>✅ Housing 60d: '+fG(7200)+'</div>';
-  if(selectedServices.shipping)html+='<div>✅ Shipping: '+fG(2882)+'</div>';
-  if(selectedServices.flights)html+='<div>✅ Flights: '+fG(6542)+'</div>';
-  if(selectedServices.car)html+='<div>✅ Rental car: '+fG(1050)+'</div>';
-  if(selectedServices.homefind)html+='<div>✅ Home finding: '+fG(1000)+'</div>';
-  if(!Object.values(selectedServices).some(function(v){return v}))html+='<div class="tm">No services selected</div>';
-  html+='<div style="border-top:1px solid var(--border);margin-top:4px;padding-top:4px">Services: '+fG(pointsMarketCost)+'</div>';
-  html+='<div>Cash left: '+fG(pointsCash)+'</div>';
+  html+='<div style="display:flex;flex-direction:column;gap:6px">';
+  if(selectedServices.temp30)html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>✅ Housing 30 days</span><strong>'+fG(3600)+'</strong></div>';
+  if(selectedServices.temp45)html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>✅ Housing 45 days</span><strong>'+fG(5400)+'</strong></div>';
+  if(selectedServices.temp60)html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>✅ Housing 60 days</span><strong>'+fG(7200)+'</strong></div>';
+  if(selectedServices.shipping)html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>✅ Shipping</span><strong>'+fG(2882)+'</strong></div>';
+  if(selectedServices.flights)html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>✅ Flights</span><strong>'+fG(6542)+'</strong></div>';
+  if(selectedServices.car)html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>✅ Rental car</span><strong>'+fG(1050)+'</strong></div>';
+  if(selectedServices.homefind)html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>✅ Home finding</span><strong>'+fG(1000)+'</strong></div>';
+  if(!Object.values(selectedServices).some(function(v){return v}))html+='<div style="background:var(--card2);padding:8px 12px;border-radius:8px;text-align:center;color:var(--muted)">No services selected yet</div>';
+  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>Services value</span><span style="color:var(--accent)">'+fG(pointsMarketCost)+'</span></div>';
+  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>Cash remaining</span><span style="color:var(--green)">'+fG(pointsCash)+'</span></div>';
   html+='</div></div>';
   
   html+='</div>';
