@@ -213,14 +213,31 @@ function moneyOverview(){
   var pointsMarketCost=0;
   Object.keys(selectedServices).forEach(function(k){if(selectedServices[k]&&servicesData[k])pointsMarketCost+=servicesData[k].market});
   
-  var debtTotal=14946;var debtAud=Math.round(debtTotal*1.88);
-  var ukPrepCosts=6134;var auSetupCosts=12138;
+  // Dynamic calculations from actual data
+  var debts=getDebts();
+  var debtTotal=debts.reduce(function(s,d){return s+d.left},0); // remaining debt in GBP
+  var debtAud=Math.round(debtTotal*1.88);
+  
+  // Calculate costs by funding source from FORECAST_ITEMS
+  var coSep=['co_visa','co_flights','co_temp','co_tax','sep_car','sep_furniture','sep_util'];
+  var ukPrepCosts=0;var auSetupCosts=0;
+  FORECAST_ITEMS.forEach(function(i){
+    if(coSep.indexOf(i.id)>=0)return;
+    var fund=(state.funding||{})[i.id]||i.defaultFund||'lump_sum';
+    var amt=state.actuals[i.id]!=null?state.actuals[i.id]:(state.forecasts&&state.forecasts[i.id]?state.forecasts[i.id]:i.forecast);
+    if(fund==='uk_wages')ukPrepCosts+=amt;
+    else if(fund==='lump_sum')auSetupCosts+=amt;
+  });
   var totalCosts=debtAud+ukPrepCosts+auSetupCosts;
   
-  var carSale2=Math.round(14000*1.88);var carSale1=Math.round(3900*1.88);
-  var homeSales=Math.round(1500*1.88);var wagesSaved=Math.round(1000*1.88);
+  // Income - use state values so user can edit
+  var savings=state.savings||0;
+  var carSale2=state.carSale2||Math.round(14000*1.88);
+  var carSale1=state.carSale1||Math.round(3900*1.88);
+  var homeSales=state.homeSales||Math.round(1500*1.88);
+  var wagesSaved=state.wagesSaved||Math.round(1000*1.88);
   var pointsCash=budget;
-  var totalIncome=carSale2+carSale1+homeSales+wagesSaved+pointsCash;
+  var totalIncome=carSale2+carSale1+homeSales+wagesSaved+pointsCash+savings;
   var netPosition=totalIncome-totalCosts+pointsMarketCost;
   
   var html=renderPointsAllocator();
@@ -240,12 +257,13 @@ function moneyOverview(){
   // INCOME
   html+='<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem;color:var(--green)">📥 Forecast Income</h3>';
   html+='<div style="display:flex;flex-direction:column;gap:6px">';
-  html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Car sale 2 (£14k)</span><strong>'+fG(carSale2)+'</strong></div>';
-  html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Car sale 1 (£3.9k)</span><strong>'+fG(carSale1)+'</strong></div>';
-  html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Home item sales (£1.5k)</span><strong>'+fG(homeSales)+'</strong></div>';
-  html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Wages saved (£1k)</span><strong>'+fG(wagesSaved)+'</strong></div>';
+  html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Car sale 2</span><input type="number" class="ism" value="'+carSale2+'" onchange="state.carSale2=+this.value;save();renderMoney()" style="text-align:right"></div>';
+  html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Car sale 1</span><input type="number" class="ism" value="'+carSale1+'" onchange="state.carSale1=+this.value;save();renderMoney()" style="text-align:right"></div>';
+  html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Home item sales</span><input type="number" class="ism" value="'+homeSales+'" onchange="state.homeSales=+this.value;save();renderMoney()" style="text-align:right"></div>';
+  html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Wages saved</span><input type="number" class="ism" value="'+wagesSaved+'" onchange="state.wagesSaved=+this.value;save();renderMoney()" style="text-align:right"></div>';
+  html+='<div style="background:rgba(34,197,94,.1);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>💰 Savings</span><input type="number" class="ism" value="'+savings+'" placeholder="0" onchange="state.savings=+this.value;save();renderMoney()" style="text-align:right"></div>';
   html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Points cash</span><strong>'+fG(pointsCash)+'</strong></div>';
-  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>TOTAL INCOME</span><span style="color:var(--green)">'+fG(totalIncome)+'</span></div>';
+  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>TOTAL</span><span style="color:var(--green)">'+fG(totalIncome)+'</span></div>';
   html+='</div></div>';
   
   // POINTS
