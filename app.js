@@ -175,16 +175,7 @@ function renderPointsAllocator(){
   });
   html+='</table></div>';
   
-  html+='<div class="card mt2" style="border-left:4px solid var(--green)"><h2>💰 Your Allocation</h2>';
-  html+='<div class="table-wrap"><table>';
-  services.forEach(function(s){if(selected[s.id])html+='<tr><td>✅ '+s.name+'</td><td>'+s.points+' pts</td><td>~$'+s.market.toLocaleString()+' AUD value</td></tr>';});
-  html+='<tr style="font-weight:700"><td>Cash ('+remainPts+' pts × $31)</td><td>'+remainPts+' pts</td><td>$'+cashValue+' AUD (~$'+cashAUD+' AUD)</td></tr>';
-  html+='<tr style="font-weight:700;font-size:1.1rem;border-top:3px solid var(--border)"><td>TOTAL VALUE</td><td>310 pts</td><td style="color:var(--green)">~$'+totalValue.toLocaleString()+' (£'+Math.round(totalValue*0.532).toLocaleString()+')</td></tr>';
-  html+='</table></div>';
-  html+='<p class="ts mt2">vs taking ALL cash: ~$14,896 (£7,925)</p>';
-  if(totalValue>14900)html+='<p class="ts" style="color:var(--green);font-weight:600">✅ Your selection gives you $'+(totalValue-14900).toLocaleString()+' MORE value than all-cash</p>';
-  html+='</div></div>';
-  return html;
+    return html;
 }
 
 function savePointsActual(id,val){
