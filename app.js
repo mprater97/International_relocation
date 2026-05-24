@@ -201,7 +201,7 @@ function renderMoney(){
       <div class="stab ${moneySub==='uk'?'active':''}" onclick="moneySub='uk';renderMoney()">UK Costs</div>
     </div>
     <div id="moneySub"></div>`;
-  ({overview:moneyOverview,costs:moneyCosts,fx:moneyFX,uk:moneyUK})[moneySub]?.();
+  ({overview:moneyOverview,costs:moneyCosts,uk:moneyUK})[moneySub]?.();
 }
 
 
@@ -256,7 +256,9 @@ function moneyOverview(){
   // totalIncome calculated from incomeLines below
   // netPosition calculated after rendering sections
   
-  var html=renderPointsAllocator();
+  var html='<div style="background:rgba(59,130,246,.08);padding:6px 12px;border-radius:8px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;font-size:.75rem"><span>💱 Live rate: <strong>$1 AUD = £0.532</strong> | £1 = $1.88 AUD | $1 USD = $1.55 AUD</span><span id="fxLive" class="tm">fetching...</span></div>';
+  fetch("https://api.exchangerate-api.com/v4/latest/AUD").then(function(r){return r.json()}).then(function(d){var el=document.getElementById("fxLive");if(el)el.textContent="Live: £"+d.rates.GBP.toFixed(4)}).catch(function(){var el=document.getElementById("fxLive");if(el)el.textContent=""});
+  html+=renderPointsAllocator();
   
   html+='<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px">';
   
