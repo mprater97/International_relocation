@@ -197,13 +197,11 @@ function renderMoney(){
     <div class="stabs">
       <div class="stab ${moneySub==='overview'?'active':''}" onclick="moneySub='overview';renderMoney()">Overview</div>
       <div class="stab ${moneySub==='costs'?'active':''}" onclick="moneySub='costs';renderMoney()">Costs</div>
-      <div class="stab ${moneySub==='debts'?'active':''}" onclick="moneySub='debts';renderMoney()">Debts</div>
-      <div class="stab ${moneySub==='income'?'active':''}" onclick="moneySub='income';renderMoney()">Income & Sales</div>
       <div class="stab ${moneySub==='fx'?'active':''}" onclick="moneySub='fx';renderMoney()">FX Rates</div>
       <div class="stab ${moneySub==='uk'?'active':''}" onclick="moneySub='uk';renderMoney()">UK Costs</div>
     </div>
     <div id="moneySub"></div>`;
-  ({overview:moneyOverview,costs:moneyCosts,debts:moneyDebts,income:moneyIncome,fx:moneyFX,uk:moneyUK})[moneySub]?.();
+  ({overview:moneyOverview,costs:moneyCosts,fx:moneyFX,uk:moneyUK})[moneySub]?.();
 }
 
 
@@ -276,7 +274,7 @@ function moneyOverview(){
   costLines.forEach(function(item,idx){
     costTotal+=item.amount;
     var display=item.currency==='gbp'?fGBP(item.gbpAmount||Math.round(item.amount*0.532)):fG(item.amount);
-    html+='<div style="background:rgba(239,68,68,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;gap:6px"><input type="text" value="'+item.name+'" style="flex:1;background:transparent;border:none;color:var(--text);font-size:.8rem" onchange="state.costLines['+idx+'].name=this.value;save()"><input type="number" class="ism" value="'+item.amount+'" style="text-align:right" onchange="state.costLines['+idx+'].amount=+this.value;save();renderMoney()"><button class="btn btn-o" style="padding:2px 6px;color:var(--red);font-size:.7rem" onclick="state.costLines.splice('+idx+',1);save();renderMoney()">✕</button></div>';
+    html+='<div style="background:rgba(239,68,68,.08);padding:8px 12px;border-radius:8px;display:flex;align-items:center;gap:8px"><input type="text" value="'+item.name+'" style="flex:2;min-width:120px;background:transparent;border:none;border-bottom:1px dashed rgba(255,255,255,.2);color:var(--text);font-size:.8rem;padding:2px 0" onchange="state.costLines['+idx+'].name=this.value;save()"><input type="number" value="'+item.amount+'" style="flex:1;max-width:100px;text-align:right;font-weight:600;font-size:.85rem" onchange="state.costLines['+idx+'].amount=+this.value;save();renderMoney()"><button class="btn btn-o" style="padding:2px 6px;color:var(--red);font-size:.7rem" onclick="state.costLines.splice('+idx+',1);save();renderMoney()">✕</button></div>';
   });
   if(pointsMarketCost>0){costTotal-=pointsMarketCost;html+='<div style="background:rgba(34,197,94,.1);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;color:var(--green)"><span>Covered by points</span><strong>-'+fG(pointsMarketCost)+'</strong></div>';}
   html+='<div style="display:flex;gap:4px;margin-top:4px"><input type="text" id="newCostName" placeholder="+ Add cost..." style="flex:1;font-size:.75rem"><input type="number" id="newCostAmt" placeholder="$" style="width:80px;font-size:.75rem"><button class="btn btn-o" style="padding:2px 8px;font-size:.7rem" onclick="addCostLine()">+</button></div>';
@@ -297,7 +295,7 @@ function moneyOverview(){
   var incomeTotal=0;
   incomeLines.forEach(function(item,idx){
     incomeTotal+=item.amount;
-    html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;gap:6px"><input type="text" value="'+item.name+'" style="flex:1;background:transparent;border:none;color:var(--text);font-size:.8rem" onchange="state.incomeLines['+idx+'].name=this.value;save()"><input type="number" class="ism" value="'+item.amount+'" style="text-align:right" onchange="state.incomeLines['+idx+'].amount=+this.value;save();renderMoney()"><button class="btn btn-o" style="padding:2px 6px;color:var(--red);font-size:.7rem" onclick="state.incomeLines.splice('+idx+',1);save();renderMoney()">✕</button></div>';
+    html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;align-items:center;gap:8px"><input type="text" value="'+item.name+'" style="flex:2;min-width:120px;background:transparent;border:none;border-bottom:1px dashed rgba(255,255,255,.2);color:var(--text);font-size:.8rem;padding:2px 0" onchange="state.incomeLines['+idx+'].name=this.value;save()"><input type="number" value="'+item.amount+'" style="flex:1;max-width:100px;text-align:right;font-weight:600;font-size:.85rem" onchange="state.incomeLines['+idx+'].amount=+this.value;save();renderMoney()"><button class="btn btn-o" style="padding:2px 6px;color:var(--red);font-size:.7rem" onclick="state.incomeLines.splice('+idx+',1);save();renderMoney()">✕</button></div>';
   });
   html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Points cash</span><strong>'+fG(pointsCash)+'</strong></div>';
   incomeTotal+=pointsCash;
