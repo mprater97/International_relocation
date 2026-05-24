@@ -326,6 +326,30 @@ function moneyOverview(){
   html+='<div class="card mt2" style="text-align:center;border-left:4px solid '+(netPosition>=0?'var(--green)':'var(--red)')+'"><h3>Net Position: <span style="color:'+(netPosition>=0?'var(--green)':'var(--red)')+'">'+fG(netPosition)+'</span></h3>';
   html+='<p class="tx tm">'+(netPosition>=0?'✅ Fully funded — surplus of '+fG(netPosition):'⚠️ Shortfall of '+fG(Math.abs(netPosition)))+'</p></div>';
   
+  // MONTHLY DISPOSABLE INCOME
+  var monthlyNet=9571; // $AUD net salary
+  var monthlyExpenses=0;
+  var expenseBreakdown='';
+  MONTHLY_AU.forEach(function(item){
+    monthlyExpenses+=item.amount;
+    expenseBreakdown+='<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>'+item.desc+'</span><span>'+fG(item.amount)+'</span></div>';
+  });
+  var disposable=monthlyNet-monthlyExpenses;
+  html+='<div class="card mt2" style="border-left:4px solid var(--accent)">';
+  html+='<div style="display:flex;justify-content:space-between;align-items:center"><h3>Monthly Disposable Income</h3><button class="btn btn-o" style="font-size:.7rem;padding:4px 8px" onclick="document.getElementById(\'expPopup\').style.display=document.getElementById(\'expPopup\').style.display===\'block\'?\'none\':\'block\'">📋 What\'s included?</button></div>';
+  html+='<div style="display:flex;justify-content:space-around;margin-top:8px;text-align:center">';
+  html+='<div><div class="tm" style="font-size:.7rem">Net Salary</div><div style="font-size:1.1rem;font-weight:700;color:var(--green)">'+fG(monthlyNet)+'</div></div>';
+  html+='<div style="font-size:1.5rem;color:var(--muted)">−</div>';
+  html+='<div><div class="tm" style="font-size:.7rem">Living Costs</div><div style="font-size:1.1rem;font-weight:700;color:var(--orange)">'+fG(monthlyExpenses)+'</div></div>';
+  html+='<div style="font-size:1.5rem;color:var(--muted)">=</div>';
+  html+='<div><div class="tm" style="font-size:.7rem">Disposable</div><div style="font-size:1.1rem;font-weight:700;color:'+(disposable>=0?'var(--green)':'var(--red)')+'">'+fG(disposable)+'</div></div>';
+  html+='</div>';
+  html+='<div id="expPopup" style="display:none;margin-top:12px;max-height:300px;overflow-y:auto;font-size:.78rem">';
+  html+='<div style="font-weight:600;margin-bottom:6px">Monthly expenses breakdown:</div>';
+  html+=expenseBreakdown;
+  html+='<div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:700"><span>TOTAL</span><span>'+fG(monthlyExpenses)+'</span></div>';
+  html+='</div></div>';
+  
   document.getElementById('moneySub').innerHTML=html;
 }
 
