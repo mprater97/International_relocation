@@ -170,8 +170,9 @@ function initSuburbMap(){
       var mc=s.train<=15?5:s.train<=30?4:s.train<=45?3:s.train<=60?2:1;
       var mf=s.familyScore;var ml=Math.round((s.walk+(s.safety||3))/2);
       var mfi=parseInt(s.bed4)<=600?5:parseInt(s.bed4)<=700?4:parseInt(s.bed4)<=850?3:parseInt(s.bed4)<=1000?2:1;
-      var ms=s.walk>=4?4:s.walk>=3?3:2;
-      var mw=((mf*30+ml*25+mfi*17.5+mc*17.5+ms*10)/100).toFixed(1);
+      var mb=s.beach==='ON beach'?5:/^5/.test(s.beach)?4:/^[89]|^1[012]/.test(s.beach)?3:/^1[3-9]|^2[0-5]/.test(s.beach)?2:1;
+      var mvce=parseInt((s.schoolRating||'').match(/\d+/)||[0]);var msc=mvce>=32?5:mvce>=29?4:mvce>=27?3:mvce>=25?2:1;
+      var mw=((mf*25+ml*20+mfi*17.5+mc*17.5+mb*10+msc*10)/100).toFixed(1);
       var mwc=mw>=4?'#16a34a':mw>=3?'#3b82f6':'#6b7280';
       marker.bindPopup('<div style="min-width:200px"><strong>'+s.name+'</strong> <span style="background:'+mwc+';color:#fff;padding:1px 6px;border-radius:8px;font-size:.7rem">'+mw+'/5</span><br><span style="font-size:.85rem">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')<br>Train: '+s.train+' min | Beach: '+s.beach+'<br>School: '+s.school+' ('+s.schoolRating+')</span><br><button onclick="showSuburbDetail(\''+s.name+'\')" style="margin-top:4px;padding:4px 8px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.75rem">View full details</button></div>');
     });
@@ -222,16 +223,18 @@ function showSuburbDetail(name){
       var family=s.familyScore;
       var lifestyle=Math.round((s.walk+(s.safety||3))/2);
       var financial=parseInt(s.bed4)<=600?5:parseInt(s.bed4)<=700?4:parseInt(s.bed4)<=850?3:parseInt(s.bed4)<=1000?2:1;
-      var social=s.walk>=4?4:s.walk>=3?3:2;
-      var weighted=((family*30+lifestyle*25+financial*17.5+commute*17.5+social*10)/100).toFixed(1);
+      var beach=s.beach==='ON beach'?5:/^5/.test(s.beach)?4:/^[89]|^1[012]/.test(s.beach)?3:/^1[3-9]|^2[0-5]/.test(s.beach)?2:1;
+      var vce=parseInt((s.schoolRating||'').match(/\d+/)||[0]);var school=vce>=32?5:vce>=29?4:vce>=27?3:vce>=25?2:1;
+      var weighted=((family*25+lifestyle*20+financial*17.5+commute*17.5+beach*10+school*10)/100).toFixed(1);
       return '<div class="card" style="margin:8px 0;padding:12px"><h3 style="font-size:.9rem">🎯 Weighted Score — '+weighted+'/5</h3>'+
-        '<div style="font-size:.75rem;color:var(--muted);margin-bottom:6px">Family & Safety 30% | Lifestyle 25% | Financial 17.5% | Commute 17.5% | Social 10%</div>'+
-        '<div style="font-size:.85rem;display:grid;grid-template-columns:1fr 1fr;gap:4px">'+
-        '<div>🚆 Commute: '+commute+'/5</div>'+
+        '<div style="font-size:.75rem;color:var(--muted);margin-bottom:6px">Family 25% | Lifestyle 20% | Financial 17.5% | Commute 17.5% | Beach 10% | School 10%</div>'+
+        '<div style="font-size:.85rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">'+
         '<div>👨‍👩‍👧‍👦 Family: '+family+'/5</div>'+
         '<div>☕ Lifestyle: '+lifestyle+'/5</div>'+
         '<div>💰 Financial: '+financial+'/5</div>'+
-        '<div>🤝 Social: '+social+'/5</div>'+
+        '<div>🚆 Commute: '+commute+'/5</div>'+
+        '<div>🏖️ Beach: '+beach+'/5</div>'+
+        '<div>🎓 School: '+school+'/5</div>'+
         '</div>'+
         '<div class="pb mt2" style="height:12px"><div class="pf" style="width:'+(weighted*20)+'%;background:var(--green)"></div></div>'+
         '<div style="font-size:.7rem;color:var(--muted);margin-top:4px">Friction check: '+(s.walk>=4&&s.train<=40?'✅ Low daily friction — walkable + reasonable commute':s.walk>=3&&s.train<=55?'⚡ Moderate friction — some car dependency':'⚠️ Higher friction — car essential, longer commute')+'</div>'+
@@ -249,7 +252,7 @@ function showSuburbDetail(name){
 
 function renderSuburbsInteractive(){
   var sd=state.suburbData||{};
-  var html='<div class="card"><h2>🏘️ Melbourne Suburbs</h2><div class="flex g2 mb2"><button class="btn '+(suburbView==='map'?'btn-p':'btn-o')+'" onclick="suburbView=\'map\';renderSuburbsInteractive()">🗺️ Map View</button><button class="btn '+(suburbView==='list'?'btn-p':'btn-o')+'" onclick="suburbView=\'list\';renderSuburbsInteractive()">📋 List View</button></div><details style="margin-top:8px"><summary style="cursor:pointer;font-size:.8rem;color:var(--accent);font-weight:600">🎯 How scores are calculated</summary><div style="font-size:.75rem;margin-top:8px;line-height:1.8"><div style="margin-bottom:6px"><strong>Weighted Score /5</strong> = Family 30% + Lifestyle 25% + Financial 17.5% + Commute 17.5% + Social 10%</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px"><div>👨‍👩‍👧‍👦 <strong>Family (30%)</strong> — safety, schools, parks, family-friendly</div><div>☕ <strong>Lifestyle (25%)</strong> — walkability + safety average</div><div>💰 <strong>Financial (17.5%)</strong> — rent affordability (4-bed price)</div><div>🚆 <strong>Commute (17.5%)</strong> — train time to CBD</div><div>🤝 <strong>Social (10%)</strong> — walkability to cafes, shops, community</div></div><div style="margin-top:6px"><span style="background:#16a34a;color:#fff;padding:1px 6px;border-radius:8px;font-size:.65rem">4.0+ Great</span> <span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:.65rem">3.0–3.9 Good</span> <span style="background:#6b7280;color:#fff;padding:1px 6px;border-radius:8px;font-size:.65rem">&lt;3.0 Weaker</span></div></div></details></div>';
+  var html='<div class="card"><h2>🏘️ Melbourne Suburbs</h2><div class="flex g2 mb2"><button class="btn '+(suburbView==='map'?'btn-p':'btn-o')+'" onclick="suburbView=\'map\';renderSuburbsInteractive()">🗺️ Map View</button><button class="btn '+(suburbView==='list'?'btn-p':'btn-o')+'" onclick="suburbView=\'list\';renderSuburbsInteractive()">📋 List View</button></div><details style="margin-top:8px"><summary style="cursor:pointer;font-size:.8rem;color:var(--accent);font-weight:600">🎯 How scores are calculated</summary><div style="font-size:.75rem;margin-top:8px;line-height:1.8"><div style="margin-bottom:6px"><strong>Weighted Score /5</strong> = Family 25% + Lifestyle 20% + Financial 17.5% + Commute 17.5% + Beach 10% + School 10%</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px"><div>👨‍👩‍👧‍👦 <strong>Family (30%)</strong> — safety, schools, parks, family-friendly</div><div>☕ <strong>Lifestyle (25%)</strong> — walkability + safety average</div><div>💰 <strong>Financial (17.5%)</strong> — rent affordability (4-bed price)</div><div>🚆 <strong>Commute (17.5%)</strong> — train time to CBD</div><div>🤝 <strong>Social (10%)</strong> — walkability to cafes, shops, community</div></div><div style="margin-top:6px"><span style="background:#16a34a;color:#fff;padding:1px 6px;border-radius:8px;font-size:.65rem">4.0+ Great</span> <span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:.65rem">3.0–3.9 Good</span> <span style="background:#6b7280;color:#fff;padding:1px 6px;border-radius:8px;font-size:.65rem">&lt;3.0 Weaker</span></div></div></details></div>';
   if(suburbView==='map'){
     html+='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:.75rem">';
     html+='<span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#22c55e"></span> Budget Beach</span>';
@@ -309,8 +312,9 @@ function renderSuburbsInteractive(){
       var _c=s.train<=15?5:s.train<=30?4:s.train<=45?3:s.train<=60?2:1;
       var _f=s.familyScore;var _l=Math.round((s.walk+(s.safety||3))/2);
       var _fi=parseInt(s.bed4)<=600?5:parseInt(s.bed4)<=700?4:parseInt(s.bed4)<=850?3:parseInt(s.bed4)<=1000?2:1;
-      var _so=s.walk>=4?4:s.walk>=3?3:2;
-      var _w=((_f*30+_l*25+_fi*17.5+_c*17.5+_so*10)/100).toFixed(1);
+      var _b=s.beach==='ON beach'?5:/^5/.test(s.beach)?4:/^[89]|^1[012]/.test(s.beach)?3:/^1[3-9]|^2[0-5]/.test(s.beach)?2:1;
+      var _vce=parseInt((s.schoolRating||'').match(/\d+/)||[0]);var _sc=_vce>=32?5:_vce>=29?4:_vce>=27?3:_vce>=25?2:1;
+      var _w=((_f*25+_l*20+_fi*17.5+_c*17.5+_b*10+_sc*10)/100).toFixed(1);
       var _wc=_w>=4?'#16a34a':_w>=3?'#3b82f6':'#6b7280';
       html+='<div class="flex jcb aic fw" style="gap:8px">';
       html+='<div><a href="'+mapUrl+'" target="_blank" style="color:var(--accent);font-weight:700;font-size:1rem">'+s.name+' 📍</a> <span style="background:'+_wc+';color:#fff;padding:2px 7px;border-radius:10px;font-size:.7rem;font-weight:700">'+_w+'/5</span>';
