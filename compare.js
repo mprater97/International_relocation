@@ -33,7 +33,8 @@ function renderShortlist(){
     areas.forEach(function(a,i){
       var s=a.scores||{beach:0,commute:0,schools:0,lifestyle:0,value:0};
       s.total=(s.beach||0)+(s.commute||0)+(s.schools||0)+(s.lifestyle||0)+(s.value||0);
-      html+='<tr><td style="font-weight:600">'+(a.link?'<a href="'+a.link+'" target="_blank" style="color:var(--accent)">'+a.name+' →</a>':a.name)+'</td>';
+      var nameColor=s.total>=40?'var(--green)':s.total>=30?'var(--accent)':'var(--muted)';
+      html+='<tr><td style="font-weight:600">'+(a.link?'<a href="'+a.link+'" target="_blank" style="color:var(--accent)">'+a.name+' →</a>':a.name)+(s.total>0?' <span style="background:'+nameColor+';color:#fff;padding:1px 6px;border-radius:10px;font-size:.7rem;font-weight:700;margin-left:4px">'+s.total+'</span>':'')+'</td>';
       html+='<td><input type="number" class="ism" value="'+(a.rent||'')+'" placeholder="$" oninput="updateShortlist('+i+',\'rent\',+this.value)"></td>';
       ['beach','commute','schools','lifestyle','value'].forEach(function(k){
         html+='<td><select onchange="updateShortlistScore('+i+',\''+k+'\',+this.value)" style="width:45px">';
