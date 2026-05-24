@@ -305,9 +305,15 @@ function renderSuburbsInteractive(){
       var disposable=9571-rentMo-3515; // 3515 = other monthly costs minus rent
       
       html+='<div style="border:1px solid var(--border);border-radius:10px;padding:12px;margin:8px 0">';
-      // Header row
+      // Header row - calculate weighted score for badge
+      var _c=s.train<=15?5:s.train<=30?4:s.train<=45?3:s.train<=60?2:1;
+      var _f=s.familyScore;var _l=Math.round((s.walk+(s.safety||3))/2);
+      var _fi=parseInt(s.bed4)<=600?5:parseInt(s.bed4)<=700?4:parseInt(s.bed4)<=850?3:parseInt(s.bed4)<=1000?2:1;
+      var _so=s.walk>=4?4:s.walk>=3?3:2;
+      var _w=((_f*30+_l*25+_fi*20+_c*15+_so*10)/100*5).toFixed(1);
+      var _wc=_w>=4?'#16a34a':_w>=3?'#3b82f6':'#6b7280';
       html+='<div class="flex jcb aic fw" style="gap:8px">';
-      html+='<div><a href="'+mapUrl+'" target="_blank" style="color:var(--accent);font-weight:700;font-size:1rem">'+s.name+' 📍</a>';
+      html+='<div><a href="'+mapUrl+'" target="_blank" style="color:var(--accent);font-weight:700;font-size:1rem">'+s.name+' 📍</a> <span style="background:'+_wc+';color:#fff;padding:2px 7px;border-radius:10px;font-size:.7rem;font-weight:700">'+_w+'/5</span>';
       html+='<div class="tx tm">'+s.vibe+'</div></div>';
       var bed4mid=parseInt(s.bed4);var bed3mid=parseInt(s.bed3);var bed4mo=Math.round(bed4mid*52/12);var bed3mo=Math.round(bed3mid*52/12);html+='<div style="text-align:right"><div style="font-weight:700">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')</div><div class="tx tm">3-bed: $'+bed3mo+'/mo (£'+Math.round(bed3mo*0.532)+')</div><div class="tx tm" style="font-size:.65rem">($'+s.bed4+'/wk)</div>';
       html+='<div class="tx tm">'+s.train+' min train · '+s.beach+'</div></div>';
