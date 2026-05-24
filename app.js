@@ -206,6 +206,24 @@ function renderMoney(){
   ({overview:moneyOverview,costs:moneyCosts,debts:moneyDebts,income:moneyIncome,fx:moneyFX,uk:moneyUK})[moneySub]?.();
 }
 
+
+function addCostLine(){
+  var name=document.getElementById('newCostName').value;
+  var amt=+(document.getElementById('newCostAmt').value)||0;
+  if(!name)return;
+  if(!state.costLines)state.costLines=[];
+  state.costLines.push({name:name,amount:amt,currency:'aud'});
+  save();renderMoney();
+}
+function addIncomeLine(){
+  var name=document.getElementById('newIncomeName').value;
+  var amt=+(document.getElementById('newIncomeAmt').value)||0;
+  if(!name)return;
+  if(!state.incomeLines)state.incomeLines=[];
+  state.incomeLines.push({name:name,amount:amt});
+  save();renderMoney();
+}
+
 function moneyOverview(){
   var budget=getBudget(),fc=totalFC();
   var selectedServices=state.pointsSelected||{};
@@ -228,7 +246,7 @@ function moneyOverview(){
     if(fund==='uk_wages')ukPrepCosts+=amt;
     else if(fund==='lump_sum')auSetupCosts+=amt;
   });
-  var totalCosts=debtAud+ukPrepCosts+auSetupCosts;
+  // totalCosts calculated from costLines below
   
   // Income - use state values so user can edit
   var savings=state.savings||0;
@@ -237,8 +255,8 @@ function moneyOverview(){
   var homeSales=state.homeSales||Math.round(1500*1.88);
   var wagesSaved=state.wagesSaved||Math.round(1000*1.88);
   var pointsCash=budget;
-  var totalIncome=carSale2+carSale1+homeSales+wagesSaved+pointsCash+savings;
-  var netPosition=totalIncome-totalCosts+pointsMarketCost;
+  // totalIncome calculated from incomeLines below
+  // netPosition calculated after rendering sections
   
   var html=renderPointsAllocator();
   
@@ -247,23 +265,44 @@ function moneyOverview(){
   // COSTS
   html+='<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem;color:var(--orange)">📤 Forecast Costs</h3>';
   html+='<div style="display:flex;flex-direction:column;gap:6px">';
-  html+='<div style="background:rgba(239,68,68,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Debts to clear</span><strong>'+fGBP(debtTotal)+'</strong></div>';
-  html+='<div style="background:rgba(239,68,68,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>UK property prep</span><strong>'+fG(ukPrepCosts)+'</strong></div>';
-  html+='<div style="background:rgba(239,68,68,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>AU setup (bond, ship, dog)</span><strong>'+fG(auSetupCosts)+'</strong></div>';
-  if(pointsMarketCost>0)html+='<div style="background:rgba(34,197,94,.1);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;color:var(--green)"><span>Covered by points</span><strong>-'+fG(pointsMarketCost)+'</strong></div>';
-  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>TOTAL COSTS</span><span style="color:var(--orange)">'+fG(totalCosts-pointsMarketCost)+'</span></div>';
+  // Editable cost lines from state
+  var costLines=state.costLines||[
+    {name:'Debts to clear',amount:debtAud,currency:'gbp',gbpAmount:debtTotal},
+    {name:'UK property prep',amount:ukPrepCosts,currency:'aud'},
+    {name:'AU setup (bond, ship, dog)',amount:auSetupCosts,currency:'aud'}
+  ];
+  if(!state.costLines){state.costLines=costLines;save()}
+  var costTotal=0;
+  costLines.forEach(function(item,idx){
+    costTotal+=item.amount;
+    var display=item.currency==='gbp'?fGBP(item.gbpAmount||Math.round(item.amount*0.532)):fG(item.amount);
+    html+='<div style="background:rgba(239,68,68,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;gap:6px"><input type="text" value="'+item.name+'" style="flex:1;background:transparent;border:none;color:var(--text);font-size:.8rem" onchange="state.costLines['+idx+'].name=this.value;save()"><input type="number" class="ism" value="'+item.amount+'" style="text-align:right" onchange="state.costLines['+idx+'].amount=+this.value;save();renderMoney()"><button class="btn btn-o" style="padding:2px 6px;color:var(--red);font-size:.7rem" onclick="state.costLines.splice('+idx+',1);save();renderMoney()">✕</button></div>';
+  });
+  if(pointsMarketCost>0){costTotal-=pointsMarketCost;html+='<div style="background:rgba(34,197,94,.1);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;color:var(--green)"><span>Covered by points</span><strong>-'+fG(pointsMarketCost)+'</strong></div>';}
+  html+='<div style="display:flex;gap:4px;margin-top:4px"><input type="text" id="newCostName" placeholder="+ Add cost..." style="flex:1;font-size:.75rem"><input type="number" id="newCostAmt" placeholder="$" style="width:80px;font-size:.75rem"><button class="btn btn-o" style="padding:2px 8px;font-size:.7rem" onclick="addCostLine()">+</button></div>';
+  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>TOTAL COSTS</span><span style="color:var(--orange)">'+fG(costTotal)+'</span></div>';
   html+='</div></div>';
   
   // INCOME
   html+='<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem;color:var(--green)">📥 Forecast Income</h3>';
   html+='<div style="display:flex;flex-direction:column;gap:6px">';
-  html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Car sale 2</span><input type="number" class="ism" value="'+carSale2+'" onchange="state.carSale2=+this.value;save();renderMoney()" style="text-align:right"></div>';
-  html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Car sale 1</span><input type="number" class="ism" value="'+carSale1+'" onchange="state.carSale1=+this.value;save();renderMoney()" style="text-align:right"></div>';
-  html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Home item sales</span><input type="number" class="ism" value="'+homeSales+'" onchange="state.homeSales=+this.value;save();renderMoney()" style="text-align:right"></div>';
-  html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Wages saved</span><input type="number" class="ism" value="'+wagesSaved+'" onchange="state.wagesSaved=+this.value;save();renderMoney()" style="text-align:right"></div>';
-  html+='<div style="background:rgba(34,197,94,.1);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>💰 Savings</span><input type="number" class="ism" value="'+savings+'" placeholder="0" onchange="state.savings=+this.value;save();renderMoney()" style="text-align:right"></div>';
+  var incomeLines=state.incomeLines||[
+    {name:'Car sale 2 (£14k)',amount:carSale2},
+    {name:'Car sale 1 (£3.9k)',amount:carSale1},
+    {name:'Home item sales (£1.5k)',amount:homeSales},
+    {name:'Wages saved (£1k)',amount:wagesSaved},
+    {name:'Savings',amount:savings}
+  ];
+  if(!state.incomeLines){state.incomeLines=incomeLines;save()}
+  var incomeTotal=0;
+  incomeLines.forEach(function(item,idx){
+    incomeTotal+=item.amount;
+    html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;gap:6px"><input type="text" value="'+item.name+'" style="flex:1;background:transparent;border:none;color:var(--text);font-size:.8rem" onchange="state.incomeLines['+idx+'].name=this.value;save()"><input type="number" class="ism" value="'+item.amount+'" style="text-align:right" onchange="state.incomeLines['+idx+'].amount=+this.value;save();renderMoney()"><button class="btn btn-o" style="padding:2px 6px;color:var(--red);font-size:.7rem" onclick="state.incomeLines.splice('+idx+',1);save();renderMoney()">✕</button></div>';
+  });
   html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Points cash</span><strong>'+fG(pointsCash)+'</strong></div>';
-  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>TOTAL</span><span style="color:var(--green)">'+fG(totalIncome)+'</span></div>';
+  incomeTotal+=pointsCash;
+  html+='<div style="display:flex;gap:4px;margin-top:4px"><input type="text" id="newIncomeName" placeholder="+ Add income..." style="flex:1;font-size:.75rem"><input type="number" id="newIncomeAmt" placeholder="$" style="width:80px;font-size:.75rem"><button class="btn btn-o" style="padding:2px 8px;font-size:.7rem" onclick="addIncomeLine()">+</button></div>';
+  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>TOTAL</span><span style="color:var(--green)">'+fG(incomeTotal)+'</span></div>';
   html+='</div></div>';
   
   // POINTS
@@ -283,9 +322,10 @@ function moneyOverview(){
   
   html+='</div>';
   
-  // NET POSITION
+  // NET POSITION - calculate from rendered totals
+  var netPosition=incomeTotal-(costTotal>0?costTotal:0);
   html+='<div class="card mt2" style="text-align:center;border-left:4px solid '+(netPosition>=0?'var(--green)':'var(--red)')+'"><h3>Net Position: <span style="color:'+(netPosition>=0?'var(--green)':'var(--red)')+'">'+fG(netPosition)+'</span></h3>';
-  html+='<p class="tx tm">'+(netPosition>=0?'✅ Fully funded':'⚠️ Shortfall — need additional funds')+'</p></div>';
+  html+='<p class="tx tm">'+(netPosition>=0?'✅ Fully funded — surplus of '+fG(netPosition):'⚠️ Shortfall of '+fG(Math.abs(netPosition)))+'</p></div>';
   
   document.getElementById('moneySub').innerHTML=html;
 }
