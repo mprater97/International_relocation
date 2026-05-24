@@ -7,7 +7,7 @@ function renderCompare(){
     '<div class="stab active" onclick="showCmp(\'suburbs\',this)">🏘️ Suburbs</div>'+
     '<div class="stab" onclick="showCmp(\'costs\',this)">💰 Living Costs</div>'+
     
-    '<div class="stab" onclick="showCmp(\'shortlist\',this)">⭐ Shortlist</div>'+
+    
     '<div class="stab" onclick="showCmp(\'frankie\',this)">💼 Frankie</div>'+
     '<div class="stab" onclick="showCmp(\'sydney\',this)">🌊 vs Sydney</div>'+
     '</div></div><div id="cmpContent"></div>';
@@ -307,7 +307,11 @@ function renderSuburbsInteractive(){
       var rentMo=Math.round(rent*52/12);
       var disposable=9571-rentMo-3515; // 3515 = other monthly costs minus rent
       
-      html+='<div style="border:1px solid var(--border);border-radius:10px;padding:12px;margin:8px 0">';
+      var myRating=(state.suburbRatings||{})[s.name]||0;
+      html+='<div style="border:1px solid var(--border);border-radius:10px;padding:12px;margin:8px 0;position:relative">';
+      html+='<div style="position:absolute;top:8px;right:10px;font-size:1.1rem;cursor:pointer" title="Your rating">';
+      for(var star=1;star<=5;star++)html+='<span onclick="if(!state.suburbRatings)state.suburbRatings={};state.suburbRatings[\''+s.name+'\']='+star+';save();renderSuburbsInteractive()" style="color:'+(star<=myRating?'#f59e0b':'#d1d5db')+'">'+(star<=myRating?'★':'☆')+'</span>';
+      html+='</div>';
       // Header row - calculate weighted score for badge
       var _c=s.train<=15?5:s.train<=30?4:s.train<=45?3:s.train<=60?2:1;
       var _f=s.familyScore;var _l=Math.round((s.walk+(s.safety||3))/2);
