@@ -22,7 +22,7 @@ var CMP={};
 CMP.shortlist='';
 function renderShortlist(){
   var areas=state.shortlist||[];
-  var html='<div class="card"><h2>⭐ My Suburb Shortlist</h2><p class="tx tm mb2">Add areas, rate them, enter real prices. Score out of 5 for each feature.</p>';
+  var html='<div class="card"><h2>⭐ My Suburb Shortlist</h2><p class="tx tm mb2">Add areas, rate them, enter real prices. Rate each feature 1–10 for a better spread.</p>';
   
   // Add new area form
   html+='<div class="flex g2 fw aic mb2"><input type="text" id="slName" placeholder="Suburb name" style="flex:1;min-width:150px"><input type="number" id="slRent" placeholder="Actual rent $/wk" style="max-width:130px"><input type="text" id="slLink" placeholder="Listing URL (optional)" style="flex:1;min-width:150px"><button class="btn btn-p" onclick="addToShortlist()">+ Add</button></div>';
@@ -36,9 +36,11 @@ function renderShortlist(){
       html+='<tr><td style="font-weight:600">'+(a.link?'<a href="'+a.link+'" target="_blank" style="color:var(--accent)">'+a.name+' →</a>':a.name)+'</td>';
       html+='<td><input type="number" class="ism" value="'+(a.rent||'')+'" placeholder="$" oninput="updateShortlist('+i+',\'rent\',+this.value)"></td>';
       ['beach','commute','schools','lifestyle','value'].forEach(function(k){
-        html+='<td><select onchange="updateShortlistScore('+i+',\''+k+'\',+this.value)" style="width:50px"><option value="0" '+(s[k]===0?'selected':'')+'>-</option><option value="1" '+(s[k]===1?'selected':'')+'>1</option><option value="2" '+(s[k]===2?'selected':'')+'>2</option><option value="3" '+(s[k]===3?'selected':'')+'>3</option><option value="4" '+(s[k]===4?'selected':'')+'>4</option><option value="5" '+(s[k]===5?'selected':'')+'>5</option></select></td>';
+        html+='<td><select onchange="updateShortlistScore('+i+',\''+k+'\',+this.value)" style="width:45px">';
+        for(var n=0;n<=10;n++)html+='<option value="'+n+'" '+(s[k]===n?'selected':'')+'>'+(n===0?'-':n)+'</option>';
+        html+='</select></td>';
       });
-      html+='<td style="font-weight:700;color:'+(s.total>=20?'var(--green)':s.total>=15?'var(--accent)':'var(--muted)')+'">'+s.total+'/25</td>';
+      html+='<td style="font-weight:700;color:'+(s.total>=40?'var(--green)':s.total>=30?'var(--accent)':'var(--muted)')+'">'+s.total+'/50</td>';
       html+='<td><input type="text" value="'+(a.notes||'')+'" placeholder="Notes..." oninput="updateShortlist('+i+',\'notes\',this.value)" style="min-width:120px"></td>';
       html+='<td><button class="btn btn-o" style="padding:2px 6px;color:var(--red)" onclick="removeFromShortlist('+i+')">✕</button></td></tr>';
     });
@@ -50,7 +52,7 @@ function renderShortlist(){
       var winner=sorted[0];
       var ws=winner.scores||{};
       var wtotal=(ws.beach||0)+(ws.commute||0)+(ws.schools||0)+(ws.lifestyle||0)+(ws.value||0);
-      if(wtotal>0)html+='<div class="card mt2" style="border-left:4px solid var(--green)"><h3 style="color:var(--green)">🏆 Current Leader: '+winner.name+' ('+wtotal+'/25)</h3></div>';
+      if(wtotal>0)html+='<div class="card mt2" style="border-left:4px solid var(--green)"><h3 style="color:var(--green)">🏆 Current Leader: '+winner.name+' ('+wtotal+'/50)</h3></div>';
     }
   } else {
     html+='<p class="tm ts">No areas shortlisted yet. Add suburbs above to start comparing.</p>';
@@ -58,7 +60,7 @@ function renderShortlist(){
   html+='</div>';
   
   // Scoring guide
-  html+='<div class="card"><h3>Scoring Guide</h3><div class="table-wrap"><table><tr><th>Score</th><th>Beach</th><th>Commute</th><th>Schools</th><th>Lifestyle</th><th>Value</th></tr><tr><td>5</td><td>On the beach</td><td>&lt;30 min train</td><td>Top rated (91+)</td><td>Cafes, shops, community all excellent</td><td>Under $550/wk 4-bed</td></tr><tr><td>4</td><td>5 min drive</td><td>30–40 min</td><td>Good rated</td><td>Most things nearby</td><td>$550–650/wk</td></tr><tr><td>3</td><td>10–15 min drive</td><td>40–50 min</td><td>Average</td><td>Some things nearby</td><td>$650–750/wk</td></tr><tr><td>2</td><td>20+ min drive</td><td>50–60 min</td><td>Below average</td><td>Limited nearby</td><td>$750–900/wk</td></tr><tr><td>1</td><td>30+ min drive</td><td>60+ min</td><td>Poor</td><td>Very limited</td><td>$900+/wk</td></tr></table></div></div>';
+  html+='<div class="card"><h3>Scoring Guide (1–10)</h3><div class="table-wrap"><table><tr><th>Score</th><th>Beach</th><th>Commute</th><th>Schools</th><th>Lifestyle</th><th>Value</th></tr><tr><td>9–10</td><td>On the beach / walk</td><td>&lt;25 min door-to-door</td><td>Top rated (VCE 90+)</td><td>Everything walkable, buzzing community</td><td>Under $550/wk 4-bed</td></tr><tr><td>7–8</td><td>5 min drive</td><td>25–35 min</td><td>Good (VCE 80+)</td><td>Most things nearby, good vibe</td><td>$550–650/wk</td></tr><tr><td>5–6</td><td>10–15 min drive</td><td>35–45 min</td><td>Average</td><td>Some things nearby</td><td>$650–750/wk</td></tr><tr><td>3–4</td><td>20 min drive</td><td>45–55 min</td><td>Below average</td><td>Limited, need to drive</td><td>$750–900/wk</td></tr><tr><td>1–2</td><td>30+ min drive</td><td>55+ min</td><td>Poor / no data</td><td>Very limited</td><td>$900+/wk</td></tr></table></div></div>';
   
   document.getElementById('cmpContent').innerHTML=html;
 }
