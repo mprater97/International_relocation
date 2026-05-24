@@ -171,7 +171,7 @@ function initSuburbMap(){
       var mf=s.familyScore;var ml=Math.round((s.walk+(s.safety||3))/2);
       var mfi=parseInt(s.bed4)<=600?5:parseInt(s.bed4)<=700?4:parseInt(s.bed4)<=850?3:parseInt(s.bed4)<=1000?2:1;
       var ms=s.walk>=4?4:s.walk>=3?3:2;
-      var mw=((mf*30+ml*25+mfi*20+mc*15+ms*10)/100*5).toFixed(1);
+      var mw=((mf*30+ml*25+mfi*20+mc*15+ms*10)/100).toFixed(1);
       var mwc=mw>=4?'#16a34a':mw>=3?'#3b82f6':'#6b7280';
       marker.bindPopup('<div style="min-width:200px"><strong>'+s.name+'</strong> <span style="background:'+mwc+';color:#fff;padding:1px 6px;border-radius:8px;font-size:.7rem">'+mw+'/5</span><br><span style="font-size:.85rem">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')<br>Train: '+s.train+' min | Beach: '+s.beach+'<br>School: '+s.school+' ('+s.schoolRating+')</span><br><button onclick="showSuburbDetail(\''+s.name+'\')" style="margin-top:4px;padding:4px 8px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.75rem">View full details</button></div>');
     });
@@ -223,7 +223,7 @@ function showSuburbDetail(name){
       var lifestyle=Math.round((s.walk+(s.safety||3))/2);
       var financial=parseInt(s.bed4)<=600?5:parseInt(s.bed4)<=700?4:parseInt(s.bed4)<=850?3:parseInt(s.bed4)<=1000?2:1;
       var social=s.walk>=4?4:s.walk>=3?3:2;
-      var weighted=((family*30+lifestyle*25+financial*20+commute*15+social*10)/100*5).toFixed(1);
+      var weighted=((family*30+lifestyle*25+financial*20+commute*15+social*10)/100).toFixed(1);
       return '<div class="card" style="margin:8px 0;padding:12px"><h3 style="font-size:.9rem">🎯 Weighted Score — '+weighted+'/5</h3>'+
         '<div style="font-size:.75rem;color:var(--muted);margin-bottom:6px">Family & Safety 30% | Lifestyle 25% | Financial 20% | Commute 15% | Social 10%</div>'+
         '<div style="font-size:.85rem;display:grid;grid-template-columns:1fr 1fr;gap:4px">'+
@@ -233,7 +233,7 @@ function showSuburbDetail(name){
         '<div>💰 Financial: '+financial+'/5</div>'+
         '<div>🤝 Social: '+social+'/5</div>'+
         '</div>'+
-        '<div class="pb mt2" style="height:12px"><div class="pf" style="width:'+(weighted/5*100)+'%;background:var(--green)"></div></div>'+
+        '<div class="pb mt2" style="height:12px"><div class="pf" style="width:'+(weighted*20)+'%;background:var(--green)"></div></div>'+
         '<div style="font-size:.7rem;color:var(--muted);margin-top:4px">Friction check: '+(s.walk>=4&&s.train<=40?'✅ Low daily friction — walkable + reasonable commute':s.walk>=3&&s.train<=55?'⚡ Moderate friction — some car dependency':'⚠️ Higher friction — car essential, longer commute')+'</div>'+
         '</div>';
     })()+
@@ -310,7 +310,7 @@ function renderSuburbsInteractive(){
       var _f=s.familyScore;var _l=Math.round((s.walk+(s.safety||3))/2);
       var _fi=parseInt(s.bed4)<=600?5:parseInt(s.bed4)<=700?4:parseInt(s.bed4)<=850?3:parseInt(s.bed4)<=1000?2:1;
       var _so=s.walk>=4?4:s.walk>=3?3:2;
-      var _w=((_f*30+_l*25+_fi*20+_c*15+_so*10)/100*5).toFixed(1);
+      var _w=((_f*30+_l*25+_fi*20+_c*15+_so*10)/100).toFixed(1);
       var _wc=_w>=4?'#16a34a':_w>=3?'#3b82f6':'#6b7280';
       html+='<div class="flex jcb aic fw" style="gap:8px">';
       html+='<div><a href="'+mapUrl+'" target="_blank" style="color:var(--accent);font-weight:700;font-size:1rem">'+s.name+' 📍</a> <span style="background:'+_wc+';color:#fff;padding:2px 7px;border-radius:10px;font-size:.7rem;font-weight:700">'+_w+'/5</span>';
