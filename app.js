@@ -331,26 +331,60 @@ function moneyOverview(){
 }
 
 function moneyCosts(){
-  const cats={};FORECAST_ITEMS.forEach(i=>{if(!cats[i.cat])cats[i.cat]=[];cats[i.cat].push(i)});
-  document.getElementById('moneySub').innerHTML=`<div class="card">
-    <h2>All Cost Items</h2>
-    ${Object.entries(cats).map(([cat,items])=>`<h3>${cat}</h3><div class="table-wrap"><table>
-      <tr><th>Item</th><th>Wk</th><th>Forecast</th><th>Actual</th><th>Funded By</th><th></th></tr>
-      ${items.map(i=>{const act=state.actuals[i.id];
-        return`<tr><td><input type="text" value="${i.desc}" style="min-width:140px" oninput="renameCost('${i.id}',this.value)"></td><td><input type="number" class="ism" style="width:50px" value="${i.week}" oninput="updateCostWeek('${i.id}',+this.value)"></td>
-        <td><input type="number" class="ism" value="${i.forecast}" oninput="FORECAST_ITEMS.find(x=>x.id==='${i.id}').forecast=+this.value;if(!state.forecasts)state.forecasts={};state.forecasts['${i.id}']=+this.value;dbSave(renderMoney)"></td>
-        <td><input type="number" class="ism" value="${act!=null?act:''}" placeholder="—" oninput="state.actuals['${i.id}']=this.value===''?null:+this.value;dbSave(renderMoney)"></td>
-        <td><select onchange="if(!state.funding)state.funding={};state.funding['${i.id}']=this.value;save()">${FUNDING_SOURCES.map(f=>`<option value="${f.id}" ${getFund(i.id)===f.id?'selected':''}>${f.label}</option>`).join('')}</select></td>
-        <td><button class="btn btn-o" style="padding:2px 6px;color:var(--red)" onclick="removeCost('${i.id}')">✕</button></td></tr>`}).join('')}</table></div>`).join('')}
-      <h3 class="mt3">+ Add Cost Item</h3>
-      <div class="flex g2 fw aic">
-        <input type="text" id="ccDesc" placeholder="Description" style="flex:1;min-width:180px">
-        <input type="text" id="ccCat" placeholder="Category" style="max-width:120px" value="Custom">
-        <input type="number" id="ccWeek" placeholder="Week" style="max-width:70px" value="1">
-        <input type="number" id="ccForecast" placeholder="Forecast £" style="max-width:100px">
-        <button class="btn btn-p" onclick="addCustomCost()">+ Add</button>
-      </div>
-  </div>`;
+  var coSep=['co_visa','co_flights','co_temp','co_tax','sep_car','sep_furniture','sep_util'];
+  var debts=getDebts();
+  var ukItems=[];var auItems=[];var otherItems=[];
+  FORECAST_ITEMS.forEach(function(i){
+    if(coSep.indexOf(i.id)>=0)return;
+    var fund=(state.funding||{})[i.id]||i.defaultFund||'lump_sum';
+    if(fund==='uk_wages')ukItems.push(i);
+    else if(fund==='lump_sum')auItems.push(i);
+    else otherItems.push(i);
+  });
+  
+  function costRow(i){
+    var act=state.actuals[i.id];
+    return '<tr><td><input type="text" value="'+i.desc+'" style="min-width:140px" oninput="renameCost(\''+i.id+'\',this.value)"></td>'+
+      '<td><input type="number" class="ism" value="'+i.forecast+'" oninput="FORECAST_ITEMS.find(function(x){return x.id===\''+i.id+'\'}).forecast=+this.value;if(!state.forecasts)state.forecasts={};state.forecasts[\''+i.id+'\']=+this.value;dbSave(renderMoney)"></td>'+
+      '<td><input type="number" class="ism" value="'+(act!=null?act:'')+'" placeholder="—" oninput="state.actuals[\''+i.id+'\']=this.value===\'\'?null:+this.value;dbSave(renderMoney)"></td>'+
+      '<td><button class="btn btn-o" style="padding:2px 6px;color:var(--red)" onclick="removeCost(\''+i.id+'\')">✕</button></td></tr>';
+  }
+  
+  var html='<p class="tx tm" style="margin-bottom:12px">💡 These costs feed into the <strong>📤 Forecast Costs</strong> tile on the Overview tab.</p>';
+  
+  // DEBTS SECTION
+  html+='<div class="card"><h2>🔴 Debts to Clear</h2>';
+  html+='<p class="tx tm mb2">Total: '+fGBP(debts.reduce(function(s,d){return s+d.left},0))+'</p>';
+  html+='<div class="table-wrap"><table><tr><th>Debt</th><th>Owed (£)</th><th>Paid (£)</th><th>Left</th></tr>';
+  debts.forEach(function(d){
+    html+='<tr><td>'+d.desc+'</td>';
+    html+='<td><input type="number" class="ism" value="'+d.owed+'" oninput="updDebt(\''+d.id+'\',+this.value)"></td>';
+    html+='<td><input type="number" class="ism" value="'+(d.paid||'')+'" placeholder="0" oninput="if(!state.debtPaid)state.debtPaid={};state.debtPaid[\''+d.id+'\']=+this.value;save();renderMoney()"></td>';
+    html+='<td style="font-weight:600;color:'+(d.left>0?'var(--red)':'var(--green)')+'">'+fGBP(d.left)+'</td></tr>';
+  });
+  html+='</table></div>';
+  html+='<div class="flex g2 fw aic mt2"><input type="text" id="ndDesc" placeholder="Description" style="max-width:180px"><input type="number" id="ndAmt" placeholder="Total £" style="max-width:100px"><button class="btn btn-o" onclick="addDebt()">+ Add</button></div>';
+  html+='</div>';
+  
+  // UK PROPERTY PREP
+  html+='<div class="card"><h2>🏠 UK Property Prep</h2>';
+  html+='<p class="tx tm mb2">Total: '+fG(ukItems.reduce(function(s,i){return s+i.forecast},0))+' — funded from UK wages</p>';
+  html+='<div class="table-wrap"><table><tr><th>Item</th><th>Forecast ($)</th><th>Actual ($)</th><th></th></tr>';
+  ukItems.forEach(function(i){html+=costRow(i)});
+  html+='</table></div></div>';
+  
+  // AU SETUP
+  html+='<div class="card"><h2>🦘 AU Setup Costs</h2>';
+  html+='<p class="tx tm mb2">Total: '+fG(auItems.reduce(function(s,i){return s+i.forecast},0))+' — funded from relo cash</p>';
+  html+='<div class="table-wrap"><table><tr><th>Item</th><th>Forecast ($)</th><th>Actual ($)</th><th></th></tr>';
+  auItems.forEach(function(i){html+=costRow(i)});
+  html+='</table></div></div>';
+  
+  // ADD NEW
+  html+='<div class="card"><h3>+ Add Cost Item</h3>';
+  html+='<div class="flex g2 fw aic"><input type="text" id="ccDesc" placeholder="Description" style="flex:1;min-width:180px"><input type="text" id="ccCat" placeholder="Category" style="max-width:120px" value="Custom"><input type="number" id="ccForecast" placeholder="Forecast $" style="max-width:100px"><select id="ccFund"><option value="lump_sum">Relo Cash</option><option value="uk_wages">UK Wages</option></select><button class="btn btn-p" onclick="addCustomCost()">+ Add</button></div></div>';
+  
+  document.getElementById('moneySub').innerHTML=html;
 }
 
 function moneyDebts(){
