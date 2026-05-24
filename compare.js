@@ -167,7 +167,13 @@ function initSuburbMap(){
       var bed4mo=Math.round(parseInt(s.bed4)*52/12);
       var icon=L.divIcon({html:'<div style="background:'+color+';padding:2px 6px;border-radius:10px;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,.3);font-size:10px;font-weight:700;color:#fff;white-space:nowrap">£'+Math.round(bed4mo*0.532)+'</div>',iconSize:[50,20],iconAnchor:[25,10],className:''});
       var marker=L.marker([s.lat,s.lng],{icon:icon}).addTo(map);
-      marker.bindPopup('<div style="min-width:200px"><strong>'+s.name+'</strong><br><span style="font-size:.85rem">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')<br>Train: '+s.train+' min | Beach: '+s.beach+'<br>School: '+s.school+' ('+s.schoolRating+')</span><br><button onclick="showSuburbDetail(\''+s.name+'\')" style="margin-top:4px;padding:4px 8px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.75rem">View full details</button></div>');
+      var mc=s.train<=15?5:s.train<=30?4:s.train<=45?3:s.train<=60?2:1;
+      var mf=s.familyScore;var ml=Math.round((s.walk+(s.safety||3))/2);
+      var mfi=parseInt(s.bed4)<=600?5:parseInt(s.bed4)<=700?4:parseInt(s.bed4)<=850?3:parseInt(s.bed4)<=1000?2:1;
+      var ms=s.walk>=4?4:s.walk>=3?3:2;
+      var mw=((mf*30+ml*25+mfi*20+mc*15+ms*10)/100*5).toFixed(1);
+      var mwc=mw>=4?'#16a34a':mw>=3?'#3b82f6':'#6b7280';
+      marker.bindPopup('<div style="min-width:200px"><strong>'+s.name+'</strong> <span style="background:'+mwc+';color:#fff;padding:1px 6px;border-radius:8px;font-size:.7rem">'+mw+'/5</span><br><span style="font-size:.85rem">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')<br>Train: '+s.train+' min | Beach: '+s.beach+'<br>School: '+s.school+' ('+s.schoolRating+')</span><br><button onclick="showSuburbDetail(\''+s.name+'\')" style="margin-top:4px;padding:4px 8px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.75rem">View full details</button></div>');
     });
   });
   
