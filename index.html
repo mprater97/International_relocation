@@ -143,6 +143,8 @@ ul{margin:6px 0 6px 20px}ul li{margin-bottom:2px}
       </form>
       <label style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;font-size:.82rem;color:#94a3b8;cursor:pointer"><input type="checkbox" id="trustDevice" style="width:18px;height:18px;min-height:18px"> Trust this device (stay logged in)</label>
       <p id="loginErr" style="color:#ef4444;font-size:.8rem;margin-top:8px;display:none">Wrong password — try again</p>
+      <p style="margin-top:12px"><a href="#" onclick="localStorage.removeItem('relo_pw_hash');document.getElementById('loginErr').style.display='none';document.getElementById('loginErr2').style.display='block';return false" style="color:rgba(255,255,255,.4);font-size:.7rem">Reset password</a></p>
+      <p id="loginErr2" style="color:#22c55e;font-size:.8rem;margin-top:8px;display:none">✅ Password reset. Enter a new password and login — it will be saved.</p>
     </div>
     <p style="font-size:.7rem;color:#475569">Family Relocation Tracker · 2026</p>
   </div>
@@ -289,10 +291,10 @@ window._fbLoad().then(function(snap){
   }
 }).catch(function(e){console.log('Firebase load:',e)});
 </script>
-<script src="data.js?v=1779749264"></script>
-<script src="checklist-data.js?v=1779749264"></script>
-<script src="compare.js?v=1779749264"></script>
-<script src="plan.js?v=1779749264"></script>
-<script src="app.js?v=1779749264"></script>
+<script src="data.js?v=1779749440"></script>
+<script src="checklist-data.js?v=1779749440"></script>
+<script src="compare.js?v=1779749440"></script>
+<script src="plan.js?v=1779749440"></script>
+<script src="app.js?v=1779749440"></script>
 </body>
 </html>
