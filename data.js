@@ -37,7 +37,7 @@ function daysUntil(dateStr){if(!dateStr)return null;const d=new Date(dateStr);co
 
 const FORECAST_ITEMS = [
   // Personal budget items
-  {id:'dog',type:'oneoff',defaultFund:'deferred',cat:'Dog Relocation',desc:'Pet relocation inc. quarantine',week:3,forecastLow:3000,forecastHigh:6000,forecast:4500,phase:1},
+  {id:'dog',type:'oneoff',defaultFund:'deferred',cat:'Dog Relocation',desc:'Pet relocation inc. quarantine',week:3,forecastLow:5640,forecastHigh:11280,forecast:8460,phase:1},
   {id:'ship',type:'oneoff',defaultFund:'uk_wages',cat:'Shipping',desc:'PSS groupage — 2 bikes, 2 TVs, 11 cartons (door-to-door)',week:6,forecastLow:1533,forecastHigh:1533,forecast:1533,phase:1},
   {id:'ship_ins',type:'oneoff',defaultFund:'uk_wages',cat:'Shipping',desc:'Shipping insurance',week:6,forecastLow:100,forecastHigh:300,forecast:200,phase:1},
   {id:'ship_bikes',type:'oneoff',cat:'Shipping',desc:'Bike shipping to AU',week:6,forecastLow:500,forecastHigh:1500,forecast:1000,phase:1,defaultFund:'lump_sum'},
