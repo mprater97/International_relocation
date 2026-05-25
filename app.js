@@ -486,17 +486,17 @@ function moneyUK(){
     <h2>UK Monthly Costs — What Happens</h2>
     <div class="table-wrap"><table><tr><th>Item</th><th>£/mo</th><th>Action</th><th>Notes</th></tr>
     ${MONTHLY_UK.map(m=>{const a=UK_COST_ACTIONS.find(x=>x.id===m.id)||{};
-      return`<tr><td>${m.desc}</td><td>${fG(m.monthly_gbp)}</td>
+      return`<tr><td>${m.desc}</td><td>${fGBP(m.monthly_gbp)}</td>
       <td><span class="badge b-${(a.action||'').toLowerCase()}">${a.action||'—'}</span></td>
       <td class="tx tm">${a.note||''}</td></tr>`}).join('')}
-    <tr style="font-weight:700"><td>Current total</td><td>${fG(MONTHLY_UK.reduce((s,m)=>s+m.monthly_gbp,0))}/mo</td><td colspan="2"></td></tr>
+    <tr style="font-weight:700"><td>Current total</td><td>${fGBP(MONTHLY_UK.reduce((s,m)=>s+m.monthly_gbp,0))}/mo</td><td colspan="2"></td></tr>
     </table></div>
     <h3>After Move (ongoing UK costs)</h3>
     <div class="table-wrap"><table><tr><th>Item</th><th>£/mo</th></tr>
-    ${MONTHLY_UK.filter(m=>{const a=UK_COST_ACTIONS.find(x=>x.id===m.id);return a&&['STAYS','KEEP','KEEPS','REVIEW'].includes(a.action)}).map(m=>`<tr><td>${m.desc}</td><td>${fG(m.monthly_gbp)}</td></tr>`).join('')}
-    <tr><td>LAP Letting Agent plan</td><td>${fG(109)}</td></tr>
-    <tr><td>Landlord insurance</td><td>${fG(80)}</td></tr>
-    <tr class="tg"><td>Rental income</td><td>+${fG(UK_RENTAL_INCOME)}</td></tr>
+    ${MONTHLY_UK.filter(m=>{const a=UK_COST_ACTIONS.find(x=>x.id===m.id);return a&&['STAYS','KEEP','KEEPS','REVIEW'].includes(a.action)}).map(m=>`<tr><td>${m.desc}</td><td>${fGBP(m.monthly_gbp)}</td></tr>`).join('')}
+    <tr><td>LAP Letting Agent plan</td><td>${fGBP(109)}</td></tr>
+    <tr><td>Landlord insurance</td><td>${fGBP(80)}</td></tr>
+    <tr class="tg"><td>Rental income</td><td>+${fGBP(UK_RENTAL_INCOME)}</td></tr>
     </table></div></div>`;
 }
 
