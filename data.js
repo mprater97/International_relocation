@@ -37,9 +37,9 @@ function daysUntil(dateStr){if(!dateStr)return null;const d=new Date(dateStr);co
 
 const FORECAST_ITEMS = [
   // Personal budget items
-  {id:'dog',type:'oneoff',cat:'Dog Relocation',desc:'Pet relocation inc. quarantine',week:3,forecastLow:3000,forecastHigh:6000,forecast:4500,phase:1,defaultFund:'lump_sum'},
-  {id:'ship',type:'oneoff',cat:'Shipping',desc:'PSS groupage — 2 bikes, 2 TVs, 11 cartons (door-to-door)',week:6,forecastLow:1533,forecastHigh:1533,forecast:1533,phase:1,defaultFund:'lump_sum'},
-  {id:'ship_ins',type:'oneoff',cat:'Shipping',desc:'Shipping insurance',week:6,forecastLow:100,forecastHigh:300,forecast:200,phase:1,defaultFund:'lump_sum'},
+  {id:'dog',type:'oneoff',defaultFund:'uk_wages',cat:'Dog Relocation',desc:'Pet relocation inc. quarantine',week:3,forecastLow:3000,forecastHigh:6000,forecast:4500,phase:1},
+  {id:'ship',type:'oneoff',defaultFund:'uk_wages',cat:'Shipping',desc:'PSS groupage — 2 bikes, 2 TVs, 11 cartons (door-to-door)',week:6,forecastLow:1533,forecastHigh:1533,forecast:1533,phase:1},
+  {id:'ship_ins',type:'oneoff',defaultFund:'uk_wages',cat:'Shipping',desc:'Shipping insurance',week:6,forecastLow:100,forecastHigh:300,forecast:200,phase:1},
   {id:'ship_bikes',type:'oneoff',cat:'Shipping',desc:'Bike shipping to AU',week:6,forecastLow:500,forecastHigh:1500,forecast:1000,phase:1,defaultFund:'lump_sum'},
   {id:'gas_cert',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Oil boiler service (£75 = ~$141 AUD)',week:5,forecastLow:113,forecastHigh:169,forecast:141,phase:2},
   {id:'eicr',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'EICR electrical cert (£180 = ~$338 AUD)',week:5,forecastLow:226,forecastHigh:470,forecast:338,phase:2},
