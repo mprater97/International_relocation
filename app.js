@@ -266,21 +266,17 @@ function moneyOverview(){
   // COSTS
   html+='<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem;color:var(--orange)">📤 Forecast Costs</h3>';
   html+='<div style="display:flex;flex-direction:column;gap:6px">';
-  // Core costs - show in native currency with conversion
-  // Debts & UK prep are in £, AU setup is in $
+  // Core costs - all shown as £ with ($) since Mike thinks in £
   var coreCosts=[
-    {name:'Debts to clear',aud:debtAud,gbp:debtTotal,native:'gbp'},
-    {name:'UK property prep',aud:ukPrepCosts,gbp:Math.round(ukPrepCosts*0.532),native:'gbp'},
-    {name:'AU setup (bond, ship, dog)',aud:auSetupCosts,gbp:Math.round(auSetupCosts*0.532),native:'aud'}
+    {name:'Debts to clear',aud:debtAud,gbp:debtTotal},
+    {name:'UK property prep',aud:ukPrepCosts,gbp:Math.round(ukPrepCosts*0.532)},
+    {name:'AU setup (bond, ship, dog)',aud:auSetupCosts,gbp:Math.round(auSetupCosts*0.532)}
   ];
   var extraCosts=state.extraCosts||[];
   var costTotal=0;
   coreCosts.forEach(function(item){
     costTotal+=item.aud;
-    var display=item.native==='gbp'?
-      '\u00a3'+item.gbp.toLocaleString()+' <span style="font-size:.7rem;color:var(--muted)">($'+item.aud.toLocaleString()+')</span>':
-      '$'+item.aud.toLocaleString()+' <span style="font-size:.7rem;color:var(--muted)">(\u00a3'+item.gbp.toLocaleString()+')</span>';
-    html+='<div style="background:rgba(239,68,68,.08);padding:8px 12px;border-radius:8px;display:flex;align-items:center;gap:8px"><span style="flex:2;font-size:.8rem">'+item.name+'</span><strong style="min-width:80px;text-align:right;font-size:.85rem">'+display+'</strong></div>';
+    html+='<div style="background:rgba(239,68,68,.08);padding:8px 12px;border-radius:8px;display:flex;align-items:center;gap:8px"><span style="flex:2;font-size:.8rem">'+item.name+'</span><strong style="min-width:80px;text-align:right;font-size:.85rem">\u00a3'+item.gbp.toLocaleString()+' <span style="font-size:.7rem;color:var(--muted)">($'+item.aud.toLocaleString()+')</span></strong></div>';
   });
   extraCosts.forEach(function(item,idx){
     var aud=item.currency==='gbp'?Math.round(item.amount*1.88):item.amount;
@@ -291,7 +287,7 @@ function moneyOverview(){
   });
   if(pointsMarketCost>0){costTotal-=pointsMarketCost;html+='<div style="background:rgba(34,197,94,.1);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;color:var(--green)"><span>Covered by points</span><strong>-'+fG(pointsMarketCost)+'</strong></div>';}
   html+='<div style="display:flex;gap:4px;margin-top:4px"><input type="text" id="newCostName" placeholder="+ Add cost..." style="flex:1;font-size:.75rem"><select id="newCostCur" style="font-size:.7rem"><option value="gbp">£</option><option value="aud">$</option></select><input type="number" id="newCostAmt" placeholder="Amount" style="width:70px;font-size:.75rem"><button class="btn btn-o" style="padding:2px 8px;font-size:.7rem" onclick="addCostLine()">+</button></div>';
-  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>TOTAL COSTS</span><span style="color:var(--orange)">'+fG(costTotal)+'</span></div>';
+  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>TOTAL COSTS</span><span style="color:var(--orange)">\u00a3'+Math.round(costTotal*0.532).toLocaleString()+' ($'+costTotal.toLocaleString()+')</span></div>';
   html+='</div></div>';
   
   // INCOME
@@ -316,7 +312,7 @@ function moneyOverview(){
   html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Points cash</span><strong>'+fG(pointsCash)+'</strong></div>';
   incomeTotal+=pointsCash;
   html+='<div style="display:flex;gap:4px;margin-top:4px"><input type="text" id="newIncomeName" placeholder="+ Add income..." style="flex:1;font-size:.75rem"><select id="newIncomeCur" style="font-size:.7rem"><option value="gbp">£</option><option value="aud">$</option></select><input type="number" id="newIncomeAmt" placeholder="Amount" style="width:70px;font-size:.75rem"><button class="btn btn-o" style="padding:2px 8px;font-size:.7rem" onclick="addIncomeLine()">+</button></div>';
-  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>TOTAL</span><span style="color:var(--green)">'+fG(incomeTotal)+'</span></div>';
+  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>TOTAL INCOME</span><span style="color:var(--green)">\u00a3'+Math.round(incomeTotal*0.532).toLocaleString()+' ($'+incomeTotal.toLocaleString()+')</span></div>';
   html+='</div></div>';
   
   // POINTS
@@ -338,7 +334,7 @@ function moneyOverview(){
   
   // NET POSITION - calculate from rendered totals
   var netPosition=incomeTotal-(costTotal>0?costTotal:0);
-  html+='<div class="card mt2" style="text-align:center;border-left:4px solid '+(netPosition>=0?'var(--green)':'var(--red)')+'"><h3>Net Position: <span style="color:'+(netPosition>=0?'var(--green)':'var(--red)')+'">'+fG(netPosition)+'</span></h3>';
+  html+='<div class="card mt2" style="text-align:center;border-left:4px solid '+(netPosition>=0?'var(--green)':'var(--red)')+'"><h3>Net Position: <span style="color:'+(netPosition>=0?'var(--green)':'var(--red)')+'">\u00a3'+Math.round(Math.abs(netPosition)*0.532).toLocaleString()+' ($'+Math.abs(netPosition).toLocaleString()+')</span></h3>';
   html+='<p class="tx tm">'+(netPosition>=0?'✅ Fully funded — surplus of '+fG(netPosition):'⚠️ Shortfall of '+fG(Math.abs(netPosition)))+'</p></div>';
 
   
