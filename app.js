@@ -8,7 +8,11 @@ function load(){
 }
 function save(){
   state._saved=Date.now();
-  try{localStorage.setItem('relo_v3',JSON.stringify(state))}catch(e){console.error('Save failed',e)}
+  try{localStorage.setItem('relo_v3',JSON.stringify(state));
+    // Auto-backup every hour
+    var lastBackup=localStorage.getItem('relo_backup_time')||0;
+    if(Date.now()-lastBackup>3600000){localStorage.setItem('relo_backup',JSON.stringify(state));localStorage.setItem('relo_backup_time',Date.now())}
+  }catch(e){console.error('Save failed',e)}
   var el=document.getElementById('saveIndicator');
   if(el){el.textContent='✓ Saved';el.style.color='var(--green)'}
   // Sync to Firebase (debounced)
