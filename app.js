@@ -400,6 +400,24 @@ function moneyCosts(){
   auItems.forEach(function(i){html+=costRow(i)});
   html+='</table></div></div>';
   
+  // DEFERRED COSTS (not in initial move total)
+  var deferredItems=[];
+  FORECAST_ITEMS.forEach(function(i){
+    if(coSep.indexOf(i.id)>=0)return;
+    var fund=(state.funding||{})[i.id]||i.defaultFund||'lump_sum';
+    if(fund==='deferred')deferredItems.push(i);
+  });
+  if(deferredItems.length){
+    html+='<div class="card" style="opacity:.7"><h2>⏳ Deferred Costs (not in initial move total)</h2>';
+    html+='<p class="tx tm mb2">These are paid later and not included in the move funding calculation.</p>';
+    html+='<div class="table-wrap"><table><tr><th>Item</th><th>Forecast (£)</th><th>When</th><th></th></tr>';
+    deferredItems.forEach(function(i){
+      var fc=Math.round(i.forecast*0.532);
+      html+='<tr><td>'+i.desc+'</td><td>£'+fc.toLocaleString()+'</td><td>Nov 2026</td><td></td></tr>';
+    });
+    html+='</table></div></div>';
+  }
+  
   // ADD NEW
   html+='<div class="card"><h3>+ Add Cost Item</h3>';
   html+='<div class="flex g2 fw aic"><input type="text" id="ccDesc" placeholder="Description" style="flex:1;min-width:180px"><input type="text" id="ccCat" placeholder="Category" style="max-width:120px" value="Custom"><input type="number" id="ccForecast" placeholder="Forecast $" style="max-width:100px"><select id="ccFund"><option value="lump_sum">Relo Cash</option><option value="uk_wages">UK Wages</option></select><button class="btn btn-p" onclick="addCustomCost()">+ Add</button></div></div>';
