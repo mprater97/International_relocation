@@ -360,6 +360,15 @@ function moneyCosts(){
       '<td><input type="number" class="ism" value="'+(act!=null?act:'')+'" placeholder="—" oninput="state.actuals[\''+i.id+'\']=this.value===\'\'?null:+this.value;dbSave(renderMoney)"></td>'+
       '<td><button class="btn btn-o" style="padding:2px 6px;color:var(--red)" onclick="removeCost(\''+i.id+'\')">✕</button></td></tr>';
   }
+  function costRowGBP(i){
+    var fc=Math.round(i.forecast*0.532);
+    var act=state.actuals[i.id];
+    var actGBP=act!=null?Math.round(act*0.532):'';
+    return '<tr><td><input type="text" value="'+i.desc+'" style="min-width:140px" oninput="renameCost(\''+i.id+'\',this.value)"></td>'+
+      '<td><input type="number" class="ism" value="'+fc+'" oninput="FORECAST_ITEMS.find(function(x){return x.id===\''+i.id+'\'}).forecast=Math.round(+this.value*1.88);if(!state.forecasts)state.forecasts={};state.forecasts[\''+i.id+'\']=Math.round(+this.value*1.88);dbSave(renderMoney)"></td>'+
+      '<td><input type="number" class="ism" value="'+actGBP+'" placeholder="—" oninput="state.actuals[\''+i.id+'\']=this.value===\'\'?null:Math.round(+this.value*1.88);dbSave(renderMoney)"></td>'+
+      '<td><button class="btn btn-o" style="padding:2px 6px;color:var(--red)" onclick="removeCost(\''+i.id+'\')">✕</button></td></tr>';
+  }
   
   var html='<p class="tx tm" style="margin-bottom:12px">💡 These costs feed into the <strong>📤 Forecast Costs</strong> tile on the Overview tab.</p>';
   
@@ -379,9 +388,9 @@ function moneyCosts(){
   
   // UK PROPERTY PREP
   html+='<div class="card"><h2>🏠 UK Property Prep</h2>';
-  html+='<p class="tx tm mb2">Total: '+fG(ukItems.reduce(function(s,i){return s+i.forecast},0))+' — funded from UK wages</p>';
-  html+='<div class="table-wrap"><table><tr><th>Item</th><th>Forecast ($)</th><th>Actual ($)</th><th></th></tr>';
-  ukItems.forEach(function(i){html+=costRow(i)});
+  html+='<p class="tx tm mb2">Total: '+fGBP(Math.round(ukItems.reduce(function(s,i){return s+i.forecast},0)*0.532))+' — funded from UK wages</p>';
+  html+='<div class="table-wrap"><table><tr><th>Item</th><th>Forecast (£)</th><th>Actual (£)</th><th></th></tr>';
+  ukItems.forEach(function(i){html+=costRowGBP(i)});
   html+='</table></div></div>';
   
   // AU SETUP
