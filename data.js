@@ -93,7 +93,6 @@ const MONTHLY_AU = [
   {id:'m_clothing',desc:'Clothing / shoes (family)',monthly_aud:120},
   {id:'m_personal',desc:'Haircuts / personal care',monthly_aud:50},
   {id:'m_medical',desc:'Medical / dental gap payments',monthly_aud:50},
-  {id:'m_gifts',desc:'Gifts / birthdays / parties',monthly_aud:80},
   {id:'m_pet',desc:'Pet insurance + vet (Nala — when arrives)',monthly_aud:60},
   {id:'m_home',desc:'Household supplies / maintenance',monthly_aud:50},
   {id:'m_school_vol',desc:'School voluntary contributions (x2)',monthly_aud:50},
