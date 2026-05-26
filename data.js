@@ -85,7 +85,7 @@ const MONTHLY_AU = [
   {id:'m_water',desc:'Water usage',monthly_aud:50},
   {id:'m_internet',desc:'Internet (NBN)',monthly_aud:80},
   {id:'m_health',desc:'Health insurance (your 20% — Amazon pays 80%)',monthly_aud:80},
-  {id:'m_mobile',desc:'Mobile phones (family)',monthly_aud:100},
+  {id:'m_mobile',desc:'Mobile phones (family)',monthly_aud:60},
   {id:'m_streaming',desc:'Streaming (Netflix, Spotify etc)',monthly_aud:35},
   {id:'m_contents_ins',desc:'Contents / rental insurance',monthly_aud:40},
   {id:'m_kids',desc:'Kids activities (sport + casual)',monthly_aud:250},
