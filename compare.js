@@ -1,4 +1,25 @@
-var SUBURB_GALLERY={"Seaford": [{"lat": -38.1005, "lng": 145.134, "heading": 270, "cap": "Seaford Beach"}, {"lat": -38.099, "lng": 145.138, "heading": 180, "cap": "Foreshore Trail"}, {"lat": -38.103, "lng": 145.142, "heading": 90, "cap": "Station Village"}], "Carrum": [{"lat": -38.074, "lng": 145.122, "heading": 270, "cap": "Carrum Beach"}, {"lat": -38.075, "lng": 145.126, "heading": 0, "cap": "Patterson River"}], "Frankston": [{"lat": -38.143, "lng": 145.121, "heading": 270, "cap": "Frankston Beach"}, {"lat": -38.144, "lng": 145.125, "heading": 180, "cap": "Pier & Waterfront"}, {"lat": -38.146, "lng": 145.129, "heading": 90, "cap": "Nepean Hwy Shops"}], "Frankston South": [{"lat": -38.16, "lng": 145.13, "heading": 90, "cap": "Leafy Streets"}, {"lat": -38.158, "lng": 145.125, "heading": 180, "cap": "Sweetwater Creek"}], "Langwarrin": [{"lat": -38.167, "lng": 145.17, "heading": 90, "cap": "New Estates"}, {"lat": -38.165, "lng": 145.175, "heading": 0, "cap": "Lloyd Park"}], "Karingal": [{"lat": -38.15, "lng": 145.15, "heading": 90, "cap": "Karingal Hub"}, {"lat": -38.152, "lng": 145.148, "heading": 180, "cap": "Residential"}], "Cranbourne": [{"lat": -38.099, "lng": 145.283, "heading": 90, "cap": "Town Centre"}, {"lat": -38.11, "lng": 145.27, "heading": 180, "cap": "Botanic Gardens"}], "Mordialloc": [{"lat": -37.987, "lng": 145.083, "heading": 270, "cap": "Beach & Pier"}, {"lat": -37.988, "lng": 145.087, "heading": 0, "cap": "Main Street Cafes"}, {"lat": -37.986, "lng": 145.085, "heading": 180, "cap": "Creek Walk"}], "Aspendale": [{"lat": -38.025, "lng": 145.1, "heading": 270, "cap": "Aspendale Beach"}, {"lat": -38.023, "lng": 145.105, "heading": 90, "cap": "Wetlands"}], "Mentone": [{"lat": -37.983, "lng": 145.062, "heading": 270, "cap": "Mentone Beach"}, {"lat": -37.982, "lng": 145.067, "heading": 90, "cap": "Mentone Parade"}, {"lat": -37.981, "lng": 145.065, "heading": 0, "cap": "Village Streets"}], "Cheltenham": [{"lat": -37.957, "lng": 145.053, "heading": 90, "cap": "Southland Area"}, {"lat": -37.956, "lng": 145.05, "heading": 180, "cap": "Charman Rd"}], "Glen Waverley": [{"lat": -37.878, "lng": 145.163, "heading": 90, "cap": "Kingsway Strip"}, {"lat": -37.88, "lng": 145.165, "heading": 0, "cap": "The Glen"}, {"lat": -37.885, "lng": 145.17, "heading": 180, "cap": "Jells Park"}], "Mt Waverley": [{"lat": -37.877, "lng": 145.129, "heading": 90, "cap": "Village Shops"}, {"lat": -37.88, "lng": 145.125, "heading": 0, "cap": "Leafy Streets"}], "Box Hill": [{"lat": -37.819, "lng": 145.122, "heading": 90, "cap": "Box Hill Central"}, {"lat": -37.818, "lng": 145.12, "heading": 180, "cap": "Market Street Food"}], "Sandringham": [{"lat": -37.951, "lng": 145.005, "heading": 270, "cap": "Sandringham Beach"}, {"lat": -37.949, "lng": 145.01, "heading": 90, "cap": "Village Shops"}, {"lat": -37.953, "lng": 145.002, "heading": 180, "cap": "Half Moon Bay"}], "Brighton": [{"lat": -37.92, "lng": 144.986, "heading": 270, "cap": "Bathing Boxes"}, {"lat": -37.907, "lng": 144.992, "heading": 90, "cap": "Church Street"}, {"lat": -37.91, "lng": 144.987, "heading": 0, "cap": "Brighton Beach"}], "Mornington": [{"lat": -38.218, "lng": 145.038, "heading": 270, "cap": "Mills Beach"}, {"lat": -38.22, "lng": 145.04, "heading": 90, "cap": "Main Street"}, {"lat": -38.219, "lng": 145.035, "heading": 0, "cap": "Pier"}], "Mt Martha": [{"lat": -38.27, "lng": 145.02, "heading": 270, "cap": "Mt Martha Beach"}, {"lat": -38.268, "lng": 145.025, "heading": 90, "cap": "Bushland"}], "Richmond": [{"lat": -37.818, "lng": 144.998, "heading": 90, "cap": "Bridge Road"}, {"lat": -37.82, "lng": 145.0, "heading": 0, "cap": "Swan Street"}], "Windsor": [{"lat": -37.856, "lng": 144.991, "heading": 90, "cap": "Chapel Street"}, {"lat": -37.85, "lng": 144.98, "heading": 0, "cap": "Albert Park Lake"}]};
+var GMAPS_KEY='AIzaSyCkKC4fUOBNqnXghQNUGTHe4lZ06gIILIY';
+function loadSuburbPhotos(name,containerId){
+  var el=document.getElementById(containerId);
+  if(!el)return;
+  // Use Places Text Search to find the suburb, then get photos
+  var query=encodeURIComponent(name+' Victoria Australia');
+  fetch('https://maps.googleapis.com/maps/api/place/textsearch/json?query='+query+'&key='+GMAPS_KEY)
+    .then(function(r){return r.json()})
+    .then(function(data){
+      if(data.results&&data.results[0]&&data.results[0].photos){
+        var photos=data.results[0].photos.slice(0,5);
+        el.innerHTML=photos.map(function(p){
+          return '<img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=300&photo_reference='+p.photo_reference+'&key='+GMAPS_KEY+'" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto" loading="lazy">';
+        }).join('');
+      } else {
+        el.innerHTML='<a href="https://www.google.com/maps/search/'+query+'" target="_blank" style="font-size:.7rem;color:var(--accent);padding:10px">📷 View on Google Maps</a>';
+      }
+    })
+    .catch(function(){
+      el.innerHTML='<a href="https://www.google.com/maps/search/'+query+'" target="_blank" style="font-size:.7rem;color:var(--accent);padding:10px">📷 View on Google Maps</a>';
+    });
+}
 function renderCompare(){
   document.getElementById('locations').innerHTML=
     '<div class="card" style="border-left:4px solid var(--accent)">'+
@@ -328,15 +349,9 @@ function renderSuburbsInteractive(){
       html+='<div class="tx tm">'+s.train+' min train · '+s.beach+'</div></div>';
       html+='</div>';
       
-      // Photo gallery
-      var gal=SUBURB_GALLERY[s.name]||[];
-      if(gal.length){
-        html+='<div style="display:flex;gap:6px;overflow-x:auto;padding:8px 0;margin-top:6px;-webkit-overflow-scrolling:touch">';
-        gal.forEach(function(p){
-          html+='<a href="https://www.google.com/maps/@'+p.lat+','+p.lng+',3a,75y,'+p.heading+'h,90t/data=!3m6!1e1!3m4!1s!2e0!7i16384!8i8192" target="_blank" style="flex:0 0 auto;text-align:center;text-decoration:none"><div style="width:150px;height:100px;border-radius:8px;background:linear-gradient(135deg,#1e3a5f,#3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.7rem;padding:8px;text-align:center">📷 '+p.cap+'</div></a>';
-        });
-        html+='</div>';
-      }
+      // Photo gallery - loads from Google Places
+      html+='<div id="gallery_'+s.name.replace(/ /g,'_')+'" style="display:flex;gap:6px;overflow-x:auto;padding:8px 0;margin-top:6px;-webkit-overflow-scrolling:touch"><div style="color:var(--muted);font-size:.7rem;padding:20px">Loading photos...</div></div>';
+      setTimeout(function(){loadSuburbPhotos(''+s.name,'gallery_'+s.name.replace(/ /g,'_'))},100*(idx+1));
       // Quick stats row
       html+='<div class="flex g2 fw mt2" style="font-size:.78rem">';
       html+='<span>🏫 <a href="'+(s.schoolLink||'')+'" target="_blank" style="color:var(--accent)">'+( s.school||'—')+'</a> ('+( s.schoolRating||'—')+')</span>';
