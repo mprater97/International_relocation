@@ -1,25 +1,3 @@
-var GMAPS_KEY='AIzaSyCkKC4fUOBNqnXghQNUGTHe4lZ06gIILIY';
-function loadSuburbPhotos(name,containerId){
-  var el=document.getElementById(containerId);
-  if(!el)return;
-  // Use Places Text Search to find the suburb, then get photos
-  var query=encodeURIComponent(name+' Victoria Australia');
-  fetch('https://maps.googleapis.com/maps/api/place/textsearch/json?query='+query+'&key='+GMAPS_KEY)
-    .then(function(r){return r.json()})
-    .then(function(data){
-      if(data.results&&data.results[0]&&data.results[0].photos){
-        var photos=data.results[0].photos.slice(0,5);
-        el.innerHTML=photos.map(function(p){
-          return '<img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=300&photo_reference='+p.photo_reference+'&key='+GMAPS_KEY+'" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto" loading="lazy">';
-        }).join('');
-      } else {
-        el.innerHTML='<a href="https://www.google.com/maps/search/'+query+'" target="_blank" style="font-size:.7rem;color:var(--accent);padding:10px">📷 View on Google Maps</a>';
-      }
-    })
-    .catch(function(){
-      el.innerHTML='<a href="https://www.google.com/maps/search/'+query+'" target="_blank" style="font-size:.7rem;color:var(--accent);padding:10px">📷 View on Google Maps</a>';
-    });
-}
 function renderCompare(){
   document.getElementById('locations').innerHTML=
     '<div class="card" style="border-left:4px solid var(--accent)">'+
@@ -349,9 +327,8 @@ function renderSuburbsInteractive(){
       html+='<div class="tx tm">'+s.train+' min train · '+s.beach+'</div></div>';
       html+='</div>';
       
-      // Photo gallery - loads from Google Places
-      html+='<div id="gallery_'+s.name.replace(/ /g,'_')+'" style="display:flex;gap:6px;overflow-x:auto;padding:8px 0;margin-top:6px;-webkit-overflow-scrolling:touch"><div style="color:var(--muted);font-size:.7rem;padding:20px">Loading photos...</div></div>';
-      setTimeout(function(){loadSuburbPhotos(''+s.name,'gallery_'+s.name.replace(/ /g,'_'))},100*(idx+1));
+      // Photo gallery link
+      html+='<div style="margin-top:6px"><a href="https://www.google.com/search?q='+encodeURIComponent(s.name+' Victoria Australia')+'&tbm=isch" target="_blank" style="font-size:.75rem;color:var(--accent);text-decoration:none">📷 View suburb photos →</a></div>';
       // Quick stats row
       html+='<div class="flex g2 fw mt2" style="font-size:.78rem">';
       html+='<span>🏫 <a href="'+(s.schoolLink||'')+'" target="_blank" style="color:var(--accent)">'+( s.school||'—')+'</a> ('+( s.schoolRating||'—')+')</span>';
