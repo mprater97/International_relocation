@@ -82,6 +82,7 @@ const MONTHLY_AU = [
   {id:'m_fuel',desc:'Car fuel',monthly_aud:250},
   {id:'m_car_lease',desc:'Car lease (inc. insurance, rego, maintenance)',monthly_aud:600},
   {id:'m_util',desc:'Electricity + gas',monthly_aud:250},
+  {id:'m_water',desc:'Water usage',monthly_aud:50},
   {id:'m_internet',desc:'Internet (NBN)',monthly_aud:80},
   {id:'m_health',desc:'Health insurance (your 20% — Amazon pays 80%)',monthly_aud:80},
   {id:'m_mobile',desc:'Mobile phones (family)',monthly_aud:130},
@@ -95,6 +96,7 @@ const MONTHLY_AU = [
   {id:'m_gifts',desc:'Gifts / birthdays / parties',monthly_aud:80},
   {id:'m_pet',desc:'Pet insurance + vet (Nala — when arrives)',monthly_aud:60},
   {id:'m_home',desc:'Household supplies / maintenance',monthly_aud:50},
+  {id:'m_school_vol',desc:'School voluntary contributions (x2)',monthly_aud:50},
 ];
 const MONTHLY_UK = [
   {id:'m_mortgage',desc:'Yorkshire BS Mortgage',monthly_gbp:1056},
