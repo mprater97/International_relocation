@@ -1,3 +1,22 @@
+
+function loadAllSuburbPhotos(){
+  if(typeof google==='undefined'||!google.maps||!google.maps.places)return setTimeout(loadAllSuburbPhotos,500);
+  var service=new google.maps.places.PlacesService(document.createElement('div'));
+  SUBURBS_DATA.forEach(function(s){
+    var el=document.getElementById('gal_'+s.name.replace(/ /g,'_'));
+    if(!el)return;
+    service.findPlaceFromQuery({query:s.name+' Victoria Australia',fields:['photos','place_id']},function(results,status){
+      if(status==='OK'&&results[0]&&results[0].photos){
+        var photos=results[0].photos.slice(0,5);
+        el.innerHTML=photos.map(function(p){
+          return '<img src="'+p.getUrl({maxWidth:300,maxHeight:200})+'" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto" loading="lazy" onerror="this.style.display=\'none\'">';
+        }).join('');
+      } else {
+        el.innerHTML='<a href="https://www.google.com/search?q='+encodeURIComponent(s.name+' Victoria Australia')+'&tbm=isch" target="_blank" style="font-size:.7rem;color:var(--accent)">📷 View photos</a>';
+      }
+    });
+  });
+}
 function renderCompare(){
   document.getElementById('locations').innerHTML=
     '<div class="card" style="border-left:4px solid var(--accent)">'+
@@ -327,8 +346,8 @@ function renderSuburbsInteractive(){
       html+='<div class="tx tm">'+s.train+' min train · '+s.beach+'</div></div>';
       html+='</div>';
       
-      // Photo gallery link
-      html+='<div style="margin-top:6px"><a href="https://www.google.com/search?q='+encodeURIComponent(s.name+' Victoria Australia')+'&tbm=isch" target="_blank" style="font-size:.75rem;color:var(--accent);text-decoration:none">📷 View suburb photos →</a></div>';
+      // Photo gallery - Google Places
+      html+='<div id="gal_'+s.name.replace(/ /g,'_')+'" style="display:flex;gap:6px;overflow-x:auto;padding:8px 0;margin-top:6px;-webkit-overflow-scrolling:touch;min-height:80px"><span style="color:var(--muted);font-size:.7rem;padding:10px">📷 Loading...</span></div>';
       // Quick stats row
       html+='<div class="flex g2 fw mt2" style="font-size:.78rem">';
       html+='<span>🏫 <a href="'+(s.schoolLink||'')+'" target="_blank" style="color:var(--accent)">'+( s.school||'—')+'</a> ('+( s.schoolRating||'—')+')</span>';
