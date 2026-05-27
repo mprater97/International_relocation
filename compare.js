@@ -1,44 +1,43 @@
 
 function loadMapPhotos(name){
-  if(typeof google==='undefined'||!google.maps||!google.maps.places)return;
   var el=document.getElementById('mapgal_'+name.replace(/ /g,'_'));
   if(!el||el.dataset.loaded)return;
   el.dataset.loaded='1';
-  var service=new google.maps.places.PlacesService(document.createElement('div'));
-  service.textSearch({query:name+' suburb Victoria Australia'},function(results,status){
-    var photos=[];
-    if(status==='OK'&&results){results.slice(0,2).forEach(function(r){if(r.photos)photos=photos.concat(r.photos)})}
-    if(photos.length){
-      el.innerHTML=photos.slice(0,3).map(function(p){
-        return '<img src="'+p.getUrl({maxWidth:200,maxHeight:130})+'" style="height:60px;border-radius:6px;object-fit:cover;flex:0 0 auto">';
-      }).join('');
-    }
-  });
+  fetch('https://maps.googleapis.com/maps/api/place/textsearch/json?query='+encodeURIComponent(name+' Victoria Australia')+'&key='+GKEY)
+    .then(function(r){return r.json()})
+    .then(function(data){
+      var photos=[];
+      if(data.results){data.results.slice(0,2).forEach(function(r){if(r.photos)photos=photos.concat(r.photos)})}
+      if(photos.length){
+        el.innerHTML=photos.slice(0,3).map(function(p){
+          return '<img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photo_reference='+p.photo_reference+'&key='+GKEY+'" style="height:60px;border-radius:6px;object-fit:cover;flex:0 0 auto">';
+        }).join('');
+      }
+    }).catch(function(){});
 }
 
+var GKEY='AIzaSyCkKC4fUOBNqnXghQNUGTHe4lZ06gIILIY';
 function loadAllSuburbPhotos(){
-  if(typeof google==='undefined'||!google.maps||!google.maps.places)return setTimeout(loadAllSuburbPhotos,500);
-  var service=new google.maps.places.PlacesService(document.createElement('div'));
   var queue=SUBURBS_DATA.slice();
   function next(){
     if(!queue.length)return;
     var s=queue.shift();
     var el=document.getElementById('gal_'+s.name.replace(/ /g,'_'));
     if(!el){next();return}
-    service.textSearch({query:s.name+' suburb Victoria Australia'},function(results,status){
-      var allPhotos=[];
-      if(status==='OK'&&results){
-        results.slice(0,3).forEach(function(r){if(r.photos)allPhotos=allPhotos.concat(r.photos)});
-      }
-      if(allPhotos.length){
-        el.innerHTML=allPhotos.slice(0,5).map(function(p){
-          return '<img src="'+p.getUrl({maxWidth:400,maxHeight:250})+'" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto" loading="lazy" onerror="this.style.display=\'none\'">';
-        }).join('');
-      } else {
-        el.innerHTML='<a href="https://www.google.com/search?q='+encodeURIComponent(s.name+' Victoria Australia')+'&tbm=isch" target="_blank" style="font-size:.7rem;color:var(--accent)">📷 View photos</a>';
-      }
-      setTimeout(next,300);
-    });
+    fetch('https://maps.googleapis.com/maps/api/place/textsearch/json?query='+encodeURIComponent(s.name+' Victoria Australia')+'&key='+GKEY)
+      .then(function(r){return r.json()})
+      .then(function(data){
+        var photos=[];
+        if(data.results){data.results.slice(0,3).forEach(function(r){if(r.photos)photos=photos.concat(r.photos)})}
+        if(photos.length){
+          el.innerHTML=photos.slice(0,5).map(function(p){
+            return '<img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference='+p.photo_reference+'&key='+GKEY+'" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto" loading="lazy" onerror="this.style.display=\'none\'">';
+          }).join('');
+        } else {
+          el.innerHTML='<a href="https://www.google.com/search?q='+encodeURIComponent(s.name+' Victoria Australia')+'&tbm=isch" target="_blank" style="font-size:.7rem;color:var(--accent)">📷 View photos</a>';
+        }
+        setTimeout(next,200);
+      }).catch(function(){next()});
   }
   next();
 }
