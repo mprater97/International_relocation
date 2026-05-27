@@ -1,4 +1,21 @@
 
+function loadMapPhotos(name){
+  if(typeof google==='undefined'||!google.maps||!google.maps.places)return;
+  var el=document.getElementById('mapgal_'+name.replace(/ /g,'_'));
+  if(!el||el.dataset.loaded)return;
+  el.dataset.loaded='1';
+  var service=new google.maps.places.PlacesService(document.createElement('div'));
+  service.textSearch({query:name+' suburb Victoria Australia'},function(results,status){
+    var photos=[];
+    if(status==='OK'&&results){results.slice(0,2).forEach(function(r){if(r.photos)photos=photos.concat(r.photos)})}
+    if(photos.length){
+      el.innerHTML=photos.slice(0,3).map(function(p){
+        return '<img src="'+p.getUrl({maxWidth:200,maxHeight:130})+'" style="height:60px;border-radius:6px;object-fit:cover;flex:0 0 auto">';
+      }).join('');
+    }
+  });
+}
+
 function loadAllSuburbPhotos(){
   if(typeof google==='undefined'||!google.maps||!google.maps.places)return setTimeout(loadAllSuburbPhotos,500);
   var service=new google.maps.places.PlacesService(document.createElement('div'));
@@ -201,7 +218,8 @@ function initSuburbMap(){
       var mvce=parseInt((s.schoolRating||'').match(/\d+/)||[0]);var msc=mvce>=32?5:mvce>=29?4:mvce>=27?3:mvce>=25?2:1;
       var mw=((mf*25+ml*20+mfi*17.5+mc*17.5+mb*10+msc*10)/100).toFixed(1);
       var mwc=mw>=4?'#16a34a':mw>=3?'#3b82f6':'#6b7280';
-      marker.bindPopup('<div style="min-width:200px"><strong>'+s.name+'</strong> <span style="background:'+mwc+';color:#fff;padding:1px 6px;border-radius:8px;font-size:.7rem">'+mw+'/5</span><br><span style="font-size:.85rem">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')<br>Train: '+s.train+' min | Beach: '+s.beach+'<br>School: '+s.school+' ('+s.schoolRating+')</span><br><button onclick="showSuburbDetail(\''+s.name+'\')" style="margin-top:4px;padding:4px 8px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.75rem">View full details</button></div>');
+      marker.bindPopup('<div style="min-width:240px"><strong>'+s.name+'</strong> <span style="background:'+mwc+';color:#fff;padding:1px 6px;border-radius:8px;font-size:.7rem">'+mw+'/5</span><br><span style="font-size:.85rem">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')<br>Train: '+s.train+' min | Beach: '+s.beach+'<br>School: '+s.school+' ('+s.schoolRating+')</span><div id="mapgal_'+s.name.replace(/ /g,'_')+'" style="display:flex;gap:4px;overflow-x:auto;margin-top:6px;max-width:240px"></div></div>');
+      marker.on("popupopen",function(){loadMapPhotos("'+s.name+'")});
     });
   });
   
@@ -362,26 +380,7 @@ function renderSuburbsInteractive(){
       html+='<span>💰 ~$'+disposable+'/mo (£'+Math.round(disposable*0.532)+') disposable</span>';
       html+='</div>';
       
-      // Expandable detail
-      html+='<details style="margin-top:8px"><summary style="cursor:pointer;font-size:.82rem;color:var(--accent)">ℹ️ Details + Add to Shortlist</summary>';
-      html+='<div style="padding:8px 0">';
-      
-      // Price + listing
-      html+='<div class="flex g2 fw aic mb2"><label class="tx">Your price:</label><input type="number" class="ism" value="'+(d.price||'')+'" placeholder="$/wk" oninput="saveSuburbField(\''+s.name+'\',\'price\',+this.value)"><label class="tx">Train:</label><input type="number" class="ism" style="width:50px" value="'+(d.train||s.train)+'" oninput="saveSuburbField(\''+s.name+'\',\'train\',+this.value)"> min<label class="tx">Listing:</label><input type="text" value="'+(d.link||'')+'" placeholder="URL" style="flex:1;min-width:100px;font-size:.75rem" oninput="saveSuburbField(\''+s.name+'\',\'link\',this.value)">'+(d.link?'<a href="'+d.link+'" target="_blank" style="color:var(--accent);font-size:.75rem">View →</a>':'')+'</div>';
-      
-      // Features
-      html+='<div style="font-size:.72rem;margin:6px 0">';
-      var features=['Beach','Garden','Direct Train','Cafes','Shops','Good School','Parks','4-bed','Quiet','Family Area','Dog Friendly','Bike Paths'];
-      features.forEach(function(f){
-        var checked=(d.features||{})[f];
-        html+='<label style="margin-right:6px"><input type="checkbox" '+(checked?'checked':'')+' onchange="saveSuburbFeature(\''+s.name+'\',\''+f+'\',this.checked)"> '+f+'</label>';
-      });
-      html+='<br><input type="text" value="'+(d.custom||'')+'" placeholder="+ Custom notes..." style="font-size:.75rem;margin-top:4px;width:100%" oninput="saveSuburbField(\''+s.name+'\',\'custom\',this.value)">';
-      html+='</div>';
-      
-      // Add to shortlist button
-      html+='<button class="btn btn-p" style="margin-top:6px;font-size:.78rem" onclick="addSuburbToShortlist(\''+s.name+'\')">⭐ Add to Shortlist</button>';
-      html+='</div></details>';
+
       // Lifestyle dropdown
       html+='<details style="margin-top:4px"><summary style="cursor:pointer;font-size:.82rem;color:var(--muted)">☕ Lifestyle & Activities</summary>';
       html+='<div style="padding:8px 0;font-size:.8rem">';
