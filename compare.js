@@ -5,9 +5,13 @@ function loadMapPhotos(name){
   if(!el||el.dataset.loaded)return;
   el.dataset.loaded='1';
   var service=new google.maps.places.PlacesService(document.createElement('div'));
-  service.findPlaceFromQuery({query:name+' Victoria Australia',fields:['photos']},function(results,status){
-    if(status===google.maps.places.PlacesServiceStatus.OK&&results&&results[0]&&results[0].photos){
-      el.innerHTML=results[0].photos.slice(0,3).map(function(p){
+  service.textSearch({query:name+' Victoria Australia'},function(results,status){
+    var allPhotos=[];
+    if(status===google.maps.places.PlacesServiceStatus.OK&&results){
+      results.slice(0,3).forEach(function(r){if(r.photos)allPhotos=allPhotos.concat(r.photos)});
+    }
+    if(allPhotos.length){
+      el.innerHTML=allPhotos.slice(0,4).map(function(p){
         return '<img src="'+p.getUrl({maxWidth:200,maxHeight:130})+'" style="height:60px;border-radius:6px;object-fit:cover;flex:0 0 auto">';
       }).join('');
     }
@@ -24,11 +28,13 @@ function loadAllSuburbPhotos(){
     var s=queue.shift();
     var el=document.getElementById('gal_'+s.name.replace(/ /g,'_'));
     if(!el){next();return}
-    var request={query:s.name+' Victoria Australia',fields:['photos']};
-    service.findPlaceFromQuery(request,function(results,status){
-      if(status===google.maps.places.PlacesServiceStatus.OK&&results&&results[0]&&results[0].photos){
-        var photos=results[0].photos.slice(0,5);
-        el.innerHTML=photos.map(function(p){
+    service.textSearch({query:s.name+' suburb Victoria Australia'},function(results,status){
+      var allPhotos=[];
+      if(status===google.maps.places.PlacesServiceStatus.OK&&results){
+        results.slice(0,5).forEach(function(r){if(r.photos)allPhotos=allPhotos.concat(r.photos)});
+      }
+      if(allPhotos.length){
+        el.innerHTML=allPhotos.slice(0,6).map(function(p){
           return '<img src="'+p.getUrl({maxWidth:400,maxHeight:250})+'" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto" loading="lazy" onerror="this.style.display=\'none\'">';
         }).join('');
       } else {
@@ -409,6 +415,7 @@ function renderSuburbsInteractive(){
   html+='</div></div>';
   
   document.getElementById('cmpContent').innerHTML=html;
+  setTimeout(loadAllSuburbPhotos,500);
 }
 function saveSuburbField(name,field,val){
   if(!state.suburbData)state.suburbData={};
