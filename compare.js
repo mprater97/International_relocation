@@ -37,17 +37,34 @@ function openLightbox(container,startIdx){
 
 function loadAllSuburbPhotos(){
   if(!window._mapsLoaded){return setTimeout(loadAllSuburbPhotos,1000);}
+  var cached=state.photoCache||{};
+  var cacheAge=state.photoCacheTime||0;
+  var isStale=(Date.now()-cacheAge)>7*24*60*60*1000;
+  // Use cache if fresh
+  if(!isStale&&Object.keys(cached).length>5){
+    SUBURBS_DATA.forEach(function(s){
+      var el=document.getElementById('gal_'+s.name.replace(/ /g,'_'));
+      if(!el)return;
+      var urls=cached[s.name]||[];
+      if(urls.length){
+        el.innerHTML=urls.map(function(url,i){
+          return '<img src="'+url+'" onclick="openLightbox(this.parentNode,'+i+')" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto;cursor:pointer" loading="lazy" onerror="this.style.display=\'none\'">';
+        }).join('');
+      } else {el.innerHTML='';}
+    });
+    return;
+  }
+  // Fetch fresh
+  var newCache={};
   var service=new google.maps.places.PlacesService(document.createElement('div'));
   var queue=SUBURBS_DATA.slice();
   function next(){
-    if(!queue.length)return;
+    if(!queue.length){state.photoCache=newCache;state.photoCacheTime=Date.now();save();return}
     var s=queue.shift();
     var el=document.getElementById('gal_'+s.name.replace(/ /g,'_'));
     if(!el){next();return}
-    // Search multiple terms for variety
-    var queries=[s.name+' beach Victoria',s.name+' shops cafes Victoria',s.name+' park Victoria',s.name+' suburb Victoria Australia'];
-    var allPhotos=[];
-    var done=0;
+    var queries=[s.name+' beach Victoria',s.name+' shops Victoria',s.name+' park Victoria',s.name+' Victoria Australia'];
+    var allPhotos=[];var done=0;
     queries.forEach(function(q){
       service.textSearch({query:q},function(results,status){
         if(status===google.maps.places.PlacesServiceStatus.OK&&results){
@@ -55,120 +72,22 @@ function loadAllSuburbPhotos(){
         }
         done++;
         if(done===queries.length){
-          // Deduplicate by URL and show
           var seen={};var unique=[];
           allPhotos.forEach(function(p){var u=p.getUrl({maxWidth:400});if(!seen[u]){seen[u]=1;unique.push(p)}});
-          if(unique.length){
-            el.innerHTML=unique.slice(0,8).map(function(p,i){
-              var url=p.getUrl({maxWidth:800,maxHeight:500});
-              return '<img src="'+p.getUrl({maxWidth:400,maxHeight:250})+'" data-full="'+url+'" onclick="openLightbox(this.parentNode,'+i+')" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto;cursor:pointer" loading="lazy" onerror="this.style.display=\'none\'">';
+          var urls=unique.slice(0,8).map(function(p){return p.getUrl({maxWidth:800,maxHeight:500})});
+          newCache[s.name]=urls;
+          if(urls.length){
+            el.innerHTML=urls.map(function(url,i){
+              return '<img src="'+url+'" onclick="openLightbox(this.parentNode,'+i+')" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto;cursor:pointer" loading="lazy" onerror="this.style.display=\'none\'">';
             }).join('');
-          } else {
-            el.innerHTML='';
-          }
-          setTimeout(next,300);
+          } else {el.innerHTML='';}
+          setTimeout(next,400);
         }
       });
     });
   }
   next();
 }
-function renderCompare(){
-  document.getElementById('locations').innerHTML=
-    '<div class="card" style="border-left:4px solid var(--accent)">'+
-    '<h2>🏙️ Melbourne — Location Guide</h2>'+
-    '<p class="ts tm">$159k salary | 4-bed with garden | Beach lifestyle</p>'+
-    '<div class="stabs mt2">'+
-    '<div class="stab active" onclick="showCmp(\'suburbs\',this)">🏘️ Suburbs</div>'+
-    '<div class="stab" onclick="showCmp(\'costs\',this)">💰 Living Costs</div>'+
-    
-    
-    '<div class="stab" onclick="showCmp(\'frankie\',this)">💼 Frankie</div>'+
-    '<div class="stab" onclick="showCmp(\'sydney\',this)">🌊 vs Sydney</div>'+
-    '</div></div><div id="cmpContent"></div>';
-  showCmp('suburbs');
-}
-function showCmp(id,btn){
-  if(btn){document.querySelectorAll('#locations .stab').forEach(function(s){s.classList.remove('active')});btn.classList.add('active')}
-  if(id==='shortlist'){renderShortlist()}else if(id==='suburbs'){renderSuburbsInteractive()}else{document.getElementById('cmpContent').innerHTML=CMP[id]||'';}
-}
-var CMP={};
-
-CMP.shortlist='';
-function renderShortlist(){
-  var areas=state.shortlist||[];
-  var html='<div class="card"><h2>⭐ My Suburb Shortlist</h2><p class="tx tm mb2">Add areas, rate them, enter real prices. Rate each feature 1–10 for a better spread.</p>';
-  
-  // Add new area form
-  html+='<div class="flex g2 fw aic mb2"><input type="text" id="slName" placeholder="Suburb name" style="flex:1;min-width:150px"><input type="number" id="slRent" placeholder="Actual rent $/wk" style="max-width:130px"><input type="text" id="slLink" placeholder="Listing URL (optional)" style="flex:1;min-width:150px"><button class="btn btn-p" onclick="addToShortlist()">+ Add</button></div>';
-  
-  if(areas.length){
-    html+='<div class="table-wrap"><table><tr><th>Suburb</th><th>Rent/wk</th><th>Beach</th><th>Commute</th><th>Schools</th><th>Lifestyle</th><th>Value</th><th>Total</th><th>Notes</th><th></th></tr>';
-    areas.sort(function(a,b){return (b.scores||{}).total-(a.scores||{}).total});
-    areas.forEach(function(a,i){
-      var s=a.scores||{beach:0,commute:0,schools:0,lifestyle:0,value:0};
-      s.total=(s.beach||0)+(s.commute||0)+(s.schools||0)+(s.lifestyle||0)+(s.value||0);
-      var nameColor=s.total>=40?'var(--green)':s.total>=30?'var(--accent)':'var(--muted)';
-      html+='<tr><td style="font-weight:600">'+(a.link?'<a href="'+a.link+'" target="_blank" style="color:var(--accent)">'+a.name+' →</a>':a.name)+(s.total>0?' <span style="background:'+nameColor+';color:#fff;padding:1px 6px;border-radius:10px;font-size:.7rem;font-weight:700;margin-left:4px">'+s.total+'</span>':'')+'</td>';
-      html+='<td><input type="number" class="ism" value="'+(a.rent||'')+'" placeholder="$" oninput="updateShortlist('+i+',\'rent\',+this.value)"></td>';
-      ['beach','commute','schools','lifestyle','value'].forEach(function(k){
-        html+='<td><select onchange="updateShortlistScore('+i+',\''+k+'\',+this.value)" style="width:45px">';
-        for(var n=0;n<=10;n++)html+='<option value="'+n+'" '+(s[k]===n?'selected':'')+'>'+(n===0?'-':n)+'</option>';
-        html+='</select></td>';
-      });
-      html+='<td style="font-weight:700;color:'+(s.total>=40?'var(--green)':s.total>=30?'var(--accent)':'var(--muted)')+'">'+s.total+'/50</td>';
-      html+='<td><input type="text" value="'+(a.notes||'')+'" placeholder="Notes..." oninput="updateShortlist('+i+',\'notes\',this.value)" style="min-width:120px"></td>';
-      html+='<td><button class="btn btn-o" style="padding:2px 6px;color:var(--red)" onclick="removeFromShortlist('+i+')">✕</button></td></tr>';
-    });
-    html+='</table></div>';
-    
-    // Show winner
-    if(areas.length>1){
-      var sorted=areas.slice().sort(function(a,b){var sa=(a.scores||{});var sb=(b.scores||{});return((sb.beach||0)+(sb.commute||0)+(sb.schools||0)+(sb.lifestyle||0)+(sb.value||0))-((sa.beach||0)+(sa.commute||0)+(sa.schools||0)+(sa.lifestyle||0)+(sa.value||0))});
-      var winner=sorted[0];
-      var ws=winner.scores||{};
-      var wtotal=(ws.beach||0)+(ws.commute||0)+(ws.schools||0)+(ws.lifestyle||0)+(ws.value||0);
-      if(wtotal>0)html+='<div class="card mt2" style="border-left:4px solid var(--green)"><h3 style="color:var(--green)">🏆 Current Leader: '+winner.name+' ('+wtotal+'/50)</h3></div>';
-    }
-  } else {
-    html+='<p class="tm ts">No areas shortlisted yet. Add suburbs above to start comparing.</p>';
-  }
-  html+='</div>';
-  
-  // Scoring guide
-  html+='<div class="card"><h3>Scoring Guide (1–10)</h3><div class="table-wrap"><table><tr><th>Score</th><th>Beach</th><th>Commute</th><th>Schools</th><th>Lifestyle</th><th>Value</th></tr><tr><td>9–10</td><td>On the beach / walk</td><td>&lt;25 min door-to-door</td><td>Top rated (VCE 90+)</td><td>Everything walkable, buzzing community</td><td>Under $550/wk 4-bed</td></tr><tr><td>7–8</td><td>5 min drive</td><td>25–35 min</td><td>Good (VCE 80+)</td><td>Most things nearby, good vibe</td><td>$550–650/wk</td></tr><tr><td>5–6</td><td>10–15 min drive</td><td>35–45 min</td><td>Average</td><td>Some things nearby</td><td>$650–750/wk</td></tr><tr><td>3–4</td><td>20 min drive</td><td>45–55 min</td><td>Below average</td><td>Limited, need to drive</td><td>$750–900/wk</td></tr><tr><td>1–2</td><td>30+ min drive</td><td>55+ min</td><td>Poor / no data</td><td>Very limited</td><td>$900+/wk</td></tr></table></div></div>';
-  
-  document.getElementById('cmpContent').innerHTML=html;
-}
-
-function addToShortlist(){
-  var name=document.getElementById('slName').value;
-  if(!name)return;
-  var rent=+(document.getElementById('slRent').value)||0;
-  var link=document.getElementById('slLink').value;
-  if(!state.shortlist)state.shortlist=[];
-  state.shortlist.push({name:name,rent:rent,link:link,notes:'',scores:{beach:0,commute:0,schools:0,lifestyle:0,value:0}});
-  save();showCmp('shortlist');
-}
-function updateShortlist(i,field,val){
-  if(!state.shortlist||!state.shortlist[i])return;
-  state.shortlist[i][field]=val;
-  save();
-}
-function updateShortlistScore(i,field,val){
-  if(!state.shortlist||!state.shortlist[i])return;
-  if(!state.shortlist[i].scores)state.shortlist[i].scores={};
-  state.shortlist[i].scores[field]=val;
-  save();showCmp('shortlist');
-}
-function removeFromShortlist(i){
-  if(!state.shortlist)return;
-  state.shortlist.splice(i,1);
-  save();showCmp('shortlist');
-}
-
-
-
 var SUBURBS_DATA=[
   {name:'Seaford',safety:4,walk:3,familyScore:4,growth:4,crime:'Low',walkScore:'Moderate — car helpful but train+beach walkable',demographics:'Young families, retirees, growing professional mix',pros:'Affordable beach lifestyle, improving rapidly, foreshore trail, good community',cons:'Further from city (50 min), limited nightlife, some older housing stock',cafes:'Foreshore cafes, fish & chips, growing brunch scene',shops:'Local shops + 10 min to Frankston Bayside Centre',outdoors:'Beach, foreshore trail, wetlands, playgrounds',community:'Relaxed village, young families, community markets',school:'Monterey SC',schoolRating:'VCE median 25 — Average',schoolLink:'https://www.google.com/search?q=Monterey+Secondary+College+Frankston',pc:'3198',bed3:'520–580',bed4:'580–650',train:50,beach:'ON beach',garden:'Yes',vibe:'Beach village, foreshore trail, relaxed',lat:-38.1,lng:145.134},
   {name:'Carrum',safety:4,walk:3,familyScore:5,growth:3,crime:'Low',walkScore:'Moderate — beach walkable, car for shops',demographics:'Families, quiet retirees, boat owners',pros:'Very quiet, Patterson River lifestyle, beach on doorstep, tight community',cons:'Small suburb, limited shops/cafes, need car for most things',cafes:'Small cafe strip, Patterson River dining',shops:'Local shops, 10 min to Frankston',outdoors:'Beach, Patterson River walks, boat ramp',community:'Quiet family streets, tight-knit',school:'Patterson River SC',schoolRating:'VCE median 26 — Average',schoolLink:'https://www.google.com/search?q=Patterson+River+Secondary+College',pc:'3197',bed3:'530–590',bed4:'600–680',train:48,beach:'ON beach',garden:'Yes',vibe:'Quiet beach, Patterson River, family',lat:-38.075,lng:145.123},
