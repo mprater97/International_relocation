@@ -1,103 +1,114 @@
-var SUBURB_PHOTOS={"Seaford": ["images/seaford/beach_1.jpg", "images/seaford/beach_2.jpg", "images/seaford/beach_3.jpg", "images/seaford/main_street_1.jpg", "images/seaford/main_street_2.jpg", "images/seaford/main_street_3.jpg", "images/seaford/cafe_1.jpg", "images/seaford/cafe_2.jpg", "images/seaford/cafe_3.jpg", "images/seaford/park_1.jpg", "images/seaford/park_2.jpg", "images/seaford/park_3.jpg"], "Carrum": ["images/carrum/beach_1.jpg", "images/carrum/beach_2.jpg", "images/carrum/main_street_1.jpg", "images/carrum/main_street_2.jpg", "images/carrum/main_street_3.jpg", "images/carrum/cafe_1.jpg", "images/carrum/cafe_2.jpg", "images/carrum/cafe_3.jpg", "images/carrum/park_1.jpg", "images/carrum/residential_1.jpg", "images/carrum/aerial_1.jpg", "images/carrum/aerial_2.jpg"], "Frankston": ["images/frankston/beach_1.jpg", "images/frankston/beach_2.jpg", "images/frankston/beach_3.jpg", "images/frankston/main_street_1.jpg", "images/frankston/main_street_2.jpg", "images/frankston/main_street_3.jpg", "images/frankston/cafe_1.jpg", "images/frankston/cafe_2.jpg", "images/frankston/cafe_3.jpg", "images/frankston/park_1.jpg", "images/frankston/park_2.jpg", "images/frankston/park_3.jpg"], "Frankston South": ["images/frankston_south/beach_1.jpg", "images/frankston_south/beach_2.jpg", "images/frankston_south/beach_3.jpg", "images/frankston_south/main_street_1.jpg", "images/frankston_south/main_street_2.jpg", "images/frankston_south/main_street_3.jpg", "images/frankston_south/cafe_1.jpg", "images/frankston_south/cafe_2.jpg", "images/frankston_south/cafe_3.jpg", "images/frankston_south/park_1.jpg", "images/frankston_south/park_2.jpg", "images/frankston_south/park_3.jpg"], "Langwarrin": ["images/langwarrin/beach_1.jpg", "images/langwarrin/beach_2.jpg", "images/langwarrin/beach_3.jpg", "images/langwarrin/main_street_1.jpg", "images/langwarrin/main_street_2.jpg", "images/langwarrin/main_street_3.jpg", "images/langwarrin/cafe_1.jpg", "images/langwarrin/cafe_2.jpg", "images/langwarrin/cafe_3.jpg", "images/langwarrin/park_1.jpg", "images/langwarrin/park_2.jpg", "images/langwarrin/park_3.jpg"], "Karingal": ["images/karingal/beach_1.jpg", "images/karingal/beach_2.jpg", "images/karingal/beach_3.jpg", "images/karingal/main_street_1.jpg", "images/karingal/main_street_2.jpg", "images/karingal/main_street_3.jpg", "images/karingal/cafe_1.jpg", "images/karingal/cafe_2.jpg", "images/karingal/cafe_3.jpg", "images/karingal/park_1.jpg", "images/karingal/lifestyle_1.jpg", "images/karingal/lifestyle_2.jpg"], "Cranbourne": ["images/cranbourne/beach_1.jpg", "images/cranbourne/beach_2.jpg", "images/cranbourne/main_street_1.jpg", "images/cranbourne/main_street_2.jpg", "images/cranbourne/main_street_3.jpg", "images/cranbourne/cafe_1.jpg", "images/cranbourne/cafe_2.jpg", "images/cranbourne/cafe_3.jpg", "images/cranbourne/park_1.jpg", "images/cranbourne/park_2.jpg", "images/cranbourne/residential_1.jpg", "images/cranbourne/residential_2.jpg"], "Mordialloc": ["images/mordialloc/beach_1.jpg", "images/mordialloc/main_street_1.jpg", "images/mordialloc/main_street_2.jpg", "images/mordialloc/main_street_3.jpg", "images/mordialloc/cafe_1.jpg", "images/mordialloc/cafe_2.jpg", "images/mordialloc/cafe_3.jpg", "images/mordialloc/park_1.jpg", "images/mordialloc/park_2.jpg", "images/mordialloc/park_3.jpg", "images/mordialloc/residential_1.jpg", "images/mordialloc/residential_2.jpg"], "Aspendale": ["images/aspendale/beach_1.jpg", "images/aspendale/main_street_1.jpg", "images/aspendale/main_street_2.jpg", "images/aspendale/main_street_3.jpg", "images/aspendale/cafe_1.jpg", "images/aspendale/cafe_2.jpg", "images/aspendale/cafe_3.jpg", "images/aspendale/park_1.jpg", "images/aspendale/park_2.jpg", "images/aspendale/park_3.jpg", "images/aspendale/residential_1.jpg", "images/aspendale/aerial_1.jpg"], "Mentone": ["images/mentone/beach_1.jpg", "images/mentone/main_street_1.jpg", "images/mentone/main_street_2.jpg", "images/mentone/main_street_3.jpg", "images/mentone/cafe_1.jpg", "images/mentone/cafe_2.jpg", "images/mentone/cafe_3.jpg", "images/mentone/park_1.jpg", "images/mentone/park_2.jpg", "images/mentone/park_3.jpg", "images/mentone/residential_1.jpg", "images/mentone/aerial_1.jpg"], "Cheltenham": ["images/cheltenham/beach_1.jpg", "images/cheltenham/beach_2.jpg", "images/cheltenham/beach_3.jpg", "images/cheltenham/main_street_1.jpg", "images/cheltenham/main_street_2.jpg", "images/cheltenham/main_street_3.jpg", "images/cheltenham/cafe_1.jpg", "images/cheltenham/park_1.jpg", "images/cheltenham/park_2.jpg", "images/cheltenham/park_3.jpg", "images/cheltenham/residential_1.jpg", "images/cheltenham/residential_2.jpg"], "Glen Waverley": ["images/glen_waverley/beach_1.jpg", "images/glen_waverley/beach_2.jpg", "images/glen_waverley/beach_3.jpg", "images/glen_waverley/main_street_1.jpg", "images/glen_waverley/main_street_2.jpg", "images/glen_waverley/main_street_3.jpg", "images/glen_waverley/cafe_1.jpg", "images/glen_waverley/cafe_2.jpg", "images/glen_waverley/cafe_3.jpg", "images/glen_waverley/park_1.jpg", "images/glen_waverley/park_2.jpg", "images/glen_waverley/park_3.jpg"], "Mt Waverley": ["images/mt_waverley/beach_1.jpg", "images/mt_waverley/beach_2.jpg", "images/mt_waverley/beach_3.jpg", "images/mt_waverley/main_street_1.jpg", "images/mt_waverley/main_street_2.jpg", "images/mt_waverley/main_street_3.jpg", "images/mt_waverley/cafe_1.jpg", "images/mt_waverley/cafe_2.jpg", "images/mt_waverley/cafe_3.jpg", "images/mt_waverley/park_1.jpg", "images/mt_waverley/park_2.jpg", "images/mt_waverley/park_3.jpg"], "Box Hill": ["images/box_hill/beach_1.jpg", "images/box_hill/main_street_1.jpg", "images/box_hill/main_street_2.jpg", "images/box_hill/main_street_3.jpg", "images/box_hill/cafe_1.jpg", "images/box_hill/cafe_2.jpg", "images/box_hill/cafe_3.jpg", "images/box_hill/park_1.jpg", "images/box_hill/park_2.jpg", "images/box_hill/park_3.jpg", "images/box_hill/residential_1.jpg", "images/box_hill/residential_2.jpg"], "Sandringham": ["images/sandringham/beach_1.jpg", "images/sandringham/beach_2.jpg", "images/sandringham/beach_3.jpg", "images/sandringham/main_street_1.jpg", "images/sandringham/main_street_2.jpg", "images/sandringham/main_street_3.jpg", "images/sandringham/cafe_1.jpg", "images/sandringham/cafe_2.jpg", "images/sandringham/cafe_3.jpg", "images/sandringham/park_1.jpg", "images/sandringham/park_2.jpg", "images/sandringham/park_3.jpg"], "Brighton": ["images/brighton/beach_1.jpg", "images/brighton/beach_2.jpg", "images/brighton/main_street_1.jpg", "images/brighton/cafe_1.jpg", "images/brighton/cafe_2.jpg", "images/brighton/cafe_3.jpg", "images/brighton/park_1.jpg", "images/brighton/park_2.jpg", "images/brighton/park_3.jpg", "images/brighton/residential_1.jpg", "images/brighton/aerial_1.jpg", "images/brighton/lifestyle_1.jpg"], "Mornington": ["images/mornington/beach_1.jpg", "images/mornington/beach_2.jpg", "images/mornington/beach_3.jpg", "images/mornington/main_street_1.jpg", "images/mornington/main_street_2.jpg", "images/mornington/cafe_1.jpg", "images/mornington/cafe_2.jpg", "images/mornington/cafe_3.jpg", "images/mornington/park_1.jpg", "images/mornington/residential_1.jpg", "images/mornington/residential_2.jpg", "images/mornington/residential_3.jpg"], "Mt Martha": ["images/mt_martha/beach_1.jpg", "images/mt_martha/beach_2.jpg", "images/mt_martha/main_street_1.jpg", "images/mt_martha/main_street_2.jpg", "images/mt_martha/cafe_1.jpg", "images/mt_martha/cafe_2.jpg", "images/mt_martha/cafe_3.jpg", "images/mt_martha/park_1.jpg", "images/mt_martha/park_2.jpg", "images/mt_martha/park_3.jpg", "images/mt_martha/residential_1.jpg", "images/mt_martha/residential_2.jpg"], "Richmond": ["images/richmond/beach_1.jpg", "images/richmond/main_street_1.jpg", "images/richmond/main_street_2.jpg", "images/richmond/main_street_3.jpg", "images/richmond/cafe_1.jpg", "images/richmond/cafe_2.jpg", "images/richmond/cafe_3.jpg", "images/richmond/park_1.jpg", "images/richmond/park_2.jpg", "images/richmond/park_3.jpg", "images/richmond/residential_1.jpg", "images/richmond/aerial_1.jpg"], "Windsor": ["images/windsor/beach_1.jpg", "images/windsor/main_street_1.jpg", "images/windsor/main_street_2.jpg", "images/windsor/main_street_3.jpg", "images/windsor/cafe_1.jpg", "images/windsor/park_1.jpg", "images/windsor/park_2.jpg", "images/windsor/park_3.jpg", "images/windsor/aerial_1.jpg", "images/windsor/lifestyle_1.jpg"]};
 var CMP={};var suburbView='list';
-function openGallery(name,startIdx){
-  var photos=SUBURB_PHOTOS[name]||[];
-  if(!photos.length)return;
-  var idx=startIdx||0;
-  var ov=document.createElement('div');
-  ov.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px';
-  function render(){
-    ov.innerHTML='<div style="color:#fff;font-size:.8rem;margin-bottom:8px">'+name+' — '+(idx+1)+'/'+photos.length+'</div><img src="'+photos[idx]+'" style="max-width:90vw;max-height:70vh;border-radius:10px;object-fit:contain"><div style="display:flex;gap:16px;margin-top:12px"><button onclick="this.parentNode.parentNode._p()" style="padding:8px 16px;background:#3b82f6;color:#fff;border:none;border-radius:6px;cursor:pointer">← Prev</button><button onclick="this.parentNode.parentNode.remove()" style="padding:8px 16px;background:#ef4444;color:#fff;border:none;border-radius:6px;cursor:pointer">✕ Close</button><button onclick="this.parentNode.parentNode._n()" style="padding:8px 16px;background:#3b82f6;color:#fff;border:none;border-radius:6px;cursor:pointer">Next →</button></div>';
-  }
-  ov._n=function(){idx=(idx+1)%photos.length;render()};
-  ov._p=function(){idx=(idx-1+photos.length)%photos.length;render()};
-  ov.onclick=function(e){if(e.target===ov)ov.remove()};
-  render();document.body.appendChild(ov);
-}
-
 function renderCompare(){
-  document.getElementById('locations').innerHTML=
+  document.getElementById('compare').innerHTML=
     '<div class="stabs">'+
     '<div class="stab active" onclick="showCmp(\'suburbs\',this)">🏘️ Suburbs</div>'+
-    '<div class="stab" onclick="showCmp(\'schools\',this)">🎓 Schools</div>'+
     '<div class="stab" onclick="showCmp(\'costs\',this)">💰 Living Costs</div>'+
     '<div class="stab" onclick="showCmp(\'lifestyle\',this)">🎯 Lifestyle</div>'+
     '<div class="stab" onclick="showCmp(\'frankie\',this)">👩 Frankie</div>'+
     '<div class="stab" onclick="showCmp(\'sydney\',this)">🌊 Sydney</div>'+
-    '<div class="stab" onclick="window.open(\'weather.html\',\'_blank\')">🌤️ Weather</div>'+
     '</div><div id="cmpContent"></div>';
   showCmp('suburbs',document.querySelector('#compare .stab'));
 }
 function showCmp(id,el){
-  document.querySelectorAll('#locations .stab').forEach(function(t){t.classList.remove('active')});
+  document.querySelectorAll('#compare .stab').forEach(function(t){t.classList.remove('active')});
   if(el)el.classList.add('active');
   if(id==='suburbs'){renderSuburbsInteractive()}else{document.getElementById('cmpContent').innerHTML=CMP[id]||'';}
 }
 CMP.lifestyle='';
 CMP.frankie='';
-CMP.sydney='<div class="card"><h2>🌊 Melbourne vs Sydney — Full Cost Comparison</h2>'
-+'<p class="tx tm mb2">Three scenarios compared: Sydney Inner (expensive), Sydney Outer (cheaper, no school fees in NSW public), and Melbourne (our choice).</p>'
-+'<div class="table-wrap"><table><tr><th></th><th style="color:var(--green)">Melbourne<br>(South-East)</th><th style="color:var(--orange)">Sydney Inner<br>(North Shore/East)</th><th style="color:var(--accent)">Sydney Outer<br>(West/South-West)</th></tr>'
-+'<tr><td style="font-weight:600">4-bed rent/wk</td><td>$600–800</td><td>$1,100–1,500</td><td>$700–900</td></tr>'
-+'<tr><td style="font-weight:600">Rent/month</td><td style="color:var(--green)">$2,600–3,466</td><td style="color:var(--red)">$4,766–6,500</td><td style="color:var(--orange)">$3,033–3,900</td></tr>'
-+'<tr><td style="font-weight:600">School fees (2 kids/yr)</td><td style="color:var(--green)">FREE (VIC 482 visa)</td><td style="color:var(--red)">$11,200+ (NSW charges 482)</td><td style="color:var(--green)">FREE (NSW public)</td></tr>'
-+'<tr><td style="font-weight:600">School fee note</td><td>All VIC govt schools free</td><td>Only free if in public school catchment — most good schools are private ($20k–40k/yr)</td><td>NSW public schools ARE free for 482 — but quality varies in outer areas</td></tr>'
-+'<tr><td style="font-weight:600">Commute to CBD</td><td style="color:var(--green)">35–55 min train</td><td style="color:var(--green)">20–35 min</td><td style="color:var(--red)">50–75 min</td></tr>'
-+'<tr><td style="font-weight:600">Amazon office</td><td>MEL12 — 555 Collins St</td><td>SYD1 — 2 Park St</td><td>SYD1 — 2 Park St</td></tr>'
-+'<tr><td style="font-weight:600">Groceries/mo</td><td>$1,150</td><td>$1,250</td><td>$1,150</td></tr>'
-+'<tr><td style="font-weight:600">Car lease/mo</td><td>$600</td><td>$650</td><td>$600</td></tr>'
-+'<tr><td style="font-weight:600">Tolls</td><td style="color:var(--green)">Minimal</td><td style="color:var(--red)">$50–100/wk (M2, Harbour Bridge, tunnel)</td><td style="color:var(--red)">$40–80/wk (M4, M5, M7)</td></tr>'
-+'<tr><td style="font-weight:600">Childcare/activities</td><td>$250/mo</td><td>$300/mo</td><td>$250/mo</td></tr>'
-+'<tr style="font-weight:700;background:rgba(255,255,255,.03)"><td>Total monthly costs (inc rent)</td><td style="color:var(--green)">$6,800–7,600</td><td style="color:var(--red)">$9,500–12,000</td><td style="color:var(--orange)">$7,400–8,800</td></tr>'
-+'<tr style="font-weight:700;background:rgba(255,255,255,.03)"><td>Monthly disposable</td><td style="color:var(--green)">$2,000–2,800</td><td style="color:var(--red)">-$400 to $100 😬</td><td style="color:var(--orange)">$800–2,200</td></tr>'
-+'<tr style="font-weight:700;background:rgba(255,255,255,.03)"><td>Annual disposable</td><td style="color:var(--green)">$24,000–33,600</td><td style="color:var(--red)">-$4,800 to $1,200</td><td style="color:var(--orange)">$9,600–26,400</td></tr>'
-+'</table></div></div>'
-
-+'<div class="card"><h2>📍 Sydney Areas Explained</h2>'
-+'<h3 style="color:var(--orange)">Sydney Inner (North Shore / Eastern Suburbs)</h3>'
-+'<div class="tx" style="line-height:2">Areas: Chatswood, Lane Cove, Mosman, Neutral Bay, Bondi, Randwick<br>'
-+'Commute: 20–35 min to CBD<br>'
-+'Rent: $1,100–1,500/wk (4-bed)<br>'
-+'Schools: Excellent public + private options BUT most families use private ($20k–40k/yr per child)<br>'
-+'Lifestyle: Beautiful harbour, beaches, cafes — but extremely expensive<br>'
-+'<strong style="color:var(--red)">Verdict: Unaffordable on $159k. Would be in deficit every month.</strong></div>'
-
-+'<h3 style="color:var(--accent);margin-top:16px">Sydney Outer (West / South-West)</h3>'
-+'<div class="tx" style="line-height:2">Areas: Parramatta, Penrith, Liverpool, Campbelltown, Blacktown<br>'
-+'Commute: 50–75 min to CBD (train or car + tolls)<br>'
-+'Rent: $700–900/wk (4-bed) — similar to Melbourne<br>'
-+'Schools: NSW public schools ARE free for 482 visa holders — correction from earlier. Quality varies but some good options.<br>'
-+'Lifestyle: New estates, shopping centres, multicultural food — but less beach/outdoor lifestyle<br>'
-+'Tolls: $40–80/wk if driving (Sydney motorways are expensive)<br>'
-+'<strong style="color:var(--orange)">Verdict: Affordable but long commute, heavy tolls, less lifestyle appeal. No beach.</strong></div>'
-+'</div>'
-
-+'<div class="card"><h2>✅ Why Melbourne Wins</h2><div style="font-size:.85rem;line-height:2">'
-+'<div>💰 <strong>£1,000–1,500/mo more disposable</strong> than Sydney outer, £2,500+ more than Sydney inner</div>'
-+'<div>🏖️ <strong>Beach lifestyle</strong> — live ON the beach for $600–800/wk rent (impossible in Sydney under $1,200)</div>'
-+'<div>🚆 <strong>Reasonable commute</strong> — 35–55 min vs Sydney outer 50–75 min</div>'
-+'<div>🆓 <strong>School fees guaranteed free</strong> — VIC policy is clear for 482 visa. No ambiguity.</div>'
-+'<div>🚗 <strong>No tolls</strong> — Melbourne has minimal tolls vs Sydney $200–400/mo</div>'
-+'<div>👨‍👩‍👧‍👦 <strong>Family suburbs</strong> — beach + parks + space + community. Sydney outer = new estates with less character</div>'
-+'<div>☕ <strong>Better lifestyle per dollar</strong> — Melbourne\'s south-east gives you beach, cafes, sports, community for half the cost of equivalent Sydney areas</div>'
-+'</div></div>'
-
-+'<div class="card"><h2>📊 Summary</h2><div class="table-wrap"><table><tr><th></th><th>Melbourne</th><th>Sydney Inner</th><th>Sydney Outer</th></tr>'
-+'<tr><td>Affordability</td><td style="color:var(--green)">✅ Comfortable</td><td style="color:var(--red)">❌ Deficit</td><td style="color:var(--orange)">⚠️ Tight</td></tr>'
-+'<tr><td>Beach access</td><td style="color:var(--green)">✅ Live on it</td><td style="color:var(--green)">✅ Nearby</td><td style="color:var(--red)">❌ 40+ min drive</td></tr>'
-+'<tr><td>Commute</td><td style="color:var(--green)">✅ 35–55 min</td><td style="color:var(--green)">✅ 20–35 min</td><td style="color:var(--red)">❌ 50–75 min</td></tr>'
-+'<tr><td>School quality</td><td style="color:var(--green)">✅ Good (VCE 28–30)</td><td style="color:var(--green)">✅ Excellent</td><td style="color:var(--orange)">⚠️ Variable</td></tr>'
-+'<tr><td>School cost</td><td style="color:var(--green)">✅ FREE</td><td style="color:var(--red)">❌ $11k–40k/yr</td><td style="color:var(--green)">✅ FREE (public)</td></tr>'
-+'<tr><td>Tolls</td><td style="color:var(--green)">✅ Minimal</td><td style="color:var(--red)">❌ $200–400/mo</td><td style="color:var(--red)">❌ $160–320/mo</td></tr>'
-+'<tr><td>Family lifestyle</td><td style="color:var(--green)">✅ Excellent</td><td style="color:var(--orange)">⚠️ Expensive</td><td style="color:var(--orange)">⚠️ Less character</td></tr>'
-+'<tr style="font-weight:700"><td>OVERALL</td><td style="color:var(--green)">🏆 WINNER</td><td style="color:var(--red)">Too expensive</td><td style="color:var(--orange)">Possible but worse lifestyle</td></tr>'
-+'</table></div></div>';
+CMP.sydney='';
 
 
+function loadMapPhotos(name){
+  if(!window._mapsLoaded)return;
+  var el=document.getElementById('mapgal_'+name.replace(/ /g,'_'));
+  if(!el||el.dataset.loaded)return;
+  el.dataset.loaded='1';
+  var service=new google.maps.places.PlacesService(document.createElement('div'));
+  service.textSearch({query:name+' Victoria Australia'},function(results,status){
+    var allPhotos=[];
+    if(status===google.maps.places.PlacesServiceStatus.OK&&results){
+      results.slice(0,3).forEach(function(r){if(r.photos)allPhotos=allPhotos.concat(r.photos)});
+    }
+    if(allPhotos.length){
+      el.innerHTML=allPhotos.slice(0,4).map(function(p){
+        return '<img src="'+p.getUrl({maxWidth:200,maxHeight:130})+'" style="height:60px;border-radius:6px;object-fit:cover;flex:0 0 auto">';
+      }).join('');
+    }
+  });
+}
 
+function openLightbox(container,startIdx){
+  var imgs=container.querySelectorAll('img');
+  if(!imgs.length)return;
+  var overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px';
+  var idx=startIdx||0;
+  function render(){
+    var src=imgs[idx].dataset.full||imgs[idx].src;
+    overlay.innerHTML='<div style="color:#fff;font-size:.8rem;margin-bottom:10px">'+(idx+1)+'/'+imgs.length+' — Swipe or use arrows</div><img src="'+src+'" style="max-width:90vw;max-height:70vh;border-radius:12px;object-fit:contain"><div style="display:flex;gap:20px;margin-top:16px"><button onclick="this.parentNode.parentNode._prev()" style="padding:10px 20px;background:#3b82f6;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer">← Prev</button><button onclick="this.parentNode.parentNode.remove()" style="padding:10px 20px;background:#ef4444;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer">✕ Close</button><button onclick="this.parentNode.parentNode._next()" style="padding:10px 20px;background:#3b82f6;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer">Next →</button></div>';
+  }
+  overlay._next=function(){idx=(idx+1)%imgs.length;render()};
+  overlay._prev=function(){idx=(idx-1+imgs.length)%imgs.length;render()};
+  overlay.onclick=function(e){if(e.target===overlay)overlay.remove()};
+  render();
+  document.body.appendChild(overlay);
+}
 
-
-
+function loadAllSuburbPhotos(){
+  if(!window._mapsLoaded){return setTimeout(loadAllSuburbPhotos,1000);}
+  var cached=state.photoCache||{};
+  var cacheAge=state.photoCacheTime||0;
+  var isStale=(Date.now()-cacheAge)>7*24*60*60*1000;
+  // Use cache if fresh
+  if(!isStale&&Object.keys(cached).length>5){
+    SUBURBS_DATA.forEach(function(s){
+      var el=document.getElementById('gal_'+s.name.replace(/ /g,'_'));
+      if(!el)return;
+      var urls=cached[s.name]||[];
+      if(urls.length){
+        el.innerHTML=urls.map(function(url,i){
+          return '<img src="'+url+'" onclick="openLightbox(this.parentNode,'+i+')" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto;cursor:pointer" loading="lazy" onerror="this.style.display=\'none\'">';
+        }).join('');
+      } else {el.innerHTML='';}
+    });
+    return;
+  }
+  // Fetch fresh
+  var newCache={};
+  var service=new google.maps.places.PlacesService(document.createElement('div'));
+  var queue=SUBURBS_DATA.slice();
+  function next(){
+    if(!queue.length){state.photoCache=newCache;state.photoCacheTime=Date.now();save();return}
+    var s=queue.shift();
+    var el=document.getElementById('gal_'+s.name.replace(/ /g,'_'));
+    if(!el){next();return}
+    var queries=[s.name+' beach Victoria',s.name+' shops Victoria',s.name+' park Victoria',s.name+' Victoria Australia'];
+    var allPhotos=[];var done=0;
+    queries.forEach(function(q){
+      service.textSearch({query:q},function(results,status){
+        if(status===google.maps.places.PlacesServiceStatus.OK&&results){
+          results.slice(0,2).forEach(function(r){if(r.photos)allPhotos=allPhotos.concat(r.photos)});
+        }
+        done++;
+        if(done===queries.length){
+          var seen={};var unique=[];
+          allPhotos.forEach(function(p){var u=p.getUrl({maxWidth:400});if(!seen[u]){seen[u]=1;unique.push(p)}});
+          var urls=unique.slice(0,8).map(function(p){return p.getUrl({maxWidth:800,maxHeight:500})});
+          newCache[s.name]=urls;
+          if(urls.length){
+            el.innerHTML=urls.map(function(url,i){
+              return '<img src="'+url+'" onclick="openLightbox(this.parentNode,'+i+')" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto;cursor:pointer" loading="lazy" onerror="this.style.display=\'none\'">';
+            }).join('');
+          } else {el.innerHTML='';}
+          setTimeout(next,400);
+        }
+      });
+    });
+  }
+  next();
+}
 var SUBURBS_DATA=[
   {name:'Seaford',safety:4,walk:3,familyScore:4,growth:4,crime:'Low',walkScore:'Moderate — car helpful but train+beach walkable',demographics:'Young families, retirees, growing professional mix',pros:'Affordable beach lifestyle, improving rapidly, foreshore trail, good community',cons:'Further from city (50 min), limited nightlife, some older housing stock',cafes:'Foreshore cafes, fish & chips, growing brunch scene',shops:'Local shops + 10 min to Frankston Bayside Centre',outdoors:'Beach, foreshore trail, wetlands, playgrounds',community:'Relaxed village, young families, community markets',school:'Monterey SC',schoolRating:'VCE median 25 — Average',schoolLink:'https://www.google.com/search?q=Monterey+Secondary+College+Frankston',pc:'3198',bed3:'520–580',bed4:'580–650',train:50,beach:'ON beach',garden:'Yes',vibe:'Beach village, foreshore trail, relaxed',lat:-38.1,lng:145.134},
   {name:'Carrum',safety:4,walk:3,familyScore:5,growth:3,crime:'Low',walkScore:'Moderate — beach walkable, car for shops',demographics:'Families, quiet retirees, boat owners',pros:'Very quiet, Patterson River lifestyle, beach on doorstep, tight community',cons:'Small suburb, limited shops/cafes, need car for most things',cafes:'Small cafe strip, Patterson River dining',shops:'Local shops, 10 min to Frankston',outdoors:'Beach, Patterson River walks, boat ramp',community:'Quiet family streets, tight-knit',school:'Patterson River SC',schoolRating:'VCE median 26 — Average',schoolLink:'https://www.google.com/search?q=Patterson+River+Secondary+College',pc:'3197',bed3:'530–590',bed4:'600–680',train:48,beach:'ON beach',garden:'Yes',vibe:'Quiet beach, Patterson River, family',lat:-38.075,lng:145.123},
@@ -178,8 +189,8 @@ function initSuburbMap(){
       var mvce=parseInt((s.schoolRating||'').match(/\d+/)||[0]);var msc=mvce>=32?5:mvce>=29?4:mvce>=27?3:mvce>=25?2:1;
       var mw=((mf*25+ml*20+mfi*17.5+mc*17.5+mb*10+msc*10)/100).toFixed(1);
       var mwc=mw>=4?'#16a34a':mw>=3?'#3b82f6':'#6b7280';
-      marker.bindPopup('<div style="min-width:240px"><strong>'+s.name+'</strong> <span style="background:'+mwc+';color:#fff;padding:1px 6px;border-radius:8px;font-size:.7rem">'+mw+'/5</span><br><span style="font-size:.85rem">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')<br>Train: '+s.train+' min | Beach: '+s.beach+'<br>School: '+s.school+' ('+s.schoolRating+')</span><button onclick="showSuburbDetail(\''+s.name+'\')" style="margin-top:6px;padding:4px 10px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.75rem;width:100%">View full details</button></div>');
-
+      marker.bindPopup('<div style="min-width:240px"><strong>'+s.name+'</strong> <span style="background:'+mwc+';color:#fff;padding:1px 6px;border-radius:8px;font-size:.7rem">'+mw+'/5</span><br><span style="font-size:.85rem">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')<br>Train: '+s.train+' min | Beach: '+s.beach+'<br>School: '+s.school+' ('+s.schoolRating+')</span><div id="mapgal_'+s.name.replace(/ /g,'_')+'" style="display:flex;gap:4px;overflow-x:auto;margin-top:6px;max-width:240px"></div><button onclick="showSuburbDetail(\''+s.name+'\')" style="margin-top:6px;padding:4px 10px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.75rem;width:100%">View full details</button></div>');
+      marker.on('popupopen',function(){loadMapPhotos(''+s.name+'')});
     });
   });
   
@@ -249,7 +260,7 @@ function showSuburbDetail(name){
     '<a href="'+mapUrl+'" target="_blank" class="btn btn-o" style="font-size:.78rem">📍 Google Maps</a>'+
     '<a href="'+domainUrl+'" target="_blank" class="btn btn-o" style="font-size:.78rem">🏠 Browse Listings</a>'+
     '<a href="'+s.schoolLink+'" target="_blank" class="btn btn-o" style="font-size:.78rem">🏫 School Info</a>'+
-    '<button class="btn btn-p" style="font-size:.78rem" onclick="addSuburbToShortlist(\''+name+'\')">1/5 Add to Shortlist</button>'+
+    '<button class="btn btn-p" style="font-size:.78rem" onclick="addSuburbToShortlist(\''+name+'\')">⭐ Add to Shortlist</button>'+
     '</div>';
   el.scrollIntoView({behavior:'smooth'});
 }
@@ -332,15 +343,8 @@ function renderSuburbsInteractive(){
       html+='<div class="tx tm">'+s.train+' min train · '+s.beach+'</div></div>';
       html+='</div>';
       
-      // Photo gallery
-      var sphotos=SUBURB_PHOTOS[s.name]||[];
-      if(sphotos.length){
-        html+='<div style="display:flex;gap:6px;overflow-x:auto;padding:8px 0;margin-top:6px;-webkit-overflow-scrolling:touch">';
-        sphotos.forEach(function(url,i){
-          html+='<img src="'+url+'" style="height:90px;border-radius:8px;object-fit:cover;flex:0 0 auto;cursor:pointer" loading="lazy" onerror="this.style.display=\'none\'" onclick="openGallery(\''+s.name+'\','+i+')">';
-        });
-        html+='</div>';
-      }
+      // Photo gallery - Google Places
+      html+='<div id="gal_'+s.name.replace(/ /g,'_')+'" style="display:flex;gap:6px;overflow-x:auto;padding:8px 0;margin-top:6px;-webkit-overflow-scrolling:touch;min-height:80px"><span style="color:var(--muted);font-size:.7rem;padding:10px">📷 Loading...</span></div>';
       // Quick stats row
       html+='<div class="flex g2 fw mt2" style="font-size:.78rem">';
       html+='<span>🏫 <a href="'+(s.schoolLink||'')+'" target="_blank" style="color:var(--accent)">'+( s.school||'—')+'</a> ('+( s.schoolRating||'—')+')</span>';
@@ -379,6 +383,7 @@ function renderSuburbsInteractive(){
   html+='</div></div>';
   
   document.getElementById('cmpContent').innerHTML=html;
+  setTimeout(loadAllSuburbPhotos,500);
 }
 function saveSuburbField(name,field,val){
   if(!state.suburbData)state.suburbData={};
@@ -408,149 +413,12 @@ function addSuburbToShortlist(name){
     scores:{beach:0,commute:0,schools:0,lifestyle:0,value:0}
   });
   save();
-  alert('1/5 '+name+' added to shortlist! Go to Shortlist tab to score it.');
+  alert('⭐ '+name+' added to shortlist! Go to Shortlist tab to score it.');
 }
 
 
 
 
-
-CMP.schools='<div class="card"><h2>🎓 School Comparison — Best for Bella (14) & Jack (11)</h2><p class="tx tm mb2">Focus: sports, drama, outdoor education, hands-on learning, active sessions. All FREE for 482 visa holders.</p><div class="table-wrap"><table><tr><th>School</th><th>Suburb</th><th>VCE</th><th>Size</th><th>🏅</th><th>🎭</th><th>⛺</th><th>For</th><th style="min-width:200px">Notes</th></tr>'
-+'<tr style="background:rgba(34,197,94,.05)"><td style="font-weight:600"><a href="https://www.parkdalesc.vic.edu.au" target="_blank" style="color:var(--accent)">Parkdale SC →</a></td><td>Mordialloc</td><td style="font-weight:700;color:var(--green)">30</td><td>~1,500</td><td>5/5</td><td>4/5</td><td>4/5</td><td>Both</td><td>Sports Academy (AFL, netball, soccer), state champions, annual musical, outdoor camps, STEM</td></tr>'
-+'<tr style="background:rgba(34,197,94,.05)"><td style="font-weight:600"><a href="https://www.sandringhamsc.vic.edu.au" target="_blank" style="color:var(--accent)">Sandringham College →</a></td><td>Sandringham</td><td style="font-weight:700;color:var(--green)">30</td><td>~1,200</td><td>4/5</td><td>5/5</td><td>4/5</td><td>Bella</td><td>Elite performing arts (TOP Arts), dance, drama, music, sports academy, beach programs</td></tr>'
-
-+'<tr><td style="font-weight:600"><a href="https://www.mtwaverleysc.vic.edu.au" target="_blank" style="color:var(--accent)">Mt Waverley SC →</a></td><td>Mt Waverley</td><td style="font-weight:700;color:var(--green)">31</td><td>~1,600</td><td>4/5</td><td>4/5</td><td>4/5</td><td>Both</td><td>Balanced: sports academy + performing arts + outdoor ed + STEM. Good all-rounder.</td></tr>'
-+'<tr style="background:rgba(34,197,94,.05)"><td style="font-weight:600"><a href="https://www.frankstonhs.vic.edu.au" target="_blank" style="color:var(--accent)">Frankston High →</a></td><td>Frankston</td><td>28</td><td>~1,400</td><td>5/5</td><td>4/5</td><td>4/5</td><td>Both</td><td>Strong sports (AFL, netball, basketball), performing arts centre, outdoor ed camps, school musical</td></tr>'
-+'<tr><td style="font-weight:600"><a href="https://www.mornsc.vic.edu.au" target="_blank" style="color:var(--accent)">Mornington SC →</a></td><td>Mornington</td><td>27</td><td>~1,200</td><td>4/5</td><td>3/5</td><td>5/5</td><td>Both</td><td>Marine studies, surfing program, outdoor ed, surf lifesaving, school productions. Unique!</td></tr>'
-+'<tr><td style="font-weight:600"><a href="https://www.emurdoch.vic.edu.au" target="_blank" style="color:var(--accent)">Elisabeth Murdoch →</a></td><td>Langwarrin</td><td>27</td><td>~1,100</td><td>4/5</td><td>3/5</td><td>5/5</td><td>Jack</td><td>Outdoor Ed as VCE subject, environmental science, camps program, sustainability focus, sports</td></tr>'
-+'<tr><td style="font-weight:600"><a href="https://www.mcclellandcollege.vic.edu.au" target="_blank" style="color:var(--accent)">McClelland College →</a></td><td>Frankston Sth</td><td>26</td><td>~900</td><td>3/5</td><td>5/5</td><td>4/5</td><td>Bella</td><td>Dedicated Performing Arts Academy, outdoor camps, VET pathways, visual arts</td></tr>'
-+'<tr><td style="font-weight:600"><a href="https://www.montereysc.vic.edu.au" target="_blank" style="color:var(--accent)">Monterey SC →</a></td><td>Seaford</td><td>25</td><td>~600</td><td>3/5</td><td>2/5</td><td>3/5</td><td>Jack</td><td>Small school feel, hands-on learning, trade pathways, smaller classes. Less academic pressure.</td></tr>'
-+'<tr><td style="font-weight:600"><a href="https://www.glenwsc.vic.edu.au" target="_blank" style="color:var(--accent)">Glen Waverley SC →</a></td><td>Glen Waverley</td><td style="font-weight:700;color:var(--green)">34</td><td>~2,000</td><td>3/5</td><td>3/5</td><td>2/5</td><td>Academic</td><td>Top academics (91.40 VCE), music, languages. Very competitive. May not suit hands-on learners.</td></tr>'
-+'</table></div></div>'
-
-+'<div class="card"><h2>🏆 Our Recommendation — Same School for Both</h2>'
-+'<div style="background:rgba(59,130,246,.08);padding:10px;border-radius:8px;margin-bottom:12px;font-size:.82rem">⚠️ <strong>Jack\'s year level:</strong> Jack (11) will be in <strong>Year 6 (primary)</strong> if arriving mid-2026, or <strong>Year 7 (secondary)</strong> from January 2027. If arriving mid-year, Jack needs a primary school for ~6 months first, then joins Bella\'s secondary in Jan 2027.</div>'
-+'<div class="table-wrap"><table><tr><th>Rank</th><th>School</th><th>Why it works for BOTH</th></tr>'
-+'<tr style="background:rgba(34,197,94,.05)"><td style="font-weight:600;color:var(--green)">1st</td><td style="font-weight:700">Parkdale SC</td><td>Sports Academy (Jack: gymnastics interschool, AFL, outdoor camps) + Performing Arts (Bella: drama, musical, dance) + VCE 30 + beach lifestyle. Best all-rounder.</td></tr>'
-+'<tr><td style="font-weight:600">2nd</td><td style="font-weight:700">Frankston High</td><td>Strong sports + performing arts centre + outdoor ed every year + near beach + skatepark. Big school energy suits both. VCE 28.</td></tr>'
-+'<tr><td style="font-weight:600">3rd</td><td style="font-weight:700">Sandringham College</td><td>Elite arts (Bella) + sports academy (Jack) + beach programs. VCE 30. Higher rent area though.</td></tr>'
-+'</table></div>'
-
-+'<div class="card" style="border-left:4px solid var(--orange)"><h2>🏫 Jack — Primary School (Aug–Dec 2026)</h2>'
-+'<p class="tx tm mb2">Jack arrives in Year 6 (Term 3). He needs a primary school for ~5 months (Aug–Dec 2026) before starting Year 7 secondary in January 2027. This is normal — schools handle mid-year arrivals regularly.</p>'
-+'<div class="table-wrap"><table><tr><th>School</th><th>Suburb</th><th>Feeds into</th><th>Students</th><th>Strengths</th></tr>'
-+'<tr style="background:rgba(34,197,94,.05)"><td style="font-weight:600"><a href="https://www.pardaleps.vic.edu.au" target="_blank" style="color:var(--accent)">Parkdale Primary →</a></td><td>Parkdale</td><td style="color:var(--green)">Parkdale SC ✓</td><td>~450</td><td>Sports, outdoor ed, arts, feeds directly into our #1 secondary pick</td></tr>'
-+'<tr style="background:rgba(34,197,94,.05)"><td style="font-weight:600"><a href="https://www.mordiallocps.vic.edu.au" target="_blank" style="color:var(--accent)">Mordialloc Beach Primary →</a></td><td>Mordialloc</td><td style="color:var(--green)">Parkdale SC ✓</td><td>~350</td><td>Beach lifestyle, active outdoor program, community feel, near pier</td></tr>'
-+'<tr><td style="font-weight:600"><a href="https://www.aspendaleps.vic.edu.au" target="_blank" style="color:var(--accent)">Aspendale Primary →</a></td><td>Aspendale</td><td style="color:var(--green)">Parkdale SC ✓</td><td>~400</td><td>Nature focus, wetlands nearby, sports, community</td></tr>'
-+'<tr><td style="font-weight:600"><a href="https://www.seafordps.vic.edu.au" target="_blank" style="color:var(--accent)">Seaford Primary →</a></td><td>Seaford</td><td>Monterey SC / Frankston High</td><td>~350</td><td>Beach community, active programs, relaxed</td></tr>'
-+'<tr><td style="font-weight:600"><a href="https://www.frankstonps.vic.edu.au" target="_blank" style="color:var(--accent)">Frankston Primary →</a></td><td>Frankston</td><td>Frankston High ✓</td><td>~300</td><td>Sports focus, near beach, feeds into #2 secondary pick</td></tr>'
-+'<tr><td style="font-weight:600"><a href="https://www.seafordnorthps.vic.edu.au" target="_blank" style="color:var(--accent)">Seaford North Primary →</a></td><td>Seaford</td><td>Frankston High</td><td>~400</td><td>Active school, good sports, gymnastics program</td></tr>'
-+'</table></div>'
-+'<p class="ts mt2">💡 <strong>Strategy:</strong> Choose a primary school that feeds into your preferred secondary. If you pick Mordialloc/Parkdale area → Parkdale Primary or Mordialloc Beach Primary → both feed into Parkdale SC where Bella will already be.</p>'
-+'<p class="ts mt2">⏰ <strong>Timeline:</strong> Contact the primary school 2-3 weeks before arrival. They\'ll arrange a start date in Term 3 (which begins mid-July). Jack will have ~5 months to settle, make friends, and learn the AU system before transitioning to Year 7 with those same friends in January.</p>'
-+'<p class="ts mt2">🤝 <strong>Bonus:</strong> Starting primary first actually helps Jack — he\'ll make local friends who then move to the same secondary school. Much easier transition than starting secondary cold.</p>'
-+'</div>'
-
-+'<p class="ts mt2">💡 <strong>Catchment matters:</strong> VIC public schools use catchment zones. Living in Mordialloc/Parkdale/Aspendale puts you in Parkdale SC catchment — our top pick for both kids. There are also good primary schools nearby for Jack\'s first 6 months if arriving mid-year. Use <a href="https://www.findmyschool.vic.gov.au" target="_blank" style="color:var(--accent)">findmyschool.vic.gov.au</a> to check zones.</p>'
-+'<p class="ts mt2">💡 <strong>Mid-year entry:</strong> Both kids can start mid-year (Term 3 = July). Schools are used to international transfers. Contact the school directly to arrange enrolment.</p>'
-+'</div>'
-
-+'<div class="card"><h2>📋 Key Facts</h2><div style="font-size:.85rem;line-height:2">'
-+'<div>🆓 <strong>Fees:</strong> FREE for 482 visa holders in VIC government schools</div>'
-+'<div>📅 <strong>Terms:</strong> T1 Jan–Mar, T2 Apr–Jun, T3 Jul–Sep, T4 Oct–Dec</div>'
-+'<div>👕 <strong>Uniform:</strong> Required (~$200–400 per child)</div>'
-+'<div>📱 <strong>Devices:</strong> Most schools require a laptop (BYOD) — ~$500–800</div>'
-+'<div>🚌 <strong>Transport:</strong> Free school bus in some areas, or Myki card ($2.50/day student)</div>'
-+'<div>🏊 <strong>Sports:</strong> Inter-school sport is a big deal — swimming, athletics, cross country, team sports</div>'
-+'<div>🎭 <strong>Arts:</strong> Most schools have annual musical/production + art shows</div>'
-+'<div>⛺ <strong>Camps:</strong> Year 7 camp (bonding), Year 9 city/outdoor camp, Year 10+ outdoor ed elective</div>'
-+'</div></div>'
-+'<div class="card"><h2>🏫 Detailed School Profiles</h2></div>'
-
-+'<div class="card" style="border-left:4px solid var(--green)"><h3>1/5 Parkdale Secondary College — TOP PICK</h3><p class="tx tm">Mordialloc/Parkdale | 1,500 students | VCE 30</p>'
-+'<h4>🏅 Sports</h4><div class="tx" style="line-height:2">AFL Academy (boys & girls) · Netball Academy · Soccer program · Swimming (school pool) · Athletics · Cross country · Basketball · Cricket · Volleyball · Surfing (beach access) · Gymnastics (interschool) · Interschool sport every Wednesday</div>'
-+'<h4>🎭 Drama & Arts</h4><div class="tx" style="line-height:2">Annual school musical (200+ students involved) · Drama classes Yr 7–12 · Dance program · Visual arts · Media studies · Music ensembles · Art exhibitions · Theatre productions</div>'
-+'<h4>⛺ Outdoor Education</h4><div class="tx" style="line-height:2">Year 7 camp (team building) · Year 8 adventure camp · Year 9 city experience · Year 10 outdoor ed elective · VCE Outdoor & Environmental Studies · Surfing · Kayaking · Rock climbing · Bushwalking · Camping</div>'
-+'<h4>🏢 Facilities</h4><div class="tx" style="line-height:2">Swimming pool · Gymnasium · Performing arts centre · Multiple ovals · Tennis/basketball courts · Science labs · Tech workshops · Recording studio · Art studios · Library/learning centre</div>'
-+'<h4>🌏 International Students</h4><div class="tx" style="line-height:2">Experienced with international transfers · Buddy program for new students · EAL (English as Additional Language) support · Transition coordinator · Wellbeing team · Parent liaison</div>'
-+'<h4>🎯 Extracurriculars</h4><div class="tx" style="line-height:2">Lunchtime sports · Chess club · Coding club · Environment club · Debating · Book club · Art club · Music rehearsals · Leadership programs · Student council · Community service</div>'
-+'<p class="ts mt2" style="color:var(--green)">✅ <strong>Why it\'s #1:</strong> Ticks every box — elite sports + strong arts + outdoor ed + beach lifestyle + good academics. Both kids would thrive here. 5 min walk from Mordialloc beach.</p></div>'
-
-+'<div class="card" style="border-left:4px solid var(--accent)"><h3>Sandringham College</h3><p class="tx tm">Sandringham | 1,200 students | VCE 30</p>'
-+'<h4>🏅 Sports</h4><div class="tx" style="line-height:2">Sports Academy program · AFL · Netball · Soccer · Swimming · Surfing · Beach volleyball · Athletics · Basketball · Sailing (nearby yacht club)</div>'
-+'<h4>🎭 Drama & Arts</h4><div class="tx" style="line-height:2">TOP Arts program (state-recognised excellence) · Dance Academy · Drama productions · Music (bands, ensembles, choirs) · Visual arts · Media/film · Photography · Annual musical · Dance showcase</div>'
-+'<h4>⛺ Outdoor Education</h4><div class="tx" style="line-height:2">Beach programs (school is 5 min from beach) · Surfing lessons · Kayaking · Year level camps · VCE Outdoor Ed · Bushwalking · Snorkelling</div>'
-+'<h4>🏢 Facilities</h4><div class="tx" style="line-height:2">Performing arts centre (professional standard) · Dance studios · Recording studio · Art galleries · Gymnasium · Ovals · Courts · Science labs · Mac labs for media</div>'
-+'<p class="ts mt2">🎭 <strong>Best for:</strong> Bella — if performing arts/dance is her main passion. Elite arts program with beach lifestyle.</p></div>'
-
-+'<div class="card" style="border-left:4px solid var(--accent)"><h3>Frankston High School</h3><p class="tx tm">Frankston | 1,400 students | VCE 28</p>'
-+'<h4>🏅 Sports</h4><div class="tx" style="line-height:2">AFL (strong program) · Netball · Basketball · Soccer · Swimming · Athletics · Cricket · Volleyball · Surfing · Gymnastics (interschool) · Skateboarding (nearby skatepark) · Interschool sport</div>'
-+'<h4>🎭 Drama & Arts</h4><div class="tx" style="line-height:2">Performing Arts Centre (recently built) · Annual musical · Drama classes · Dance · Music program (bands, ensembles) · Visual arts · Media studies</div>'
-+'<h4>⛺ Outdoor Education</h4><div class="tx" style="line-height:2">Outdoor ed camps every year level · Year 9 extended camp · VCE Outdoor Ed · Beach access (5 min walk) · Surfing · Rock climbing · Bushwalking · Kayaking</div>'
-+'<h4>🏢 Facilities</h4><div class="tx" style="line-height:2">New performing arts centre · Gymnasium · Multiple ovals · Beach access · Science labs · Tech workshops · Art studios · Library</div>'
-+'<h4>🌏 International Students</h4><div class="tx" style="line-height:2">International student program · EAL support · Transition support · Multicultural community · Buddy system</div>'
-+'<p class="ts mt2">⚽ <strong>Best for:</strong> Jack — big school energy, strong sports culture, outdoor ed every year, near beach + skatepark.</p></div>'
-
-+'<div class="card" style="border-left:4px solid var(--accent)"><h3>Elisabeth Murdoch College</h3><p class="tx tm">Langwarrin | 1,100 students | VCE 27</p>'
-+'<h4>🏅 Sports</h4><div class="tx" style="line-height:2">AFL · Netball · Soccer · Basketball · Athletics · Cross country · Swimming · Cricket</div>'
-+'<h4>🎭 Drama & Arts</h4><div class="tx" style="line-height:2">Drama productions · Music program · Visual arts · Media</div>'
-+'<h4>⛺ Outdoor Education</h4><div class="tx" style="line-height:2">VCE Outdoor & Environmental Studies (specialist) · Flora & Fauna Reserve on doorstep · Camps every year · Bushwalking · Kayaking · Rock climbing · Environmental science projects · Sustainability garden</div>'
-+'<h4>🏢 Facilities</h4><div class="tx" style="line-height:2">Environmental centre · Science labs · Gymnasium · Ovals · Courts · Tech workshops · Art studios · Adjacent to nature reserve</div>'
-+'<p class="ts mt2">🌿 <strong>Best for:</strong> Jack — if he loves nature/outdoors. The school literally backs onto a nature reserve. Outdoor ed is their specialty.</p></div>'
-
-+'<div class="card" style="border-left:4px solid var(--accent)"><h3>McClelland College</h3><p class="tx tm">Frankston South | 900 students | VCE 26</p>'
-+'<h4>🏅 Sports</h4><div class="tx" style="line-height:2">AFL · Netball · Basketball · Soccer · Athletics · Swimming</div>'
-+'<h4>🎭 Drama & Arts</h4><div class="tx" style="line-height:2">Dedicated Performing Arts Academy · Annual musical (high production value) · Dance · Drama · Music ensembles · Visual arts · VET Creative Arts</div>'
-+'<h4>⛺ Outdoor Education</h4><div class="tx" style="line-height:2">Year level camps · Outdoor ed elective · Bushwalking · Team challenges</div>'
-+'<h4>🏢 Facilities</h4><div class="tx" style="line-height:2">Purpose-built Performing Arts Centre · Dance studio · Recording facilities · Gymnasium · Ovals</div>'
-+'<p class="ts mt2">🎭 <strong>Best for:</strong> Bella — if performing arts is the priority over academics. Dedicated arts academy with smaller, nurturing environment.</p></div>'
-
-+'<div class="card" style="border-left:4px solid var(--accent)"><h3>Mornington Secondary College</h3><p class="tx tm">Mornington | 1,200 students | VCE 27</p>'
-+'<h4>🏅 Sports</h4><div class="tx" style="line-height:2">Surf lifesaving · AFL · Netball · Soccer · Swimming · Athletics · Sailing · Beach sports</div>'
-+'<h4>🎭 Drama & Arts</h4><div class="tx" style="line-height:2">Drama productions · Music · Visual arts · Media studies</div>'
-+'<h4>⛺ Outdoor Education</h4><div class="tx" style="line-height:2">Marine Studies program (unique!) · Surfing lessons · Snorkelling · Kayaking · Coastal ecology · VCE Outdoor Ed · Camps · Rock climbing · Bushwalking</div>'
-+'<h4>🏢 Facilities</h4><div class="tx" style="line-height:2">Marine studies centre · Beach access (walking distance) · Gymnasium · Ovals · Science labs · Art studios</div>'
-+'<p class="ts mt2">🏄 <strong>Best for:</strong> Both — if you choose Mornington Peninsula. Unique marine/surfing focus. Amazing lifestyle school but 70 min commute for Mike.</p></div>'
-
-+'<div class="card"><h2>👧 Bella-Specific Opportunities</h2><div style="font-size:.85rem;line-height:2">'
-+'<div>🎪 <strong>Circus/Aerial:</strong> <a href="https://www.nica.com.au" target="_blank" style="color:var(--accent)">NICA (National Institute of Circus Arts)</a> in Brunswick offers youth programs. Parkdale & Sandringham students can access after-school.</div>'
-+'<div>⛸️ <strong>Ice Skating/Hockey:</strong> <a href="https://www.icerink.com.au" target="_blank" style="color:var(--accent)">Oakleigh Ice Skating Centre</a> (20 min from Mordialloc) + <a href="https://obrienicehouse.com.au" target="_blank" style="color:var(--accent)">O\'Brien Icehouse</a> (Docklands). Both have figure skating + hockey programs.</div>'
-+'<div>🎭 <strong>Drama outside school:</strong> Melbourne Youth Theatre, St Martins Youth Arts, NICA youth circus — all accessible from south-east suburbs.</div>'
-+'<div>💃 <strong>Dance:</strong> Multiple dance studios in Mordialloc/Mentone area — contemporary, jazz, hip hop, ballet.</div>'
-+'</div></div>'
-
-+'<div class="card"><h2>👦 Jack-Specific Opportunities</h2><div style="font-size:.85rem;line-height:2">'
-+'<div>🤸 <strong>Gymnastics & Trampolining (PRIORITY):</strong> <a href="https://www.waverleygymnastics.com.au" target="_blank" style="color:var(--accent)">Waverley Gymnastics</a> · <a href="https://www.peninsulagymnastics.com.au" target="_blank" style="color:var(--accent)">Peninsula Gymnastics</a> (Frankston) · <a href="https://www.bounceinc.com.au" target="_blank" style="color:var(--accent)">Bounce Inc</a> (trampolining) · <a href="https://www.skyzone.com.au/melbourne" target="_blank" style="color:var(--accent)">Sky Zone</a> · Multiple gymnastics clubs in south-east with competitive + recreational programs. Trampoline parks within 15 min of all shortlisted suburbs.</div>'
-+'<div>🎮 <strong>Gaming/Tech:</strong> Most schools have coding clubs + esports teams. Parkdale has a dedicated coding club.</div>'
-+'<div>🛹 <strong>Skateparks:</strong> Frankston skatepark (huge), Mordialloc skatepark, Waterways, Seaford — all free, all excellent.</div>'
-+'<div>⚽ <strong>Sports clubs:</strong> Mordialloc FC (soccer), Mordialloc Braeside JFC (AFL), Peninsula Strikers (soccer), local cricket clubs — all welcome new players mid-season.</div>'
-+'<div>🚴 <strong>Mountain biking:</strong> Lysterfield Park (30 min) — amazing trails for kids. Also Silvan, You Yangs.</div>'
-+'<div>🏒 <strong>Ice hockey:</strong> Melbourne Ice (juniors) at O\'Brien Icehouse — competitive + social leagues.</div>'
-+'</div></div>'
-
-+'<div class="card"><h2>🇬🇧→🇦🇺 UK vs AU School System</h2><div class="table-wrap"><table><tr><th>UK</th><th>Australia (VIC)</th><th>Notes</th></tr>'
-+'<tr><td>Year 9 (age 13-14)</td><td>Year 9 (same)</td><td>Bella enters Year 10 in Jan 2027 (or Year 9 Term 3 if arriving mid-year)</td></tr>'
-+'<tr><td>Year 6 (age 10-11)</td><td>Year 6 (primary) → Year 7 (secondary)</td><td>Jack enters Year 7 in Jan 2027 (secondary starts at Year 7 in VIC)</td></tr>'
-+'<tr><td>GCSEs (Year 10-11)</td><td>No equivalent — continuous assessment</td><td>No high-stakes exams until VCE in Year 11-12</td></tr>'
-+'<tr><td>A-Levels (Year 12-13)</td><td>VCE (Year 11-12)</td><td>VCE = Victorian Certificate of Education. ATAR score for uni entry.</td></tr>'
-+'<tr><td>Homework: heavy</td><td>Homework: moderate</td><td>Less homework pressure, more project-based learning</td></tr>'
-+'<tr><td>Uniform: strict</td><td>Uniform: relaxed</td><td>Uniform required but less formal. No blazers usually.</td></tr>'
-+'<tr><td>School day: 8:45–3:15</td><td>School day: 8:30–3:30</td><td>Similar hours. After-school activities 3:30–5pm common.</td></tr>'
-+'<tr><td>Terms: 3 (Sep–Jul)</td><td>Terms: 4 (Jan–Dec)</td><td>T1 Jan–Mar, T2 Apr–Jun, T3 Jul–Sep, T4 Oct–Dec</td></tr>'
-+'<tr><td>Summer hols: 6 weeks</td><td>Summer hols: 6 weeks (Dec–Jan)</td><td>Christmas = summer! School holidays in Dec-Jan.</td></tr>'
-+'</table></div>'
-+'<p class="ts mt2">💡 <strong>Key difference:</strong> AU schools are more relaxed, less exam-focused, more emphasis on wellbeing and outdoor activities. Kids generally find the transition easy and enjoy the less pressured environment.</p></div>'
-
-+'<div class="card"><h2>📝 Enrolment Process (Mid-Year Transfer)</h2><div style="font-size:.85rem;line-height:2">'
-+'<div>1️⃣ <strong>Choose suburb</strong> → determines catchment school</div>'
-+'<div>2️⃣ <strong>Check catchment</strong> → <a href="https://www.findmyschool.vic.gov.au" target="_blank" style="color:var(--accent)">findmyschool.vic.gov.au</a></div>'
-+'<div>3️⃣ <strong>Contact school directly</strong> → email/call enrolment office, explain international transfer</div>'
-+'<div>4️⃣ <strong>Provide documents:</strong> passports, visa grant letter, previous school reports, immunisation records</div>'
-+'<div>5️⃣ <strong>School tour</strong> → most schools offer a tour + meeting with year level coordinator</div>'
-+'<div>6️⃣ <strong>Start date agreed</strong> → usually within 1-2 weeks of contact</div>'
-+'<div>7️⃣ <strong>Orientation day</strong> → buddy assigned, timetable created, uniform purchased</div>'
-+'</div><p class="ts mt2">⏰ <strong>Timeline:</strong> Contact school 2-4 weeks before you want kids to start. Mid-term starts are fine — schools handle this regularly.</p></div>';
-;
 
 CMP.costs='<div class="card" style="border-left:4px solid var(--accent);margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap"><div><div class="tm" style="font-size:.7rem">Net Salary</div><div style="font-size:1.1rem;font-weight:700;color:var(--green)">$9,571 (£5,092)/mo</div></div><div style="font-size:1.2rem;color:var(--muted)">−</div><div><div class="tm" style="font-size:.7rem">Living Costs (excl. rent)</div><div style="font-size:1.1rem;font-weight:700;color:var(--orange)">$3,345 (£1,780)/mo</div></div><div style="font-size:1.2rem;color:var(--muted)">=</div><div><div class="tm" style="font-size:.7rem">Before Rent</div><div style="font-size:1.1rem;font-weight:700;color:var(--green)">$6,226 (£3,312)/mo</div><div class="tm" style="font-size:.65rem">Subtract your suburb\'s rent for final disposable</div></div></div><button class="btn btn-o" style="font-size:.7rem;padding:6px 10px" onclick="document.getElementById(\'lcPopup\').style.display=document.getElementById(\'lcPopup\').style.display===\'block\'?\'none\':\'block\'">📋 What\'s included?</button></div><div id="lcPopup" style="display:none;margin-top:12px;font-size:.78rem;max-height:350px;overflow-y:auto"><div style="font-weight:600;margin-bottom:6px">Monthly expenses (excluding rent):</div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Groceries (~$265/wk)</span><span>$1,150 (£612)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Eating out / coffees / takeaway</span><span>$200 (£106)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Car fuel</span><span>$200 (£106)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Car lease (inc. insurance, rego, maint)</span><span>$600 (£319)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Electricity + gas</span><span>$250 (£133)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Water usage</span><span>$50 (£27)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Internet (NBN)</span><span>$80 (£43)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Health insurance (your 20% of ~$400 plan)</span><span>$80 (£43)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Mobile phones (family)</span><span>$60 (£32)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Streaming (Netflix, Spotify)</span><span>$35 (£19)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Contents / rental insurance</span><span>$40 (£21)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Kids activities (sport + casual)</span><span>$250 (£133)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>School uniforms / books</span><span>$50 (£27)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Clothing / shoes</span><span>$80 (£43)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Haircuts / personal care</span><span>$40 (£21)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Medical / dental gap</span><span>$30 (£16)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Pet insurance + vet</span><span>$60 (£32)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Household supplies</span><span>$40 (£21)</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>School contributions (x2)</span><span>$50 (£27)</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:700"><span>TOTAL (excl. rent)</span><span>$3,345 (£1,780)/mo</span></div><div class="tm" style="font-size:.7rem;margin-top:4px">⬆️ Subtract your chosen suburb\'s rent from $6,226 to get your final monthly disposable income.</div></div></div>'+
 '<div class="card"><h2>💰 Monthly Budget — $159k (£85k) Salary (4-Bed with Garden)</h2><p class="tx tm mb2">Net: $9,571 (£5,092)/mo. Amazon pays 80% health insurance.</p><div class="table-wrap"><table><tr><th>Suburb</th><th>4-bed/wk</th><th>Rent/mo</th><th>Disposable/mo</th><th>Disposable/yr</th></tr><tr style="background:rgba(34,197,94,.05)"><td style="font-weight:600"><a href="https://www.google.com/maps/search/Langwarrin+Victoria+Australia/@-38.1670,145.1700,13z" target="_blank" style="color:var(--accent)">Langwarrin 📍</a></td><td>$590 (£314)</td><td>$2,556 (£1360)</td><td style="color:var(--green)">$3,670 (£1952)</td><td style="color:var(--green)">$44,040 (£23429)</td></tr><tr><td style="font-weight:600"><a href="https://www.google.com/maps/search/Seaford+Victoria+Australia/@-38.1000,145.1340,13z" target="_blank" style="color:var(--accent)">Seaford 📍</a></td><td>$620 (£330)</td><td>$2,686 (£1429)</td><td style="color:var(--green)">$3,540 (£1883)</td><td style="color:var(--green)">$42,480 (£22599)</td></tr><tr><td style="font-weight:600"><a href="https://www.google.com/maps/search/Frankston+Victoria+Australia/@-38.1430,145.1260,13z" target="_blank" style="color:var(--accent)">Frankston 📍</a></td><td>$630 (£335)</td><td>$2,730 (£1452)</td><td style="color:var(--green)">$3,496 (£1860)</td><td style="color:var(--green)">$41,952 (£22318)</td></tr><tr><td style="font-weight:600"><a href="https://www.google.com/maps/search/Mordialloc+Victoria+Australia/@-37.9870,145.0870,13z" target="_blank" style="color:var(--accent)">Mordialloc 📍</a></td><td>$730 (£388)</td><td>$3,163 (£1683)</td><td style="color:var(--green)">$3,063 (£1630)</td><td style="color:var(--green)">$36,756 (£19554)</td></tr><tr><td style="font-weight:600"><a href="https://www.google.com/maps/search/Mentone+Victoria+Australia/@-37.9830,145.0670,13z" target="_blank" style="color:var(--accent)">Mentone 📍</a></td><td>$800 (£426)</td><td>$3,466 (£1844)</td><td style="color:var(--green)">$2,760 (£1468)</td><td style="color:var(--green)">$33,120 (£17620)</td></tr><tr><td style="font-weight:600"><a href="https://www.google.com/maps/search/Glen Waverley+Victoria+Australia/@-37.8780,145.1630,13z" target="_blank" style="color:var(--accent)">Glen Waverley 📍</a></td><td>$1,460 (£777)</td><td>$3,553 (£1890)</td><td style="color:var(--green)">$2,673 (£1422)</td><td style="color:var(--green)">$32,076 (£17064)</td></tr><tr><td style="font-weight:600"><a href="https://www.google.com/maps/search/Sandringham+Victoria+Australia/@-37.9510,145.0100,13z" target="_blank" style="color:var(--accent)">Sandringham 📍</a></td><td>$950 (£505)</td><td>$4,116 (£2190)</td><td style="color:var(--orange)">$2,110 (£1123)</td><td style="color:var(--orange)">$25,320 (£13470)</td></tr><tr><td style="font-weight:600"><a href="https://www.google.com/maps/search/Brighton+Victoria+Australia/@-37.9070,144.9870,13z" target="_blank" style="color:var(--accent)">Brighton 📍</a></td><td>$1100 (£585)</td><td>$4,766 (£2536)</td><td style="color:var(--orange)">$1,460 (£777)</td><td style="color:var(--orange)">$17,520 (£9321)</td></tr></table></div></div>';
@@ -594,4 +462,4 @@ CMP.frankie+='<div class="card"><h2>💰 What Frankie Could Earn</h2><div class=
 CMP.frankie+='<div class="card"><h2>🔗 All Job Search Links</h2><div class="table-wrap"><table><tr><th>Platform</th><th>Best for</th><th>Link</th></tr><tr><td style="font-weight:600">Seek</td><td>Main AU job site — all roles</td><td><a href="https://www.seek.com.au/education-support-jobs/in-Melbourne-VIC" target="_blank" style="color:var(--accent)">seek.com.au →</a></td></tr><tr><td style="font-weight:600">Indeed Australia</td><td>Wide range, good for support roles</td><td><a href="https://au.indeed.com/Education-Support-jobs-in-Melbourne-VIC" target="_blank" style="color:var(--accent)">indeed.com.au →</a></td></tr><tr><td style="font-weight:600">VIC Dept of Education</td><td>Government school roles</td><td><a href="https://www.education.vic.gov.au/hrweb/careers" target="_blank" style="color:var(--accent)">education.vic.gov.au →</a></td></tr><tr><td style="font-weight:600">Catholic Education Melbourne</td><td>Catholic school roles</td><td><a href="https://www.cecv.catholic.edu.au/Employment" target="_blank" style="color:var(--accent)">cecv.catholic.edu.au →</a></td></tr><tr><td style="font-weight:600">Independent Schools Victoria</td><td>Private school roles</td><td><a href="https://www.is.vic.edu.au/employment" target="_blank" style="color:var(--accent)">is.vic.edu.au →</a></td></tr><tr><td style="font-weight:600">Tradewind Recruitment</td><td>Education agency — casual/relief</td><td><a href="https://www.twrecruitment.com.au" target="_blank" style="color:var(--accent)">twrecruitment.com.au →</a></td></tr><tr><td style="font-weight:600">Anzuk Education</td><td>Education agency — casual/perm</td><td><a href="https://www.anzuk.education" target="_blank" style="color:var(--accent)">anzuk.education →</a></td></tr><tr><td style="font-weight:600">ClassCover</td><td>Relief teaching/support app</td><td><a href="https://www.classcover.com.au" target="_blank" style="color:var(--accent)">classcover.com.au →</a></td></tr><tr><td style="font-weight:600">EthicalJobs</td><td>Community sector, youth, wellbeing</td><td><a href="https://www.ethicaljobs.com.au" target="_blank" style="color:var(--accent)">ethicaljobs.com.au →</a></td></tr><tr><td style="font-weight:600">Hireup (NDIS)</td><td>NDIS support work platform</td><td><a href="https://www.hireup.com.au" target="_blank" style="color:var(--accent)">hireup.com.au →</a></td></tr><tr><td style="font-weight:600">Mable (NDIS)</td><td>NDIS support work platform</td><td><a href="https://www.mable.com.au" target="_blank" style="color:var(--accent)">mable.com.au →</a></td></tr></table></div></div>';
 
 
-
+CMP.sydney='<div class="card"><h2>🌊 Why Not Sydney — Cost Summary</h2><p class="tx tm mb2">Sydney was considered but Melbourne wins financially.</p><div class="table-wrap"><table><tr><th></th><th style="color:var(--accent)">Melbourne</th><th style="color:var(--orange)">Sydney</th><th>Difference</th></tr><tr><td style="font-weight:600">4-bed rent/wk</td><td>$58 (£31)0–800 (£309–426)</td><td>$90 (£48)0–1,200 (£479–638)</td><td class="tr">Syd +$30 (£16)0–400 (£160–213)/wk</td></tr><tr><td style="font-weight:600">School fees (2 kids/yr)</td><td style="color:var(--green)">FREE</td><td style="color:var(--red)">$11,200 (£5958)+</td><td class="tr">Syd +$11,200 (£5958)/yr</td></tr><tr><td style="font-weight:600">Annual cost difference</td><td colspan="2"></td><td style="color:var(--red);font-weight:700">Sydney costs $25,00 (£1330)0–35,000 (£13300–18620)/yr MORE</td></tr><tr><td style="font-weight:600">Monthly disposable</td><td style="color:var(--green)">$3,50 (£186)0–4,100 (£1862–2181)</td><td style="color:var(--red)">$80 (£43)0–1,500 (£426–798)</td><td></td></tr></table></div><p class="ts mt2">On $159 (£85)k salary, Sydney would leave you with under $1,500 (£798)/mo disposable after a 4-bed rent + school fees. Melbourne gives you $3,50 (£186)0–4,100 (£1862–2181)/mo. The decision is clear.</p></div>';
