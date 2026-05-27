@@ -1,43 +1,41 @@
 
 function loadMapPhotos(name){
+  if(!window._mapsLoaded)return;
   var el=document.getElementById('mapgal_'+name.replace(/ /g,'_'));
   if(!el||el.dataset.loaded)return;
   el.dataset.loaded='1';
-  fetch('https://maps.googleapis.com/maps/api/place/textsearch/json?query='+encodeURIComponent(name+' Victoria Australia')+'&key='+GKEY)
-    .then(function(r){return r.json()})
-    .then(function(data){
-      var photos=[];
-      if(data.results){data.results.slice(0,2).forEach(function(r){if(r.photos)photos=photos.concat(r.photos)})}
-      if(photos.length){
-        el.innerHTML=photos.slice(0,3).map(function(p){
-          return '<img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photo_reference='+p.photo_reference+'&key='+GKEY+'" style="height:60px;border-radius:6px;object-fit:cover;flex:0 0 auto">';
-        }).join('');
-      }
-    }).catch(function(){});
+  var service=new google.maps.places.PlacesService(document.createElement('div'));
+  service.findPlaceFromQuery({query:name+' Victoria Australia',fields:['photos']},function(results,status){
+    if(status===google.maps.places.PlacesServiceStatus.OK&&results&&results[0]&&results[0].photos){
+      el.innerHTML=results[0].photos.slice(0,3).map(function(p){
+        return '<img src="'+p.getUrl({maxWidth:200,maxHeight:130})+'" style="height:60px;border-radius:6px;object-fit:cover;flex:0 0 auto">';
+      }).join('');
+    }
+  });
 }
 
-var GKEY='AIzaSyCkKC4fUOBNqnXghQNUGTHe4lZ06gIILIY';
 function loadAllSuburbPhotos(){
+  if(!window._mapsLoaded){return setTimeout(loadAllSuburbPhotos,1000);}
+  var div=document.createElement('div');
+  var service=new google.maps.places.PlacesService(div);
   var queue=SUBURBS_DATA.slice();
   function next(){
     if(!queue.length)return;
     var s=queue.shift();
     var el=document.getElementById('gal_'+s.name.replace(/ /g,'_'));
     if(!el){next();return}
-    fetch('https://maps.googleapis.com/maps/api/place/textsearch/json?query='+encodeURIComponent(s.name+' Victoria Australia')+'&key='+GKEY)
-      .then(function(r){return r.json()})
-      .then(function(data){
-        var photos=[];
-        if(data.results){data.results.slice(0,3).forEach(function(r){if(r.photos)photos=photos.concat(r.photos)})}
-        if(photos.length){
-          el.innerHTML=photos.slice(0,5).map(function(p){
-            return '<img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference='+p.photo_reference+'&key='+GKEY+'" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto" loading="lazy" onerror="this.style.display=\'none\'">';
-          }).join('');
-        } else {
-          el.innerHTML='<a href="https://www.google.com/search?q='+encodeURIComponent(s.name+' Victoria Australia')+'&tbm=isch" target="_blank" style="font-size:.7rem;color:var(--accent)">📷 View photos</a>';
-        }
-        setTimeout(next,200);
-      }).catch(function(){next()});
+    var request={query:s.name+' Victoria Australia',fields:['photos']};
+    service.findPlaceFromQuery(request,function(results,status){
+      if(status===google.maps.places.PlacesServiceStatus.OK&&results&&results[0]&&results[0].photos){
+        var photos=results[0].photos.slice(0,5);
+        el.innerHTML=photos.map(function(p){
+          return '<img src="'+p.getUrl({maxWidth:400,maxHeight:250})+'" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto" loading="lazy" onerror="this.style.display=\'none\'">';
+        }).join('');
+      } else {
+        el.innerHTML='';
+      }
+      setTimeout(next,500);
+    });
   }
   next();
 }
@@ -218,7 +216,7 @@ function initSuburbMap(){
       var mw=((mf*25+ml*20+mfi*17.5+mc*17.5+mb*10+msc*10)/100).toFixed(1);
       var mwc=mw>=4?'#16a34a':mw>=3?'#3b82f6':'#6b7280';
       marker.bindPopup('<div style="min-width:240px"><strong>'+s.name+'</strong> <span style="background:'+mwc+';color:#fff;padding:1px 6px;border-radius:8px;font-size:.7rem">'+mw+'/5</span><br><span style="font-size:.85rem">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')<br>Train: '+s.train+' min | Beach: '+s.beach+'<br>School: '+s.school+' ('+s.schoolRating+')</span><div id="mapgal_'+s.name.replace(/ /g,'_')+'" style="display:flex;gap:4px;overflow-x:auto;margin-top:6px;max-width:240px"></div></div>');
-      marker.on("popupopen",function(){loadMapPhotos("'+s.name+'")});
+      marker.on('popupopen',function(){loadMapPhotos(''+s.name+'')});
     });
   });
   
