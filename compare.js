@@ -18,29 +18,57 @@ function loadMapPhotos(name){
   });
 }
 
+function openLightbox(container,startIdx){
+  var imgs=container.querySelectorAll('img');
+  if(!imgs.length)return;
+  var overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px';
+  var idx=startIdx||0;
+  function render(){
+    var src=imgs[idx].dataset.full||imgs[idx].src;
+    overlay.innerHTML='<div style="color:#fff;font-size:.8rem;margin-bottom:10px">'+(idx+1)+'/'+imgs.length+' — Swipe or use arrows</div><img src="'+src+'" style="max-width:90vw;max-height:70vh;border-radius:12px;object-fit:contain"><div style="display:flex;gap:20px;margin-top:16px"><button onclick="this.parentNode.parentNode._prev()" style="padding:10px 20px;background:#3b82f6;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer">← Prev</button><button onclick="this.parentNode.parentNode.remove()" style="padding:10px 20px;background:#ef4444;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer">✕ Close</button><button onclick="this.parentNode.parentNode._next()" style="padding:10px 20px;background:#3b82f6;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer">Next →</button></div>';
+  }
+  overlay._next=function(){idx=(idx+1)%imgs.length;render()};
+  overlay._prev=function(){idx=(idx-1+imgs.length)%imgs.length;render()};
+  overlay.onclick=function(e){if(e.target===overlay)overlay.remove()};
+  render();
+  document.body.appendChild(overlay);
+}
+
 function loadAllSuburbPhotos(){
   if(!window._mapsLoaded){return setTimeout(loadAllSuburbPhotos,1000);}
-  var div=document.createElement('div');
-  var service=new google.maps.places.PlacesService(div);
+  var service=new google.maps.places.PlacesService(document.createElement('div'));
   var queue=SUBURBS_DATA.slice();
   function next(){
     if(!queue.length)return;
     var s=queue.shift();
     var el=document.getElementById('gal_'+s.name.replace(/ /g,'_'));
     if(!el){next();return}
-    service.textSearch({query:s.name+' suburb Victoria Australia'},function(results,status){
-      var allPhotos=[];
-      if(status===google.maps.places.PlacesServiceStatus.OK&&results){
-        results.slice(0,5).forEach(function(r){if(r.photos)allPhotos=allPhotos.concat(r.photos)});
-      }
-      if(allPhotos.length){
-        el.innerHTML=allPhotos.slice(0,6).map(function(p){
-          return '<img src="'+p.getUrl({maxWidth:400,maxHeight:250})+'" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto" loading="lazy" onerror="this.style.display=\'none\'">';
-        }).join('');
-      } else {
-        el.innerHTML='';
-      }
-      setTimeout(next,500);
+    // Search multiple terms for variety
+    var queries=[s.name+' beach Victoria',s.name+' shops cafes Victoria',s.name+' park Victoria',s.name+' suburb Victoria Australia'];
+    var allPhotos=[];
+    var done=0;
+    queries.forEach(function(q){
+      service.textSearch({query:q},function(results,status){
+        if(status===google.maps.places.PlacesServiceStatus.OK&&results){
+          results.slice(0,2).forEach(function(r){if(r.photos)allPhotos=allPhotos.concat(r.photos)});
+        }
+        done++;
+        if(done===queries.length){
+          // Deduplicate by URL and show
+          var seen={};var unique=[];
+          allPhotos.forEach(function(p){var u=p.getUrl({maxWidth:400});if(!seen[u]){seen[u]=1;unique.push(p)}});
+          if(unique.length){
+            el.innerHTML=unique.slice(0,8).map(function(p,i){
+              var url=p.getUrl({maxWidth:800,maxHeight:500});
+              return '<img src="'+p.getUrl({maxWidth:400,maxHeight:250})+'" data-full="'+url+'" onclick="openLightbox(this.parentNode,'+i+')" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto;cursor:pointer" loading="lazy" onerror="this.style.display=\'none\'">';
+            }).join('');
+          } else {
+            el.innerHTML='';
+          }
+          setTimeout(next,300);
+        }
+      });
     });
   }
   next();
