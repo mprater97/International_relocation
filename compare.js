@@ -1,3 +1,24 @@
+var CMP={};var suburbView='list';
+function renderCompare(){
+  document.getElementById('compare').innerHTML=
+    '<div class="stabs">'+
+    '<div class="stab active" onclick="showCmp(\'suburbs\',this)">🏘️ Suburbs</div>'+
+    '<div class="stab" onclick="showCmp(\'costs\',this)">💰 Living Costs</div>'+
+    '<div class="stab" onclick="showCmp(\'lifestyle\',this)">🎯 Lifestyle</div>'+
+    '<div class="stab" onclick="showCmp(\'frankie\',this)">👩 Frankie</div>'+
+    '<div class="stab" onclick="showCmp(\'sydney\',this)">🌊 Sydney</div>'+
+    '</div><div id="cmpContent"></div>';
+  showCmp('suburbs',document.querySelector('#compare .stab'));
+}
+function showCmp(id,el){
+  document.querySelectorAll('#compare .stab').forEach(function(t){t.classList.remove('active')});
+  if(el)el.classList.add('active');
+  if(id==='suburbs'){renderSuburbsInteractive()}else{document.getElementById('cmpContent').innerHTML=CMP[id]||'';}
+}
+CMP.lifestyle='';
+CMP.frankie='';
+CMP.sydney='';
+
 
 function loadMapPhotos(name){
   if(!window._mapsLoaded)return;
