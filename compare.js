@@ -456,7 +456,7 @@ CMP.schools='<div class="card"><h2>🎓 School Comparison — Best for Bella (14
 +'<div class="card"><h2>🏫 Detailed School Profiles</h2></div>'
 
 +'<div class="card" style="border-left:4px solid var(--green)"><h3>⭐ Parkdale Secondary College — TOP PICK</h3><p class="tx tm">Mordialloc/Parkdale | 1,500 students | VCE 30</p>'
-+'<h4>🏅 Sports</h4><div class="tx" style="line-height:2">AFL Academy (boys & girls) · Netball Academy · Soccer program · Swimming (school pool) · Athletics · Cross country · Basketball · Cricket · Volleyball · Surfing (beach access) · Interschool sport every Wednesday</div>'
++'<h4>🏅 Sports</h4><div class="tx" style="line-height:2">AFL Academy (boys & girls) · Netball Academy · Soccer program · Swimming (school pool) · Athletics · Cross country · Basketball · Cricket · Volleyball · Surfing (beach access) · Gymnastics (interschool) · Interschool sport every Wednesday</div>'
 +'<h4>🎭 Drama & Arts</h4><div class="tx" style="line-height:2">Annual school musical (200+ students involved) · Drama classes Yr 7–12 · Dance program · Visual arts · Media studies · Music ensembles · Art exhibitions · Theatre productions</div>'
 +'<h4>⛺ Outdoor Education</h4><div class="tx" style="line-height:2">Year 7 camp (team building) · Year 8 adventure camp · Year 9 city experience · Year 10 outdoor ed elective · VCE Outdoor & Environmental Studies · Surfing · Kayaking · Rock climbing · Bushwalking · Camping</div>'
 +'<h4>🏢 Facilities</h4><div class="tx" style="line-height:2">Swimming pool · Gymnasium · Performing arts centre · Multiple ovals · Tennis/basketball courts · Science labs · Tech workshops · Recording studio · Art studios · Library/learning centre</div>'
@@ -472,7 +472,7 @@ CMP.schools='<div class="card"><h2>🎓 School Comparison — Best for Bella (14
 +'<p class="ts mt2">🎭 <strong>Best for:</strong> Bella — if performing arts/dance is her main passion. Elite arts program with beach lifestyle.</p></div>'
 
 +'<div class="card" style="border-left:4px solid var(--accent)"><h3>Frankston High School</h3><p class="tx tm">Frankston | 1,400 students | VCE 28</p>'
-+'<h4>🏅 Sports</h4><div class="tx" style="line-height:2">AFL (strong program) · Netball · Basketball · Soccer · Swimming · Athletics · Cricket · Volleyball · Surfing · Skateboarding (nearby skatepark) · Interschool sport</div>'
++'<h4>🏅 Sports</h4><div class="tx" style="line-height:2">AFL (strong program) · Netball · Basketball · Soccer · Swimming · Athletics · Cricket · Volleyball · Surfing · Gymnastics (interschool) · Skateboarding (nearby skatepark) · Interschool sport</div>'
 +'<h4>🎭 Drama & Arts</h4><div class="tx" style="line-height:2">Performing Arts Centre (recently built) · Annual musical · Drama classes · Dance · Music program (bands, ensembles) · Visual arts · Media studies</div>'
 +'<h4>⛺ Outdoor Education</h4><div class="tx" style="line-height:2">Outdoor ed camps every year level · Year 9 extended camp · VCE Outdoor Ed · Beach access (5 min walk) · Surfing · Rock climbing · Bushwalking · Kayaking</div>'
 +'<h4>🏢 Facilities</h4><div class="tx" style="line-height:2">New performing arts centre · Gymnasium · Multiple ovals · Beach access · Science labs · Tech workshops · Art studios · Library</div>'
@@ -508,6 +508,7 @@ CMP.schools='<div class="card"><h2>🎓 School Comparison — Best for Bella (14
 +'</div></div>'
 
 +'<div class="card"><h2>👦 Jack-Specific Opportunities</h2><div style="font-size:.85rem;line-height:2">'
++'<div>🤸 <strong>Gymnastics & Trampolining (PRIORITY):</strong> <a href="https://www.waverleygymnastics.com.au" target="_blank" style="color:var(--accent)">Waverley Gymnastics</a> · <a href="https://www.peninsulagymnastics.com.au" target="_blank" style="color:var(--accent)">Peninsula Gymnastics</a> (Frankston) · <a href="https://www.bounceinc.com.au" target="_blank" style="color:var(--accent)">Bounce Inc</a> (trampolining) · <a href="https://www.skyzone.com.au/melbourne" target="_blank" style="color:var(--accent)">Sky Zone</a> · Multiple gymnastics clubs in south-east with competitive + recreational programs. Trampoline parks within 15 min of all shortlisted suburbs.</div>'
 +'<div>🎮 <strong>Gaming/Tech:</strong> Most schools have coding clubs + esports teams. Parkdale has a dedicated coding club.</div>'
 +'<div>🛹 <strong>Skateparks:</strong> Frankston skatepark (huge), Mordialloc skatepark, Waterways, Seaford — all free, all excellent.</div>'
 +'<div>⚽ <strong>Sports clubs:</strong> Mordialloc FC (soccer), Mordialloc Braeside JFC (AFL), Peninsula Strikers (soccer), local cricket clubs — all welcome new players mid-season.</div>'
