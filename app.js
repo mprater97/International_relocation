@@ -152,13 +152,33 @@ let moneySub='overview';
 // ===== POINTS ALLOCATOR =====
 function renderPointsAllocator(){
   var services=[
-    {id:'temp30',name:'Temp Housing 30 days',points:70,market:3600,cashCost:3364},
-    {id:'temp45',name:'Temp Housing 45 days',points:105,market:5400,cashCost:5045},
-    {id:'temp60',name:'Temp Housing 60 days',points:140,market:7200,cashCost:6727},
-    {id:'shipping',name:'Household Goods Shipment',points:190,market:2882,cashCost:9130},
-    {id:'flights',name:'Final Trip Airfare (family of 4)',points:15,market:6542,cashCost:721},
-    {id:'car',name:'Rental Car 15 days',points:15,market:1050,cashCost:721},
-    {id:'homefind',name:'Home Finding Trip (3 days)',points:35,market:1000,cashCost:1682},
+    // Best value first (by ratio)
+    {id:'flights',name:'Final Trip Airfare (4 pax)',points:15,market:Math.round(3200*1.88),ratio:'9.3x',desc:'4x one-way economy',cat:'Travel'},
+    {id:'homefind',name:'Home Finding Trip (4 pax)',points:35,market:Math.round(5750*1.88),ratio:'7.1x',desc:'4 ret. flights + hotel + car',cat:'Travel'},
+    {id:'coaching',name:'Family Relocation Support',points:10,market:Math.round(1500*1.88),ratio:'6.5x',desc:'6 coaching sessions',cat:'Support'},
+    {id:'cultural',name:'Cross Cultural Training',points:15,market:Math.round(1575*1.88),ratio:'4.6x',desc:'1-day session',cat:'Support'},
+    {id:'hotel7',name:'Short Term Hotel (7 days)',points:21,market:Math.round(1950*1.88),ratio:'4.0x',desc:'2 rooms, 4 pax',cat:'Housing'},
+    {id:'hotel14',name:'Short Term Hotel (14 days)',points:42,market:Math.round(3900*1.88),ratio:'4.0x',desc:'2 rooms, 4 pax',cat:'Housing'},
+    {id:'temp30',name:'Temp Housing (30 days)',points:70,market:Math.round(4250*1.88),ratio:'2.6x',desc:'2-bed furnished apt',cat:'Housing'},
+    {id:'temp45',name:'Temp Housing (45 days)',points:105,market:Math.round(6400*1.88),ratio:'2.6x',desc:'2-bed furnished apt',cat:'Housing'},
+    {id:'temp60',name:'Temp Housing (60 days)',points:140,market:Math.round(8500*1.88),ratio:'2.6x',desc:'2-bed furnished apt',cat:'Housing'},
+    {id:'temp75',name:'Temp Housing (75 days)',points:175,market:Math.round(10650*1.88),ratio:'2.6x',desc:'2-bed furnished apt',cat:'Housing'},
+    {id:'temp90',name:'Temp Housing (90 days)',points:210,market:Math.round(12750*1.88),ratio:'2.6x',desc:'2-bed furnished apt',cat:'Housing'},
+    {id:'shipping',name:'Assisted Move — Full HHG',points:190,market:Math.round(9500*1.88),ratio:'2.2x',desc:'Full intl. sea freight + 30d storage',cat:'Shipping'},
+    {id:'storage15',name:'Addtl HHG Storage (15d)',points:5,market:Math.round(300*1.88),ratio:'2.6x',desc:'Storage extension',cat:'Shipping'},
+    {id:'storage30',name:'Addtl HHG Storage (30d)',points:10,market:Math.round(525*1.88),ratio:'2.3x',desc:'Storage extension',cat:'Shipping'},
+    {id:'storage45',name:'Addtl HHG Storage (45d)',points:15,market:Math.round(750*1.88),ratio:'2.2x',desc:'Storage extension',cat:'Shipping'},
+    {id:'air',name:'Ship Goods by Air',points:60,market:Math.round(2500*1.88),ratio:'1.8x',desc:'Small/soft items',cat:'Shipping'},
+    {id:'dsp1',name:'Dest. Service Provider (1d)',points:10,market:Math.round(475*1.88),ratio:'2.1x',desc:'Local relocation expert',cat:'Support'},
+    {id:'dsp2',name:'Dest. Service Provider (2d)',points:20,market:Math.round(950*1.88),ratio:'2.1x',desc:'Local relocation expert',cat:'Support'},
+    {id:'dsp3',name:'Dest. Service Provider (3d)',points:30,market:Math.round(1425*1.88),ratio:'2.1x',desc:'Local relocation expert',cat:'Support'},
+    {id:'car15',name:'Rental Car (15 days)',points:10,market:Math.round(525*1.88),ratio:'2.3x',desc:'Mid-size vehicle',cat:'Transport'},
+    {id:'car30',name:'Rental Car (30 days)',points:20,market:Math.round(1000*1.88),ratio:'2.2x',desc:'Mid-size vehicle',cat:'Transport'},
+    {id:'car45',name:'Rental Car (45 days)',points:30,market:Math.round(1475*1.88),ratio:'2.1x',desc:'Mid-size vehicle',cat:'Transport'},
+    {id:'car60',name:'Rental Car (60 days)',points:40,market:Math.round(1950*1.88),ratio:'2.1x',desc:'Mid-size vehicle',cat:'Transport'},
+    {id:'furn30',name:'Furniture Rental (30d)',points:35,market:Math.round(450*1.88),ratio:'0.6x',desc:'2-bed setup — POOR VALUE',cat:'Housing'},
+    {id:'furn60',name:'Furniture Rental (60d)',points:70,market:Math.round(900*1.88),ratio:'0.6x',desc:'2-bed setup — POOR VALUE',cat:'Housing'},
+    {id:'furn90',name:'Furniture Rental (90d)',points:105,market:Math.round(1350*1.88),ratio:'0.6x',desc:'2-bed setup — POOR VALUE',cat:'Housing'},
   ];
   var selected=state.pointsSelected||{};
   var usedPts=0;var totalMarketValue=0;
@@ -170,14 +190,22 @@ function renderPointsAllocator(){
 
   var html='<div class="card"><h2>🎯 Points Allocator — 310 Total</h2>';
   html+='<div class="sg"><div class="sb blue"><div class="l">Total Points</div><div class="v">310</div></div><div class="sb orange"><div class="l">Used</div><div class="v">'+usedPts+'</div></div><div class="sb green"><div class="l">Remaining</div><div class="v">'+remainPts+'</div></div><div class="sb green"><div class="l">Cash Value</div><div class="v">$'+cashValue+' AUD</div></div></div>';
-  html+='<p class="tx tm mb2">Tick services you want. Remaining points convert to cash at $31 USD/point.</p>';
-  html+='<div class="table-wrap"><table><tr><th>Use?</th><th>Service</th><th>Points</th><th>Cash Cost<br>(off $14,900)</th><th>Est. Value</th><th>Actual Cost<br>(if you find it)</th><th>Saving</th></tr>';
+  html+='<p class="tx tm mb2">Tick services to use points. Remaining convert to cash at $31 USD/pt ($43.49 AUD). Sorted by value ratio.</p>';
+  html+='<p class="tx tm mb2" style="font-size:.7rem">🟢 4x+ = excellent value | 🔵 2x+ = good | 🔴 <1x = take cash instead</p>';
+  html+='<div class="table-wrap"><table><tr><th></th><th>Service</th><th>Pts</th><th>Market Value</th><th>Ratio</th></tr>';
   services.forEach(function(s){
     var checked=selected[s.id];
-    var verdict=s.market>(s.points*31*1.55)?'<span style="color:var(--green)">✅ Good value</span>':'<span style="color:var(--red)">❌ Take cash</span>';
-    var actualCost=(state.pointsActual||{})[s.id]||0;var effectiveMarket=actualCost||s.market;var saving=effectiveMarket-s.cashCost;html+='<tr'+(checked?' style="background:rgba(34,197,94,.08)"':'')+'><td><input type="checkbox" '+(checked?'checked':'')+' onchange="togglePoint(this.checked,\''+s.id+'\')"></td><td style="font-weight:600">'+s.name+'</td><td>'+s.points+' pts<br><span class="tx tm">($'+s.cashCost.toLocaleString()+' AUD)</span></td><td>-$'+s.cashCost.toLocaleString()+' (£'+Math.round(s.cashCost*0.532).toLocaleString()+')</td><td>~$'+s.market.toLocaleString()+' (£'+Math.round(s.market*0.532).toLocaleString()+')</td><td><input type="number" class="ism" value="'+(actualCost||'')+'" placeholder="$" onchange="savePointsActual(\''+s.id+'\',+this.value);renderMoney()"></td><td style="color:'+(saving>0?'var(--green)':'var(--red)')+'">$'+(saving>0?'+':'')+saving.toLocaleString()+' (£'+(saving>0?'+':'')+Math.round(saving*0.532).toLocaleString()+')</td></tr>';
+    var ratioNum=parseFloat(s.ratio);
+    var ratioColor=ratioNum>=4?'var(--green)':ratioNum>=2?'var(--accent)':'var(--red)';
+    var cashCost=Math.round(s.points*43.49);
+    html+='<tr'+(checked?' style="background:rgba(34,197,94,.08)"':'')+'><td><input type="checkbox" '+(checked?'checked':'')+' onchange="togglePoint(this.checked,\''+s.id+'\')">';
+    html+='</td><td><strong>'+s.name+'</strong><br><span class="tx tm">'+s.desc+'</span></td>';
+    html+='<td style="text-align:center">'+s.points+'</td>';
+    html+='<td>£'+Math.round(s.market*0.532).toLocaleString()+' <span class="tx tm">($'+s.market.toLocaleString()+')</span></td>';
+    html+='<td style="font-weight:700;color:'+ratioColor+'">'+s.ratio+'</td></tr>';
   });
   html+='</table></div>';
+  html+='<p class="tx tm" style="margin-top:8px">💡 Recommended: Flights (9.3x) + Home Finding (7.1x) + Assisted Move (2.2x) + Temp Housing 30d (2.6x) = 310 pts used, ~£22,700 market value for £7,131 in points.</p>';
   
     return html;
 }
