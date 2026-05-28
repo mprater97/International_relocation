@@ -261,7 +261,7 @@ function showSuburbDetail(name){
     '<a href="'+mapUrl+'" target="_blank" class="btn btn-o" style="font-size:.78rem">📍 Google Maps</a>'+
     '<a href="'+domainUrl+'" target="_blank" class="btn btn-o" style="font-size:.78rem">🏠 Browse Listings</a>'+
     '<a href="'+s.schoolLink+'" target="_blank" class="btn btn-o" style="font-size:.78rem">🏫 School Info</a>'+
-    '<button class="btn btn-p" style="font-size:.78rem" onclick="addSuburbToShortlist(\''+name+'\')">⭐ Add to Shortlist</button>'+
+    '<button class="btn btn-p" style="font-size:.78rem" onclick="addSuburbToShortlist(\''+name+'\')">1/5 Add to Shortlist</button>'+
     '</div>';
   el.scrollIntoView({behavior:'smooth'});
 }
@@ -414,24 +414,24 @@ function addSuburbToShortlist(name){
     scores:{beach:0,commute:0,schools:0,lifestyle:0,value:0}
   });
   save();
-  alert('⭐ '+name+' added to shortlist! Go to Shortlist tab to score it.');
+  alert('1/5 '+name+' added to shortlist! Go to Shortlist tab to score it.');
 }
 
 
 
 
 
-CMP.schools='<div class="card"><h2>🎓 School Comparison — Best for Bella (14) & Jack (11)</h2><p class="tx tm mb2">Focus: sports, drama, outdoor education, hands-on learning, active sessions. All FREE for 482 visa holders.</p><div class="table-wrap"><table><tr><th>School</th><th>Suburb</th><th>VCE</th><th>Students</th><th>Sports</th><th>Drama</th><th>Outdoor Ed</th><th>Best For</th><th>Notes</th></tr>'
-+'<tr style="background:rgba(34,197,94,.05)"><td style="font-weight:600"><a href="https://www.parkdalesc.vic.edu.au" target="_blank" style="color:var(--accent)">Parkdale SC →</a></td><td>Mordialloc</td><td style="font-weight:700;color:var(--green)">30</td><td>~1,500</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>Both</td><td>Sports Academy (AFL, netball, soccer), state champions, annual musical, outdoor camps, STEM</td></tr>'
-+'<tr style="background:rgba(34,197,94,.05)"><td style="font-weight:600"><a href="https://www.sandringhamsc.vic.edu.au" target="_blank" style="color:var(--accent)">Sandringham College →</a></td><td>Sandringham</td><td style="font-weight:700;color:var(--green)">30</td><td>~1,200</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>Bella</td><td>Elite performing arts (TOP Arts), dance, drama, music, sports academy, beach programs</td></tr>'
-+'<tr><td style="font-weight:600"><a href="https://www.mentonegirls.vic.edu.au" target="_blank" style="color:var(--accent)">Mentone Girls SC →</a></td><td>Mentone</td><td style="font-weight:700;color:var(--green)">31</td><td>~900</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td><span style="color:var(--muted)">Bella only</span></td><td>Drama/dance focus, annual musical, sports teams, wellbeing focus. <strong style="color:var(--red)">Girls only — not suitable (both kids need same school).</strong></td></tr>'
-+'<tr><td style="font-weight:600"><a href="https://www.mtwaverleysc.vic.edu.au" target="_blank" style="color:var(--accent)">Mt Waverley SC →</a></td><td>Mt Waverley</td><td style="font-weight:700;color:var(--green)">31</td><td>~1,600</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>Both</td><td>Balanced: sports academy + performing arts + outdoor ed + STEM. Good all-rounder.</td></tr>'
-+'<tr style="background:rgba(34,197,94,.05)"><td style="font-weight:600"><a href="https://www.frankstonhs.vic.edu.au" target="_blank" style="color:var(--accent)">Frankston High →</a></td><td>Frankston</td><td>28</td><td>~1,400</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>Both</td><td>Strong sports (AFL, netball, basketball), performing arts centre, outdoor ed camps, school musical</td></tr>'
-+'<tr><td style="font-weight:600"><a href="https://www.mornsc.vic.edu.au" target="_blank" style="color:var(--accent)">Mornington SC →</a></td><td>Mornington</td><td>27</td><td>~1,200</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td>Both</td><td>Marine studies, surfing program, outdoor ed, surf lifesaving, school productions. Unique!</td></tr>'
-+'<tr><td style="font-weight:600"><a href="https://www.emurdoch.vic.edu.au" target="_blank" style="color:var(--accent)">Elisabeth Murdoch →</a></td><td>Langwarrin</td><td>27</td><td>~1,100</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td>Jack</td><td>Outdoor Ed as VCE subject, environmental science, camps program, sustainability focus, sports</td></tr>'
-+'<tr><td style="font-weight:600"><a href="https://www.mcclellandcollege.vic.edu.au" target="_blank" style="color:var(--accent)">McClelland College →</a></td><td>Frankston Sth</td><td>26</td><td>~900</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>Bella</td><td>Dedicated Performing Arts Academy, outdoor camps, VET pathways, visual arts</td></tr>'
-+'<tr><td style="font-weight:600"><a href="https://www.montereysc.vic.edu.au" target="_blank" style="color:var(--accent)">Monterey SC →</a></td><td>Seaford</td><td>25</td><td>~600</td><td>⭐⭐⭐</td><td>⭐⭐</td><td>⭐⭐⭐</td><td>Jack</td><td>Small school feel, hands-on learning, trade pathways, smaller classes. Less academic pressure.</td></tr>'
-+'<tr><td style="font-weight:600"><a href="https://www.glenwsc.vic.edu.au" target="_blank" style="color:var(--accent)">Glen Waverley SC →</a></td><td>Glen Waverley</td><td style="font-weight:700;color:var(--green)">34</td><td>~2,000</td><td>⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐</td><td>Academic</td><td>Top academics (91.40 VCE), music, languages. Very competitive. May not suit hands-on learners.</td></tr>'
+CMP.schools='<div class="card"><h2>🎓 School Comparison — Best for Bella (14) & Jack (11)</h2><p class="tx tm mb2">Focus: sports, drama, outdoor education, hands-on learning, active sessions. All FREE for 482 visa holders.</p><div class="table-wrap"><table><tr><th>School</th><th>Suburb</th><th>VCE</th><th>Size</th><th>🏅</th><th>🎭</th><th>⛺</th><th>For</th><th style="min-width:200px">Notes</th></tr>'
++'<tr style="background:rgba(34,197,94,.05)"><td style="font-weight:600"><a href="https://www.parkdalesc.vic.edu.au" target="_blank" style="color:var(--accent)">Parkdale SC →</a></td><td>Mordialloc</td><td style="font-weight:700;color:var(--green)">30</td><td>~1,500</td><td>5/5</td><td>4/5</td><td>4/5</td><td>Both</td><td>Sports Academy (AFL, netball, soccer), state champions, annual musical, outdoor camps, STEM</td></tr>'
++'<tr style="background:rgba(34,197,94,.05)"><td style="font-weight:600"><a href="https://www.sandringhamsc.vic.edu.au" target="_blank" style="color:var(--accent)">Sandringham College →</a></td><td>Sandringham</td><td style="font-weight:700;color:var(--green)">30</td><td>~1,200</td><td>4/5</td><td>5/5</td><td>4/5</td><td>Bella</td><td>Elite performing arts (TOP Arts), dance, drama, music, sports academy, beach programs</td></tr>'
+
++'<tr><td style="font-weight:600"><a href="https://www.mtwaverleysc.vic.edu.au" target="_blank" style="color:var(--accent)">Mt Waverley SC →</a></td><td>Mt Waverley</td><td style="font-weight:700;color:var(--green)">31</td><td>~1,600</td><td>4/5</td><td>4/5</td><td>4/5</td><td>Both</td><td>Balanced: sports academy + performing arts + outdoor ed + STEM. Good all-rounder.</td></tr>'
++'<tr style="background:rgba(34,197,94,.05)"><td style="font-weight:600"><a href="https://www.frankstonhs.vic.edu.au" target="_blank" style="color:var(--accent)">Frankston High →</a></td><td>Frankston</td><td>28</td><td>~1,400</td><td>5/5</td><td>4/5</td><td>4/5</td><td>Both</td><td>Strong sports (AFL, netball, basketball), performing arts centre, outdoor ed camps, school musical</td></tr>'
++'<tr><td style="font-weight:600"><a href="https://www.mornsc.vic.edu.au" target="_blank" style="color:var(--accent)">Mornington SC →</a></td><td>Mornington</td><td>27</td><td>~1,200</td><td>4/5</td><td>3/5</td><td>5/5</td><td>Both</td><td>Marine studies, surfing program, outdoor ed, surf lifesaving, school productions. Unique!</td></tr>'
++'<tr><td style="font-weight:600"><a href="https://www.emurdoch.vic.edu.au" target="_blank" style="color:var(--accent)">Elisabeth Murdoch →</a></td><td>Langwarrin</td><td>27</td><td>~1,100</td><td>4/5</td><td>3/5</td><td>5/5</td><td>Jack</td><td>Outdoor Ed as VCE subject, environmental science, camps program, sustainability focus, sports</td></tr>'
++'<tr><td style="font-weight:600"><a href="https://www.mcclellandcollege.vic.edu.au" target="_blank" style="color:var(--accent)">McClelland College →</a></td><td>Frankston Sth</td><td>26</td><td>~900</td><td>3/5</td><td>5/5</td><td>4/5</td><td>Bella</td><td>Dedicated Performing Arts Academy, outdoor camps, VET pathways, visual arts</td></tr>'
++'<tr><td style="font-weight:600"><a href="https://www.montereysc.vic.edu.au" target="_blank" style="color:var(--accent)">Monterey SC →</a></td><td>Seaford</td><td>25</td><td>~600</td><td>3/5</td><td>2/5</td><td>3/5</td><td>Jack</td><td>Small school feel, hands-on learning, trade pathways, smaller classes. Less academic pressure.</td></tr>'
++'<tr><td style="font-weight:600"><a href="https://www.glenwsc.vic.edu.au" target="_blank" style="color:var(--accent)">Glen Waverley SC →</a></td><td>Glen Waverley</td><td style="font-weight:700;color:var(--green)">34</td><td>~2,000</td><td>3/5</td><td>3/5</td><td>2/5</td><td>Academic</td><td>Top academics (91.40 VCE), music, languages. Very competitive. May not suit hands-on learners.</td></tr>'
 +'</table></div></div>'
 
 +'<div class="card"><h2>🏆 Our Recommendation — Same School for Both</h2>'
@@ -473,7 +473,7 @@ CMP.schools='<div class="card"><h2>🎓 School Comparison — Best for Bella (14
 +'</div></div>'
 +'<div class="card"><h2>🏫 Detailed School Profiles</h2></div>'
 
-+'<div class="card" style="border-left:4px solid var(--green)"><h3>⭐ Parkdale Secondary College — TOP PICK</h3><p class="tx tm">Mordialloc/Parkdale | 1,500 students | VCE 30</p>'
++'<div class="card" style="border-left:4px solid var(--green)"><h3>1/5 Parkdale Secondary College — TOP PICK</h3><p class="tx tm">Mordialloc/Parkdale | 1,500 students | VCE 30</p>'
 +'<h4>🏅 Sports</h4><div class="tx" style="line-height:2">AFL Academy (boys & girls) · Netball Academy · Soccer program · Swimming (school pool) · Athletics · Cross country · Basketball · Cricket · Volleyball · Surfing (beach access) · Gymnastics (interschool) · Interschool sport every Wednesday</div>'
 +'<h4>🎭 Drama & Arts</h4><div class="tx" style="line-height:2">Annual school musical (200+ students involved) · Drama classes Yr 7–12 · Dance program · Visual arts · Media studies · Music ensembles · Art exhibitions · Theatre productions</div>'
 +'<h4>⛺ Outdoor Education</h4><div class="tx" style="line-height:2">Year 7 camp (team building) · Year 8 adventure camp · Year 9 city experience · Year 10 outdoor ed elective · VCE Outdoor & Environmental Studies · Surfing · Kayaking · Rock climbing · Bushwalking · Camping</div>'
