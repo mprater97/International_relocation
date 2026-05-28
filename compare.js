@@ -18,8 +18,63 @@ function showCmp(id,el){
 }
 CMP.lifestyle='';
 CMP.frankie='';
-CMP.sydney='';
+CMP.sydney='<div class="card"><h2>🌊 Melbourne vs Sydney — Full Cost Comparison</h2>'
++'<p class="tx tm mb2">Three scenarios compared: Sydney Inner (expensive), Sydney Outer (cheaper, no school fees in NSW public), and Melbourne (our choice).</p>'
++'<div class="table-wrap"><table><tr><th></th><th style="color:var(--green)">Melbourne<br>(South-East)</th><th style="color:var(--orange)">Sydney Inner<br>(North Shore/East)</th><th style="color:var(--accent)">Sydney Outer<br>(West/South-West)</th></tr>'
++'<tr><td style="font-weight:600">4-bed rent/wk</td><td>$600–800</td><td>$1,100–1,500</td><td>$700–900</td></tr>'
++'<tr><td style="font-weight:600">Rent/month</td><td style="color:var(--green)">$2,600–3,466</td><td style="color:var(--red)">$4,766–6,500</td><td style="color:var(--orange)">$3,033–3,900</td></tr>'
++'<tr><td style="font-weight:600">School fees (2 kids/yr)</td><td style="color:var(--green)">FREE (VIC 482 visa)</td><td style="color:var(--red)">$11,200+ (NSW charges 482)</td><td style="color:var(--green)">FREE (NSW public)</td></tr>'
++'<tr><td style="font-weight:600">School fee note</td><td>All VIC govt schools free</td><td>Only free if in public school catchment — most good schools are private ($20k–40k/yr)</td><td>NSW public schools ARE free for 482 — but quality varies in outer areas</td></tr>'
++'<tr><td style="font-weight:600">Commute to CBD</td><td style="color:var(--green)">35–55 min train</td><td style="color:var(--green)">20–35 min</td><td style="color:var(--red)">50–75 min</td></tr>'
++'<tr><td style="font-weight:600">Amazon office</td><td>MEL12 — 555 Collins St</td><td>SYD1 — 2 Park St</td><td>SYD1 — 2 Park St</td></tr>'
++'<tr><td style="font-weight:600">Groceries/mo</td><td>$1,150</td><td>$1,250</td><td>$1,150</td></tr>'
++'<tr><td style="font-weight:600">Car lease/mo</td><td>$600</td><td>$650</td><td>$600</td></tr>'
++'<tr><td style="font-weight:600">Tolls</td><td style="color:var(--green)">Minimal</td><td style="color:var(--red)">$50–100/wk (M2, Harbour Bridge, tunnel)</td><td style="color:var(--red)">$40–80/wk (M4, M5, M7)</td></tr>'
++'<tr><td style="font-weight:600">Childcare/activities</td><td>$250/mo</td><td>$300/mo</td><td>$250/mo</td></tr>'
++'<tr style="font-weight:700;background:rgba(255,255,255,.03)"><td>Total monthly costs (inc rent)</td><td style="color:var(--green)">$6,800–7,600</td><td style="color:var(--red)">$9,500–12,000</td><td style="color:var(--orange)">$7,400–8,800</td></tr>'
++'<tr style="font-weight:700;background:rgba(255,255,255,.03)"><td>Monthly disposable</td><td style="color:var(--green)">$2,000–2,800</td><td style="color:var(--red)">-$400 to $100 😬</td><td style="color:var(--orange)">$800–2,200</td></tr>'
++'<tr style="font-weight:700;background:rgba(255,255,255,.03)"><td>Annual disposable</td><td style="color:var(--green)">$24,000–33,600</td><td style="color:var(--red)">-$4,800 to $1,200</td><td style="color:var(--orange)">$9,600–26,400</td></tr>'
++'</table></div></div>'
 
++'<div class="card"><h2>📍 Sydney Areas Explained</h2>'
++'<h3 style="color:var(--orange)">Sydney Inner (North Shore / Eastern Suburbs)</h3>'
++'<div class="tx" style="line-height:2">Areas: Chatswood, Lane Cove, Mosman, Neutral Bay, Bondi, Randwick<br>'
++'Commute: 20–35 min to CBD<br>'
++'Rent: $1,100–1,500/wk (4-bed)<br>'
++'Schools: Excellent public + private options BUT most families use private ($20k–40k/yr per child)<br>'
++'Lifestyle: Beautiful harbour, beaches, cafes — but extremely expensive<br>'
++'<strong style="color:var(--red)">Verdict: Unaffordable on $159k. Would be in deficit every month.</strong></div>'
+
++'<h3 style="color:var(--accent);margin-top:16px">Sydney Outer (West / South-West)</h3>'
++'<div class="tx" style="line-height:2">Areas: Parramatta, Penrith, Liverpool, Campbelltown, Blacktown<br>'
++'Commute: 50–75 min to CBD (train or car + tolls)<br>'
++'Rent: $700–900/wk (4-bed) — similar to Melbourne<br>'
++'Schools: NSW public schools ARE free for 482 visa holders — correction from earlier. Quality varies but some good options.<br>'
++'Lifestyle: New estates, shopping centres, multicultural food — but less beach/outdoor lifestyle<br>'
++'Tolls: $40–80/wk if driving (Sydney motorways are expensive)<br>'
++'<strong style="color:var(--orange)">Verdict: Affordable but long commute, heavy tolls, less lifestyle appeal. No beach.</strong></div>'
++'</div>'
+
++'<div class="card"><h2>✅ Why Melbourne Wins</h2><div style="font-size:.85rem;line-height:2">'
++'<div>💰 <strong>£1,000–1,500/mo more disposable</strong> than Sydney outer, £2,500+ more than Sydney inner</div>'
++'<div>🏖️ <strong>Beach lifestyle</strong> — live ON the beach for $600–800/wk rent (impossible in Sydney under $1,200)</div>'
++'<div>🚆 <strong>Reasonable commute</strong> — 35–55 min vs Sydney outer 50–75 min</div>'
++'<div>🆓 <strong>School fees guaranteed free</strong> — VIC policy is clear for 482 visa. No ambiguity.</div>'
++'<div>🚗 <strong>No tolls</strong> — Melbourne has minimal tolls vs Sydney $200–400/mo</div>'
++'<div>👨‍👩‍👧‍👦 <strong>Family suburbs</strong> — beach + parks + space + community. Sydney outer = new estates with less character</div>'
++'<div>☕ <strong>Better lifestyle per dollar</strong> — Melbourne\'s south-east gives you beach, cafes, sports, community for half the cost of equivalent Sydney areas</div>'
++'</div></div>'
+
++'<div class="card"><h2>📊 Summary</h2><div class="table-wrap"><table><tr><th></th><th>Melbourne</th><th>Sydney Inner</th><th>Sydney Outer</th></tr>'
++'<tr><td>Affordability</td><td style="color:var(--green)">✅ Comfortable</td><td style="color:var(--red)">❌ Deficit</td><td style="color:var(--orange)">⚠️ Tight</td></tr>'
++'<tr><td>Beach access</td><td style="color:var(--green)">✅ Live on it</td><td style="color:var(--green)">✅ Nearby</td><td style="color:var(--red)">❌ 40+ min drive</td></tr>'
++'<tr><td>Commute</td><td style="color:var(--green)">✅ 35–55 min</td><td style="color:var(--green)">✅ 20–35 min</td><td style="color:var(--red)">❌ 50–75 min</td></tr>'
++'<tr><td>School quality</td><td style="color:var(--green)">✅ Good (VCE 28–30)</td><td style="color:var(--green)">✅ Excellent</td><td style="color:var(--orange)">⚠️ Variable</td></tr>'
++'<tr><td>School cost</td><td style="color:var(--green)">✅ FREE</td><td style="color:var(--red)">❌ $11k–40k/yr</td><td style="color:var(--green)">✅ FREE (public)</td></tr>'
++'<tr><td>Tolls</td><td style="color:var(--green)">✅ Minimal</td><td style="color:var(--red)">❌ $200–400/mo</td><td style="color:var(--red)">❌ $160–320/mo</td></tr>'
++'<tr><td>Family lifestyle</td><td style="color:var(--green)">✅ Excellent</td><td style="color:var(--orange)">⚠️ Expensive</td><td style="color:var(--orange)">⚠️ Less character</td></tr>'
++'<tr style="font-weight:700"><td>OVERALL</td><td style="color:var(--green)">🏆 WINNER</td><td style="color:var(--red)">Too expensive</td><td style="color:var(--orange)">Possible but worse lifestyle</td></tr>'
++'</table></div></div>';
 
 function loadMapPhotos(name){
   if(!window._mapsLoaded)return;
@@ -600,4 +655,4 @@ CMP.frankie+='<div class="card"><h2>💰 What Frankie Could Earn</h2><div class=
 CMP.frankie+='<div class="card"><h2>🔗 All Job Search Links</h2><div class="table-wrap"><table><tr><th>Platform</th><th>Best for</th><th>Link</th></tr><tr><td style="font-weight:600">Seek</td><td>Main AU job site — all roles</td><td><a href="https://www.seek.com.au/education-support-jobs/in-Melbourne-VIC" target="_blank" style="color:var(--accent)">seek.com.au →</a></td></tr><tr><td style="font-weight:600">Indeed Australia</td><td>Wide range, good for support roles</td><td><a href="https://au.indeed.com/Education-Support-jobs-in-Melbourne-VIC" target="_blank" style="color:var(--accent)">indeed.com.au →</a></td></tr><tr><td style="font-weight:600">VIC Dept of Education</td><td>Government school roles</td><td><a href="https://www.education.vic.gov.au/hrweb/careers" target="_blank" style="color:var(--accent)">education.vic.gov.au →</a></td></tr><tr><td style="font-weight:600">Catholic Education Melbourne</td><td>Catholic school roles</td><td><a href="https://www.cecv.catholic.edu.au/Employment" target="_blank" style="color:var(--accent)">cecv.catholic.edu.au →</a></td></tr><tr><td style="font-weight:600">Independent Schools Victoria</td><td>Private school roles</td><td><a href="https://www.is.vic.edu.au/employment" target="_blank" style="color:var(--accent)">is.vic.edu.au →</a></td></tr><tr><td style="font-weight:600">Tradewind Recruitment</td><td>Education agency — casual/relief</td><td><a href="https://www.twrecruitment.com.au" target="_blank" style="color:var(--accent)">twrecruitment.com.au →</a></td></tr><tr><td style="font-weight:600">Anzuk Education</td><td>Education agency — casual/perm</td><td><a href="https://www.anzuk.education" target="_blank" style="color:var(--accent)">anzuk.education →</a></td></tr><tr><td style="font-weight:600">ClassCover</td><td>Relief teaching/support app</td><td><a href="https://www.classcover.com.au" target="_blank" style="color:var(--accent)">classcover.com.au →</a></td></tr><tr><td style="font-weight:600">EthicalJobs</td><td>Community sector, youth, wellbeing</td><td><a href="https://www.ethicaljobs.com.au" target="_blank" style="color:var(--accent)">ethicaljobs.com.au →</a></td></tr><tr><td style="font-weight:600">Hireup (NDIS)</td><td>NDIS support work platform</td><td><a href="https://www.hireup.com.au" target="_blank" style="color:var(--accent)">hireup.com.au →</a></td></tr><tr><td style="font-weight:600">Mable (NDIS)</td><td>NDIS support work platform</td><td><a href="https://www.mable.com.au" target="_blank" style="color:var(--accent)">mable.com.au →</a></td></tr></table></div></div>';
 
 
-CMP.sydney='<div class="card"><h2>🌊 Why Not Sydney — Cost Summary</h2><p class="tx tm mb2">Sydney was considered but Melbourne wins financially.</p><div class="table-wrap"><table><tr><th></th><th style="color:var(--accent)">Melbourne</th><th style="color:var(--orange)">Sydney</th><th>Difference</th></tr><tr><td style="font-weight:600">4-bed rent/wk</td><td>$58 (£31)0–800 (£309–426)</td><td>$90 (£48)0–1,200 (£479–638)</td><td class="tr">Syd +$30 (£16)0–400 (£160–213)/wk</td></tr><tr><td style="font-weight:600">School fees (2 kids/yr)</td><td style="color:var(--green)">FREE</td><td style="color:var(--red)">$11,200 (£5958)+</td><td class="tr">Syd +$11,200 (£5958)/yr</td></tr><tr><td style="font-weight:600">Annual cost difference</td><td colspan="2"></td><td style="color:var(--red);font-weight:700">Sydney costs $25,00 (£1330)0–35,000 (£13300–18620)/yr MORE</td></tr><tr><td style="font-weight:600">Monthly disposable</td><td style="color:var(--green)">$3,50 (£186)0–4,100 (£1862–2181)</td><td style="color:var(--red)">$80 (£43)0–1,500 (£426–798)</td><td></td></tr></table></div><p class="ts mt2">On $159 (£85)k salary, Sydney would leave you with under $1,500 (£798)/mo disposable after a 4-bed rent + school fees. Melbourne gives you $3,50 (£186)0–4,100 (£1862–2181)/mo. The decision is clear.</p></div>';
+
