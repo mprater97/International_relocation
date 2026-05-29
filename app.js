@@ -1024,10 +1024,43 @@ function restoreCustomItems(){
 }
 
 // ===== INIT =====
-restoreCustomItems();updateHeader();planSub='thisweek';renderPlanNew();
+restoreCustomItems();updateHeader();planSub='visa';renderPlanNew();
 
 // ===== PLAN (Combined: Phases + Tasks + To-Do) =====
-var planSub='thisweek';
+var planSub='visa';
+
+function renderVisaLegal(){
+  var todos=state.todos||[];
+  var visaCats=['Immigration','Tax','Health','Travel','Schools'];
+  var visaTasks=todos.filter(function(t){return visaCats.indexOf(t.cat)>=0});
+  var done=visaTasks.filter(function(t){return t.done}).length;
+  
+  var html='<div class="card"><h2>📋 Visa & Legal Checklist</h2>';
+  html+='<div class="sg mb2"><div class="sb '+(done===visaTasks.length&&visaTasks.length?'green':'orange')+'"><div class="l">Progress</div><div class="v">'+done+'/'+visaTasks.length+'</div></div></div>';
+  
+  visaCats.forEach(function(cat){
+    var items=visaTasks.filter(function(t){return t.cat===cat});
+    if(!items.length)return;
+    var catDone=items.filter(function(t){return t.done}).length;
+    html+='<h3 style="margin-top:12px">'+(cat==='Immigration'?'🛂':cat==='Tax'?'💼':cat==='Health'?'🏥':cat==='Travel'?'✈️':'🎓')+' '+cat+' ('+catDone+'/'+items.length+')</h3>';
+    
+    // Pending first
+    items.filter(function(t){return !t.done}).forEach(function(t){
+      var idx=todos.indexOf(t);
+      var pri=t.pri==='high'?'🔴':t.pri==='low'?'🟢':'🟡';
+      html+='<div class="ci"><input type="checkbox" onchange="state.todos['+idx+'].done=true;save();renderPlanNew()"><div class="ct">'+pri+' '+t.text+'</div><button class="btn btn-o" style="padding:2px 6px" onclick="state.todos.splice('+idx+',1);save();renderPlanNew()">✕</button></div>';
+    });
+    // Done at bottom
+    items.filter(function(t){return t.done}).forEach(function(t){
+      var idx=todos.indexOf(t);
+      html+='<div class="ci done"><input type="checkbox" checked onchange="state.todos['+idx+'].done=false;save();renderPlanNew()"><div class="ct">'+t.text+'</div></div>';
+    });
+  });
+  
+  html+='</div>';
+  document.getElementById('planSub').innerHTML=html;
+}
+
 function renderPlanNew(){
   updateHeader();
   var el=document.getElementById('plan');
@@ -1036,8 +1069,9 @@ function renderPlanNew(){
   var thisWk=CHECKLIST.filter(function(c){return c.week===cw&&!state.checked[c.id]});
   var overdue=CHECKLIST.filter(function(c){return c.week<cw&&!state.checked[c.id]});
   var pct=pctDone();
-  el.innerHTML='<div class="sg"><div class="sb '+(pct>75?'green':pct>40?'yellow':'red')+'"><div class="l">Done</div><div class="v">'+pct+'%</div></div><div class="sb yellow"><div class="l">Overdue</div><div class="v">'+overdue.length+'</div></div><div class="sb blue"><div class="l">This Week</div><div class="v">'+thisWk.length+'</div></div><div class="sb blue"><div class="l">Week</div><div class="v">'+cw+'</div></div></div><div class="stabs"><div class="stab '+(planSub==='thisweek'?'active':'')+'" onclick="planSub=\'thisweek\';renderPlanNew()">⚡ This Week</div><div class="stab '+(planSub==='phase1'?'active':'')+'" onclick="planSub=\'phase1\';renderPlanNew()">🔵 P1</div><div class="stab '+(planSub==='phase2'?'active':'')+'" onclick="planSub=\'phase2\';renderPlanNew()">🟠 P2</div><div class="stab '+(planSub==='phase3'?'active':'')+'" onclick="planSub=\'phase3\';renderPlanNew()">🟡 P3</div><div class="stab '+(planSub==='phase4'?'active':'')+'" onclick="planSub=\'phase4\';renderPlanNew()">🟢 P4</div><div class="stab '+(planSub==='todo'?'active':'')+'" onclick="planSub=\'todo\';renderPlanNew()">📌 To-Do</div></div><div id="planSub"></div>';
-  if(planSub==='thisweek')planThisWeek(cw,thisWk,overdue);
+  el.innerHTML='<div class="sg"><div class="sb '+(pct>75?'green':pct>40?'yellow':'red')+'"><div class="l">Done</div><div class="v">'+pct+'%</div></div><div class="sb yellow"><div class="l">Overdue</div><div class="v">'+overdue.length+'</div></div><div class="sb blue"><div class="l">This Week</div><div class="v">'+thisWk.length+'</div></div><div class="sb blue"><div class="l">Week</div><div class="v">'+cw+'</div></div></div><div class="stabs"><div class="stab '+(planSub==='visa'?'active':'')+'" onclick="planSub=\'visa\';renderPlanNew()">📋 Visa & Legal</div><div class="stab '+(planSub==='thisweek'?'active':'')+'" onclick="planSub=\'thisweek\';renderPlanNew()">⚡ This Week</div><div class="stab '+(planSub==='phase1'?'active':'')+'" onclick="planSub=\'phase1\';renderPlanNew()">🔵 P1</div><div class="stab '+(planSub==='phase2'?'active':'')+'" onclick="planSub=\'phase2\';renderPlanNew()">🟠 P2</div><div class="stab '+(planSub==='phase3'?'active':'')+'" onclick="planSub=\'phase3\';renderPlanNew()">🟡 P3</div><div class="stab '+(planSub==='phase4'?'active':'')+'" onclick="planSub=\'phase4\';renderPlanNew()">🟢 P4</div><div class="stab '+(planSub==='todo'?'active':'')+'" onclick="planSub=\'todo\';renderPlanNew()">📌 To-Do</div></div><div id="planSub"></div>';
+  if(planSub==='visa')renderVisaLegal();
+  else if(planSub==='thisweek')planThisWeek(cw,thisWk,overdue);
   else if(planSub==='todo')renderTodo2();
   
   else planPhase(parseInt(planSub.replace('phase','')));
