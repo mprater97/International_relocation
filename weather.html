@@ -222,12 +222,12 @@ h2{font-size:1rem;margin:16px 0 8px;color:#94a3b8}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:16px}
 .stat{background:#1e293b;padding:12px;border-radius:10px;text-align:center}
 .stat .val{font-size:1.2rem;font-weight:700}
-.stat .lbl{font-size:.65rem;color:#64748b;margin-top:2px}
+.stat .lbl{font-size:.6rem;color:#64748b;margin-top:2px}
 .controls{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
 .btn{padding:5px 10px;border:1px solid #334155;background:#1e293b;color:#e2e8f0;border-radius:6px;cursor:pointer;font-size:.7rem}
 .btn:hover{background:#334155}.btn.active{background:#3b82f6;border-color:#3b82f6}
 .monthly{display:grid;grid-template-columns:repeat(auto-fit,minmax(75px,1fr));gap:6px;margin:12px 0}
-.mc{background:#1e293b;padding:8px 4px;border-radius:8px;text-align:center;font-size:.65rem}
+.mc{background:#1e293b;padding:6px 3px;border-radius:8px;text-align:center;font-size:.6rem}
 .mc .t{font-size:.85rem;font-weight:700}
 .note{background:#1e293b;padding:12px;border-radius:8px;font-size:.72rem;color:#94a3b8;margin-top:16px;line-height:1.6}
 a{color:#3b82f6}
@@ -247,45 +247,43 @@ a{color:#3b82f6}
 <a href="index.html" style="margin-left:auto;font-size:.75rem">← Back to Tracker</a>
 </div>
 
-<div class="chart-box" style="height:280px"><canvas id="main"></canvas></div>
+<div class="chart-box" style="height:220px"><canvas id="main"></canvas></div>
 
 <h2>☀️ Sunshine Hours & ☁️ Cloud Cover</h2>
-<div class="chart-box" style="height:180px"><canvas id="sunCloud"></canvas></div>
+<div class="chart-box" style="height:140px"><canvas id="sunCloud"></canvas></div>
 
-<h2>🌧️ Daily Rainfall</h2>
-<div class="chart-box" style="height:140px"><canvas id="rain"></canvas></div>
 
-<h2>💨 Wind Gusts</h2>
-<div class="chart-box" style="height:140px"><canvas id="wind"></canvas></div>
+
+
 
 
 <h2>🌊 Sea Surface Temperature (Port Phillip Bay)</h2>
-<div class="chart-box" style="height:150px"><canvas id="seaTemp"></canvas></div>
+<div class="chart-box" style="height:120px"><canvas id="seaTemp"></canvas></div>
 <h2>📊 Monthly Summary</h2>
 <div class="monthly" id="mo"></div>
 
 
 <h2>📈 Weather Trends & Stats</h2>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0">
 
 <div style="background:#1e293b;padding:14px;border-radius:10px">
 <h3 style="font-size:.85rem;margin-bottom:8px">🌡️ Temperature</h3>
-<div style="font-size:.78rem;line-height:2" id="tempStats"></div>
+<div style="font-size:.72rem;line-height:1.8" id="tempStats"></div>
 </div>
 
 <div style="background:#1e293b;padding:14px;border-radius:10px">
 <h3 style="font-size:.85rem;margin-bottom:8px">🌧️ Rainfall</h3>
-<div style="font-size:.78rem;line-height:2" id="rainStats"></div>
+<div style="font-size:.72rem;line-height:1.8" id="rainStats"></div>
 </div>
 
 <div style="background:#1e293b;padding:14px;border-radius:10px">
 <h3 style="font-size:.85rem;margin-bottom:8px">☀️ Sunshine & Cloud</h3>
-<div style="font-size:.78rem;line-height:2" id="sunStats"></div>
+<div style="font-size:.72rem;line-height:1.8" id="sunStats"></div>
 </div>
 
 <div style="background:#1e293b;padding:14px;border-radius:10px">
 <h3 style="font-size:.85rem;margin-bottom:8px">💨 Wind</h3>
-<div style="font-size:.78rem;line-height:2" id="windStats"></div>
+<div style="font-size:.72rem;line-height:1.8" id="windStats"></div>
 </div>
 
 </div>
@@ -359,118 +357,7 @@ new Chart(document.getElementById('sunCloud'),{type:'line',data:{labels:labels,d
 {label:'Cloud %',data:D.map(d=>d.cloud),borderColor:'#94a3b8',backgroundColor:'rgba(148,163,184,.08)',fill:true,borderWidth:1,pointRadius:0,tension:.3,yAxisID:'cloud'}
 ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{zoom:zoomOpts},scales:{x:{ticks:{maxTicksLimit:12,font:{size:9}},grid:{display:false}},sun:{position:'left',title:{display:true,text:'Hours'},grid:{color:'rgba(255,255,255,.05)'},min:0},cloud:{position:'right',title:{display:true,text:'Cloud %'},grid:{display:false},min:0,max:100}}}});
 
-// Rain
-new Chart(document.getElementById('rain'),{type:'bar',data:{labels:labels,datasets:[{data:D.map(d=>d.rain),backgroundColor:'rgba(6,182,212,.7)',barThickness:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},zoom:zoomOpts},scales:{x:{ticks:{maxTicksLimit:12,font:{size:9}},grid:{display:false}},y:{title:{display:true,text:'mm'},grid:{color:'rgba(255,255,255,.05)'}}}}});
 
-// Wind
-new Chart(document.getElementById('wind'),{type:'line',data:{labels:labels,datasets:[{data:D.map(d=>d.wind),borderColor:'#8b5cf6',backgroundColor:'rgba(139,92,246,.1)',fill:true,borderWidth:1.5,pointRadius:0,tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},zoom:zoomOpts},scales:{x:{ticks:{maxTicksLimit:12,font:{size:9}},grid:{display:false}},y:{title:{display:true,text:'km/h gust'},grid:{color:'rgba(255,255,255,.05)'}}}}});
-
-
-// Sea Temperature
-new Chart(document.getElementById('seaTemp'),{type:'line',data:{labels:labels,datasets:[
-{data:D.map(d=>d.sea_temp),borderColor:'#0ea5e9',backgroundColor:'rgba(14,165,233,.15)',fill:true,borderWidth:2,pointRadius:0,tension:.4},
-{label:'Swimmable (18°C)',data:D.map(()=>18),borderColor:'rgba(34,197,94,.4)',borderWidth:1,borderDash:[4,4],pointRadius:0,fill:false}
-]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},zoom:zoomOpts,tooltip:{callbacks:{label:function(c){return c.datasetIndex===0?c.raw+'°C sea temp':'18°C swimmable line'}}}},scales:{x:{ticks:{maxTicksLimit:12,font:{size:9}},grid:{display:false}},y:{title:{display:true,text:'°C'},grid:{color:'rgba(255,255,255,.05)'},min:10,max:25}}}});
-
-// Sea temp stats
-var seaTemps=D.filter(d=>d.sea_temp!=null);
-var swimDays=seaTemps.filter(d=>d.sea_temp>=18).length;
-var avgSea=(seaTemps.reduce((s,d)=>s+d.sea_temp,0)/seaTemps.length).toFixed(1);
-var maxSea=Math.max(...seaTemps.map(d=>d.sea_temp));
-var minSea=Math.min(...seaTemps.map(d=>d.sea_temp));
-
-function toggle(i,b){mc.data.datasets[i].hidden=!mc.data.datasets[i].hidden;b.classList.toggle('active');mc.update()}
-
-// TEMPERATURE STATS
-var hot30=D.filter(d=>d.max>=30).length;
-var hot35=D.filter(d=>d.max>=35).length;
-var hot40=D.filter(d=>d.max>=40).length;
-var warm20=D.filter(d=>d.max>=20&&d.max<30).length;
-var mild=D.filter(d=>d.max>=12&&d.max<20).length;
-var cold=D.filter(d=>d.max<12).length;
-var frost=D.filter(d=>d.min!=null&&d.min<=0).length;
-var coldNights=D.filter(d=>d.min!=null&&d.min<5).length;
-var hottestDay=D.reduce((a,b)=>(b.max||0)>(a.max||0)?b:a);
-var coldestDay=D.reduce((a,b)=>(b.min!=null&&b.min<(a.min!=null?a.min:99))?b:a);
-
-document.getElementById('tempStats').innerHTML=
-'<div>🔥 Days ≥30°C: <strong>'+hot30+'</strong></div>'+
-'<div>🔥 Days ≥35°C: <strong>'+hot35+'</strong></div>'+
-'<div>🔥 Days ≥40°C: <strong>'+hot40+'</strong></div>'+
-'<div>☀️ Warm days (20–30°C): <strong>'+warm20+'</strong></div>'+
-'<div>🌤️ Mild days (12–20°C): <strong>'+mild+'</strong></div>'+
-'<div>🥶 Cool days (<12°C max): <strong>'+cold+'</strong></div>'+
-'<div>❄️ Frost nights (≤0°C): <strong>'+frost+'</strong></div>'+
-'<div>🌙 Cold nights (<5°C): <strong>'+coldNights+'</strong></div>'+
-'<div style="margin-top:6px;color:#ef4444">Hottest: <strong>'+hottestDay.max+'°C</strong> ('+hottestDay.date+')</div>'+
-'<div style="color:#3b82f6">Coldest: <strong>'+coldestDay.min+'°C</strong> ('+coldestDay.date+')</div>';
-
-// RAINFALL STATS
-var dryDays=D.filter(d=>d.rain===0).length;
-var lightRain=D.filter(d=>d.rain>0&&d.rain<5).length;
-var modRain=D.filter(d=>d.rain>=5&&d.rain<20).length;
-var heavyRain=D.filter(d=>d.rain>=20).length;
-var wettest=D.reduce((a,b)=>(b.rain||0)>(a.rain||0)?b:a);
-var longestDry=0,currentDry=0;
-D.forEach(function(d){if(d.rain===0){currentDry++;if(currentDry>longestDry)longestDry=currentDry}else{currentDry=0}});
-
-document.getElementById('rainStats').innerHTML=
-'<div>☀️ Dry days (0mm): <strong>'+dryDays+'</strong> ('+Math.round(dryDays/D.length*100)+'%)</div>'+
-'<div>🌦️ Light rain (<5mm): <strong>'+lightRain+'</strong></div>'+
-'<div>🌧️ Moderate rain (5–20mm): <strong>'+modRain+'</strong></div>'+
-'<div>⛈️ Heavy rain (≥20mm): <strong>'+heavyRain+'</strong></div>'+
-'<div>📊 Total rainfall: <strong>'+totalRain+'mm</strong></div>'+
-'<div>📊 Avg rain/rain day: <strong>'+(D.filter(d=>d.rain>0).reduce((s,d)=>s+d.rain,0)/rainDays).toFixed(1)+'mm</strong></div>'+
-'<div>🏜️ Longest dry streak: <strong>'+longestDry+' days</strong></div>'+
-'<div style="margin-top:6px;color:#06b6d4">Wettest day: <strong>'+wettest.rain+'mm</strong> ('+wettest.date+')</div>';
-
-// SUNSHINE STATS
-var sunDays=D.filter(d=>d.sun_hours>=8);
-var cloudyDays=D.filter(d=>d.cloud!=null&&d.cloud>=80);
-var clearDays=D.filter(d=>d.cloud!=null&&d.cloud<=20);
-var partCloud=D.filter(d=>d.cloud!=null&&d.cloud>20&&d.cloud<80);
-var totalSun=D.filter(d=>d.sun_hours).reduce((s,d)=>s+d.sun_hours,0);
-var sunniestDay=D.reduce((a,b)=>(b.sun_hours||0)>(a.sun_hours||0)?b:a);
-
-document.getElementById('sunStats').innerHTML=
-'<div>☀️ Sunny days (≥8h sun): <strong>'+sunDays.length+'</strong></div>'+
-'<div>🌤️ Partly cloudy (20–80%): <strong>'+partCloud.length+'</strong></div>'+
-'<div>☁️ Overcast days (≥80% cloud): <strong>'+cloudyDays.length+'</strong></div>'+
-'<div>🔵 Clear days (≤20% cloud): <strong>'+clearDays.length+'</strong></div>'+
-'<div>📊 Total sunshine: <strong>'+Math.round(totalSun)+' hours</strong></div>'+
-'<div>📊 Avg sunshine/day: <strong>'+avgSun+'h</strong></div>'+
-'<div style="margin-top:6px;color:#fbbf24">Sunniest: <strong>'+sunniestDay.sun_hours+'h</strong> ('+sunniestDay.date+')</div>';
-
-// WIND STATS
-var windData=D.filter(d=>d.wind!=null);
-var calmDays=windData.filter(d=>d.wind<20).length;
-var breezy=windData.filter(d=>d.wind>=20&&d.wind<40).length;
-var windy=windData.filter(d=>d.wind>=40&&d.wind<60).length;
-var vWindy=windData.filter(d=>d.wind>=60).length;
-var gustiest=windData.reduce((a,b)=>b.wind>a.wind?b:a);
-
-document.getElementById('windStats').innerHTML=
-'<div>😌 Calm days (<20km/h): <strong>'+calmDays+'</strong></div>'+
-'<div>🍃 Breezy (20–40km/h): <strong>'+breezy+'</strong></div>'+
-'<div>💨 Windy (40–60km/h): <strong>'+windy+'</strong></div>'+
-'<div>🌪️ Very windy (≥60km/h): <strong>'+vWindy+'</strong></div>'+
-'<div>📊 Avg gust: <strong>'+Math.round(windData.reduce((s,d)=>s+d.wind,0)/windData.length)+'km/h</strong></div>'+
-'<div style="margin-top:6px;color:#8b5cf6">Gustiest: <strong>'+gustiest.wind+'km/h</strong> ('+gustiest.date+')</div>';
-
-// DAY COUNTS
-document.getElementById('dayCounts').innerHTML=
-'<div>☀️ Beach days (≥25°C, dry): <strong style="color:#fbbf24">'+D.filter(d=>d.max>=25&&d.rain===0).length+'</strong></div>'+
-'<div>🏖️ Perfect days (22–28°C, dry, <50% cloud): <strong style="color:#22c55e">'+D.filter(d=>d.max>=22&&d.max<=28&&d.rain===0&&d.cloud!=null&&d.cloud<50).length+'</strong></div>'+
-'<div>🧥 Coat days (<15°C max): <strong style="color:#3b82f6">'+D.filter(d=>d.max<15).length+'</strong></div>'+
-'<div>☔ Umbrella days (≥5mm rain): <strong style="color:#06b6d4">'+D.filter(d=>d.rain>=5).length+'</strong></div>'+
-'<div>🌈 Warm + rain (≥20°C + rain): <strong>'+D.filter(d=>d.max>=20&&d.rain>0).length+'</strong></div>'+
-'<div>❄️ Heating days (<10°C min): <strong style="color:#94a3b8">'+D.filter(d=>d.min!=null&&d.min<10).length+'</strong></div>'+
-'<div>🔥 AC days (≥32°C): <strong style="color:#ef4444">'+D.filter(d=>d.max>=32).length+'</strong></div>'+
-'<div>👕 T-shirt days (≥20°C, dry): <strong style="color:#f59e0b">'+D.filter(d=>d.max>=20&&d.rain===0).length+'</strong></div>';
-
-// SEASONS
-var seasons={summer:{label:'Summer (Dec–Feb)',d:[]},autumn:{label:'Autumn (Mar–May)',d:[]},winter:{label:'Winter (Jun–Aug)',d:[]},spring:{label:'Spring (Sep–Nov)',d:[]}};
-D.forEach(function(d){var m=parseInt(d.date.split('-')[1]);if(m>=12||m<=2)seasons.summer.d.push(d);else if(m>=3&&m<=5)seasons.autumn.d.push(d);else if(m>=6&&m<=8)seasons.winter.d.push(d);else seasons.spring.d.push(d)});
 var shtml='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px">';
 Object.values(seasons).forEach(function(s){
   if(!s.d.length)return;
