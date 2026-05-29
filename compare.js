@@ -8,6 +8,7 @@ function renderCompare(){
     '<div class="stab" onclick="showCmp(\'lifestyle\',this)">🎯 Lifestyle</div>'+
     '<div class="stab" onclick="showCmp(\'frankie\',this)">👩 Frankie</div>'+
     '<div class="stab" onclick="showCmp(\'sydney\',this)">🌊 Sydney</div>'+
+    '<div class="stab" onclick="window.open(\'weather.html\',\'_blank\')">🌤️ Weather</div>'+
     '</div><div id="cmpContent"></div>';
   showCmp('suburbs',document.querySelector('#compare .stab'));
 }
