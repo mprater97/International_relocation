@@ -1034,6 +1034,53 @@ if(!(state.todos||[]).some(function(t){return _visaCats.indexOf(t.cat)>=0})){
 // ===== PLAN (Combined: Phases + Tasks + To-Do) =====
 var planSub='visa';
 
+var VISA_DEFAULTS=[
+{text:'Confirm visa status with Internal Movement Hub',cat:'Immigration',pri:'high'},
+{text:'Upload Education Certificates',cat:'Immigration',pri:'high'},
+{text:'Upload Evidence of English Language',cat:'Immigration',pri:'high'},
+{text:'Upload Invitation Letter',cat:'Immigration',pri:'high'},
+{text:'Upload Letter of Appointment',cat:'Immigration',pri:'high'},
+{text:'Book & complete visa medicals (all 4 family)',cat:'Immigration',pri:'high'},
+{text:'Upload Passport(s) — all family members',cat:'Immigration',pri:'high'},
+{text:'Upload Proof of Medical Insurance',cat:'Immigration',pri:'high'},
+{text:'Upload Resume / CV',cat:'Immigration',pri:'med'},
+{text:'Upload Secondment Letter',cat:'Immigration',pri:'high'},
+{text:'Visa application submitted & approved',cat:'Immigration',pri:'high'},
+{text:'Update citizenship/residency in A to Z',cat:'Immigration',pri:'high'},
+{text:'Get certified copies birth + marriage certificates',cat:'Immigration',pri:'high'},
+{text:'Check passport expiry — renew if <2 years',cat:'Immigration',pri:'high'},
+{text:'Take extra passport photos',cat:'Immigration',pri:'med'},
+{text:'Make extra copies of all passports',cat:'Immigration',pri:'med'},
+{text:'Meet Amazon tax advisor — AU taxation',cat:'Tax',pri:'high'},
+{text:'Check RSU/stock vesting across jurisdictions',cat:'Tax',pri:'high'},
+{text:'Ensure last 5 years tax returns accessible',cat:'Tax',pri:'med'},
+{text:'Check AU super/retirement contributions',cat:'Tax',pri:'med'},
+{text:'Physical exams for all family before departure',cat:'Health',pri:'med'},
+{text:'Complete all dental work before departure',cat:'Health',pri:'med'},
+{text:'Get copies of medical + dental records',cat:'Health',pri:'high'},
+{text:'Get extra medications, glasses, prescriptions',cat:'Health',pri:'med'},
+{text:'Check AU inoculation requirements',cat:'Health',pri:'med'},
+{text:'Get small amount of AUD cash for arrival',cat:'Travel',pri:'med'},
+{text:'Notify credit card companies of travel',cat:'Travel',pri:'med'},
+{text:'Keep record of all relocation expenses + receipts',cat:'Travel',pri:'med'},
+{text:'Change travel profile (new cost centre)',cat:'Travel',pri:'med'},
+{text:'Select primary school for Jack (Aug-Dec 2026)',cat:'Schools',pri:'high'},
+{text:'Select secondary school for Bella',cat:'Schools',pri:'high'},
+{text:'Get school records transferred',cat:'Schools',pri:'high'},
+{text:'Notify current UK schools of departure',cat:'Schools',pri:'med'},
+{text:'Check registration dates + interview requirements',cat:'Schools',pri:'high'},
+];
+function ensureVisaTasks(){
+  if(!state.todos)state.todos=[];
+  var existing=state.todos.map(function(t){return t.text});
+  var added=0;
+  VISA_DEFAULTS.forEach(function(d){
+    if(existing.indexOf(d.text)<0){state.todos.push({text:d.text,cat:d.cat,pri:d.pri,done:false});added++}
+  });
+  if(added>0)save();
+}
+ensureVisaTasks();
+
 function renderVisaLegal(){
   var todos=state.todos||[];
   var visaCats=['Immigration','Tax','Health','Travel','Schools'];
