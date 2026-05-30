@@ -107,6 +107,18 @@ Object.values(seasons).forEach(function(s){
 shtml+='</div>';
 document.getElementById('seasons').innerHTML=shtml;
 
+
+// Sea Temperature chart
+var seaCtx=document.getElementById('seaTemp');
+if(seaCtx){
+new Chart(seaCtx,{type:'line',data:{labels:labels,datasets:[
+{data:D.map(d=>d.sea_temp),borderColor:'#0ea5e9',backgroundColor:'rgba(14,165,233,.15)',fill:true,borderWidth:2,pointRadius:0,tension:.4},
+{label:'18°C swim line',data:D.map(()=>18),borderColor:'rgba(34,197,94,.4)',borderWidth:1,borderDash:[4,4],pointRadius:0,fill:false}
+]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},zoom:zoomOpts},scales:{x:{ticks:{maxTicksLimit:12,font:{size:9}},grid:{display:false}},y:{title:{display:true,text:'°C'},grid:{color:'rgba(255,255,255,.05)'},min:10,max:25}}}});
+}
+
+function toggle(i,b){mc.data.datasets[i].hidden=!mc.data.datasets[i].hidden;b.classList.toggle('active');mc.update()}
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js">
 // TEMPERATURE STATS
@@ -210,6 +222,18 @@ Object.values(seasons).forEach(function(s){
 });
 shtml+='</div>';
 document.getElementById('seasons').innerHTML=shtml;
+
+
+// Sea Temperature chart
+var seaCtx=document.getElementById('seaTemp');
+if(seaCtx){
+new Chart(seaCtx,{type:'line',data:{labels:labels,datasets:[
+{data:D.map(d=>d.sea_temp),borderColor:'#0ea5e9',backgroundColor:'rgba(14,165,233,.15)',fill:true,borderWidth:2,pointRadius:0,tension:.4},
+{label:'18°C swim line',data:D.map(()=>18),borderColor:'rgba(34,197,94,.4)',borderWidth:1,borderDash:[4,4],pointRadius:0,fill:false}
+]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},zoom:zoomOpts},scales:{x:{ticks:{maxTicksLimit:12,font:{size:9}},grid:{display:false}},y:{title:{display:true,text:'°C'},grid:{color:'rgba(255,255,255,.05)'},min:10,max:25}}}});
+}
+
+function toggle(i,b){mc.data.datasets[i].hidden=!mc.data.datasets[i].hidden;b.classList.toggle('active');mc.update()}
 
 </script>
 <style>
@@ -369,6 +393,18 @@ Object.values(seasons).forEach(function(s){
 });
 shtml+='</div>';
 document.getElementById('seasons').innerHTML=shtml;
+
+
+// Sea Temperature chart
+var seaCtx=document.getElementById('seaTemp');
+if(seaCtx){
+new Chart(seaCtx,{type:'line',data:{labels:labels,datasets:[
+{data:D.map(d=>d.sea_temp),borderColor:'#0ea5e9',backgroundColor:'rgba(14,165,233,.15)',fill:true,borderWidth:2,pointRadius:0,tension:.4},
+{label:'18°C swim line',data:D.map(()=>18),borderColor:'rgba(34,197,94,.4)',borderWidth:1,borderDash:[4,4],pointRadius:0,fill:false}
+]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},zoom:zoomOpts},scales:{x:{ticks:{maxTicksLimit:12,font:{size:9}},grid:{display:false}},y:{title:{display:true,text:'°C'},grid:{color:'rgba(255,255,255,.05)'},min:10,max:25}}}});
+}
+
+function toggle(i,b){mc.data.datasets[i].hidden=!mc.data.datasets[i].hidden;b.classList.toggle('active');mc.update()}
 
 </script>
 </body>
