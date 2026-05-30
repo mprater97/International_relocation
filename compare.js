@@ -77,95 +77,11 @@ CMP.sydney='<div class="card"><h2>🌊 Melbourne vs Sydney — Full Cost Compari
 +'<tr style="font-weight:700"><td>OVERALL</td><td style="color:var(--green)">🏆 WINNER</td><td style="color:var(--red)">Too expensive</td><td style="color:var(--orange)">Possible but worse lifestyle</td></tr>'
 +'</table></div></div>';
 
-function loadMapPhotos(name){
-  if(!window._mapsLoaded)return;
-  var el=document.getElementById('mapgal_'+name.replace(/ /g,'_'));
-  if(!el||el.dataset.loaded)return;
-  el.dataset.loaded='1';
-  var service=new google.maps.places.PlacesService(document.createElement('div'));
-  service.textSearch({query:name+' Victoria Australia'},function(results,status){
-    var allPhotos=[];
-    if(status===google.maps.places.PlacesServiceStatus.OK&&results){
-      results.slice(0,3).forEach(function(r){if(r.photos)allPhotos=allPhotos.concat(r.photos)});
-    }
-    if(allPhotos.length){
-      el.innerHTML=allPhotos.slice(0,4).map(function(p){
-        return '<img src="'+p.getUrl({maxWidth:200,maxHeight:130})+'" style="height:60px;border-radius:6px;object-fit:cover;flex:0 0 auto">';
-      }).join('');
-    }
-  });
-}
 
-function openLightbox(container,startIdx){
-  var imgs=container.querySelectorAll('img');
-  if(!imgs.length)return;
-  var overlay=document.createElement('div');
-  overlay.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px';
-  var idx=startIdx||0;
-  function render(){
-    var src=imgs[idx].dataset.full||imgs[idx].src;
-    overlay.innerHTML='<div style="color:#fff;font-size:.8rem;margin-bottom:10px">'+(idx+1)+'/'+imgs.length+' — Swipe or use arrows</div><img src="'+src+'" style="max-width:90vw;max-height:70vh;border-radius:12px;object-fit:contain"><div style="display:flex;gap:20px;margin-top:16px"><button onclick="this.parentNode.parentNode._prev()" style="padding:10px 20px;background:#3b82f6;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer">← Prev</button><button onclick="this.parentNode.parentNode.remove()" style="padding:10px 20px;background:#ef4444;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer">✕ Close</button><button onclick="this.parentNode.parentNode._next()" style="padding:10px 20px;background:#3b82f6;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer">Next →</button></div>';
-  }
-  overlay._next=function(){idx=(idx+1)%imgs.length;render()};
-  overlay._prev=function(){idx=(idx-1+imgs.length)%imgs.length;render()};
-  overlay.onclick=function(e){if(e.target===overlay)overlay.remove()};
-  render();
-  document.body.appendChild(overlay);
-}
 
-function loadAllSuburbPhotos(){
-  if(!window._mapsLoaded){return setTimeout(loadAllSuburbPhotos,1000);}
-  var cached=state.photoCache||{};
-  var cacheAge=state.photoCacheTime||0;
-  var isStale=(Date.now()-cacheAge)>7*24*60*60*1000;
-  // Use cache if fresh
-  if(!isStale&&Object.keys(cached).length>5){
-    SUBURBS_DATA.forEach(function(s){
-      var el=document.getElementById('gal_'+s.name.replace(/ /g,'_'));
-      if(!el)return;
-      var urls=cached[s.name]||[];
-      if(urls.length){
-        el.innerHTML=urls.map(function(url,i){
-          return '<img src="'+url+'" onclick="openLightbox(this.parentNode,'+i+')" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto;cursor:pointer" loading="lazy" onerror="this.style.display=\'none\'">';
-        }).join('');
-      } else {el.innerHTML='';}
-    });
-    return;
-  }
-  // Fetch fresh
-  var newCache={};
-  var service=new google.maps.places.PlacesService(document.createElement('div'));
-  var queue=SUBURBS_DATA.slice();
-  function next(){
-    if(!queue.length){state.photoCache=newCache;state.photoCacheTime=Date.now();save();return}
-    var s=queue.shift();
-    var el=document.getElementById('gal_'+s.name.replace(/ /g,'_'));
-    if(!el){next();return}
-    var queries=[s.name+' beach Victoria',s.name+' shops Victoria',s.name+' park Victoria',s.name+' Victoria Australia'];
-    var allPhotos=[];var done=0;
-    queries.forEach(function(q){
-      service.textSearch({query:q},function(results,status){
-        if(status===google.maps.places.PlacesServiceStatus.OK&&results){
-          results.slice(0,2).forEach(function(r){if(r.photos)allPhotos=allPhotos.concat(r.photos)});
-        }
-        done++;
-        if(done===queries.length){
-          var seen={};var unique=[];
-          allPhotos.forEach(function(p){var u=p.getUrl({maxWidth:400});if(!seen[u]){seen[u]=1;unique.push(p)}});
-          var urls=unique.slice(0,8).map(function(p){return p.getUrl({maxWidth:800,maxHeight:500})});
-          newCache[s.name]=urls;
-          if(urls.length){
-            el.innerHTML=urls.map(function(url,i){
-              return '<img src="'+url+'" onclick="openLightbox(this.parentNode,'+i+')" style="height:100px;border-radius:8px;object-fit:cover;flex:0 0 auto;cursor:pointer" loading="lazy" onerror="this.style.display=\'none\'">';
-            }).join('');
-          } else {el.innerHTML='';}
-          setTimeout(next,400);
-        }
-      });
-    });
-  }
-  next();
-}
+
+
+
 var SUBURBS_DATA=[
   {name:'Seaford',safety:4,walk:3,familyScore:4,growth:4,crime:'Low',walkScore:'Moderate — car helpful but train+beach walkable',demographics:'Young families, retirees, growing professional mix',pros:'Affordable beach lifestyle, improving rapidly, foreshore trail, good community',cons:'Further from city (50 min), limited nightlife, some older housing stock',cafes:'Foreshore cafes, fish & chips, growing brunch scene',shops:'Local shops + 10 min to Frankston Bayside Centre',outdoors:'Beach, foreshore trail, wetlands, playgrounds',community:'Relaxed village, young families, community markets',school:'Monterey SC',schoolRating:'VCE median 25 — Average',schoolLink:'https://www.google.com/search?q=Monterey+Secondary+College+Frankston',pc:'3198',bed3:'520–580',bed4:'580–650',train:50,beach:'ON beach',garden:'Yes',vibe:'Beach village, foreshore trail, relaxed',lat:-38.1,lng:145.134},
   {name:'Carrum',safety:4,walk:3,familyScore:5,growth:3,crime:'Low',walkScore:'Moderate — beach walkable, car for shops',demographics:'Families, quiet retirees, boat owners',pros:'Very quiet, Patterson River lifestyle, beach on doorstep, tight community',cons:'Small suburb, limited shops/cafes, need car for most things',cafes:'Small cafe strip, Patterson River dining',shops:'Local shops, 10 min to Frankston',outdoors:'Beach, Patterson River walks, boat ramp',community:'Quiet family streets, tight-knit',school:'Patterson River SC',schoolRating:'VCE median 26 — Average',schoolLink:'https://www.google.com/search?q=Patterson+River+Secondary+College',pc:'3197',bed3:'530–590',bed4:'600–680',train:48,beach:'ON beach',garden:'Yes',vibe:'Quiet beach, Patterson River, family',lat:-38.075,lng:145.123},
@@ -246,8 +162,8 @@ function initSuburbMap(){
       var mvce=parseInt((s.schoolRating||'').match(/\d+/)||[0]);var msc=mvce>=32?5:mvce>=29?4:mvce>=27?3:mvce>=25?2:1;
       var mw=((mf*25+ml*20+mfi*17.5+mc*17.5+mb*10+msc*10)/100).toFixed(1);
       var mwc=mw>=4?'#16a34a':mw>=3?'#3b82f6':'#6b7280';
-      marker.bindPopup('<div style="min-width:240px"><strong>'+s.name+'</strong> <span style="background:'+mwc+';color:#fff;padding:1px 6px;border-radius:8px;font-size:.7rem">'+mw+'/5</span><br><span style="font-size:.85rem">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')<br>Train: '+s.train+' min | Beach: '+s.beach+'<br>School: '+s.school+' ('+s.schoolRating+')</span><div id="mapgal_'+s.name.replace(/ /g,'_')+'" style="display:flex;gap:4px;overflow-x:auto;margin-top:6px;max-width:240px"></div><button onclick="showSuburbDetail(\''+s.name+'\')" style="margin-top:6px;padding:4px 10px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.75rem;width:100%">View full details</button></div>');
-      marker.on('popupopen',function(){loadMapPhotos(''+s.name+'')});
+      marker.bindPopup('<div style="min-width:240px"><strong>'+s.name+'</strong> <span style="background:'+mwc+';color:#fff;padding:1px 6px;border-radius:8px;font-size:.7rem">'+mw+'/5</span><br><span style="font-size:.85rem">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')<br>Train: '+s.train+' min | Beach: '+s.beach+'<br>School: '+s.school+' ('+s.schoolRating+')</span><button onclick="showSuburbDetail(\''+s.name+'\')" style="margin-top:6px;padding:4px 10px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.75rem;width:100%">View full details</button></div>');
+
     });
   });
   
@@ -400,8 +316,8 @@ function renderSuburbsInteractive(){
       html+='<div class="tx tm">'+s.train+' min train · '+s.beach+'</div></div>';
       html+='</div>';
       
-      // Photo gallery - Google Places
-      html+='<div id="gal_'+s.name.replace(/ /g,'_')+'" style="display:flex;gap:6px;overflow-x:auto;padding:8px 0;margin-top:6px;-webkit-overflow-scrolling:touch;min-height:80px"><span style="color:var(--muted);font-size:.7rem;padding:10px">📷 Loading...</span></div>';
+      // Photo link
+      html+='<div style="margin-top:6px"><a href="https://www.google.com/search?q='+encodeURIComponent(s.name+' suburb Melbourne Victoria')+'&tbm=isch" target="_blank" style="font-size:.75rem;color:var(--accent);text-decoration:none">📷 View suburb photos →</a></div>';
       // Quick stats row
       html+='<div class="flex g2 fw mt2" style="font-size:.78rem">';
       html+='<span>🏫 <a href="'+(s.schoolLink||'')+'" target="_blank" style="color:var(--accent)">'+( s.school||'—')+'</a> ('+( s.schoolRating||'—')+')</span>';
@@ -440,7 +356,6 @@ function renderSuburbsInteractive(){
   html+='</div></div>';
   
   document.getElementById('cmpContent').innerHTML=html;
-  setTimeout(loadAllSuburbPhotos,500);
 }
 function saveSuburbField(name,field,val){
   if(!state.suburbData)state.suburbData={};
