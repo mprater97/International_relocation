@@ -59,18 +59,21 @@ function showTab(id){
   html+='<div class="vibe-item"><div class="num" style="color:#ef4444">'+D.filter(function(d){return d.max>=32}).length+'</div><div class="desc">AC days<br>(32°+ hot)</div></div>';
   html+='</div></div>';
   
-  // vs UK comparison
-  html+='<div class="section"><div class="section-title">🇬🇧 vs 🇦🇺 How Does It Compare to Home?</div>';
+  // vs Scotland comparison
+  html+='<div class="section"><div class="section-title">🏴󠁧󠁢󠁳󠁣󠁴󠁿 vs 🇦🇺 How Does It Compare to Scotland?</div>';
   html+='<div class="compare"><table>';
-  html+='<tr><th></th><th>Melbourne</th><th>UK (Midlands)</th><th>Winner</th></tr>';
-  html+='<tr><td>☀️ Sunshine hours/year</td><td><strong>'+Math.round(sunData.reduce(function(s,d){return s+d.sun_hours},0))+'h</strong></td><td>~1,500h</td><td class="winner">🇦🇺 +'+Math.round(sunData.reduce(function(s,d){return s+d.sun_hours},0)-1500)+'h</td></tr>';
-  html+='<tr><td>🌧️ Rain days/year</td><td><strong>'+rainDays+'</strong></td><td>~155</td><td class="winner">🇦🇺 '+(155-rainDays)+' fewer</td></tr>';
-  html+='<tr><td>🏖️ Beach days (25°+)</td><td><strong>'+beachDays+'</strong></td><td>~5–10</td><td class="winner">🇦🇺 '+beachDays+' vs ~8</td></tr>';
-  html+='<tr><td>🌊 Swimmable ocean</td><td><strong>'+swimDays+' days</strong> (18°+)</td><td>~0 days</td><td class="winner">🇦🇺 Ocean swimming!</td></tr>';
-  html+='<tr><td>❄️ Frost days</td><td><strong>'+D.filter(function(d){return d.min!=null&&d.min<=0}).length+'</strong></td><td>~55</td><td class="winner">🇦🇺 Almost none</td></tr>';
-  html+='<tr><td>🌡️ Winter high</td><td><strong>14°C avg</strong></td><td>7°C avg</td><td class="winner">🇦🇺 Twice as warm</td></tr>';
-  html+='<tr><td>🔥 Hot days (30°+)</td><td><strong>'+D.filter(function(d){return d.max>=30}).length+'</strong></td><td>~2</td><td style="color:#f59e0b">🇦🇺 (need AC)</td></tr>';
-  html+='<tr><td>🌫️ Grey days (80%+ cloud)</td><td><strong>'+D.filter(function(d){return d.cloud!=null&&d.cloud>=80}).length+'</strong></td><td>~200</td><td class="winner">🇦🇺 Way less grey</td></tr>';
+  html+='<tr><th></th><th>Melbourne</th><th>Scotland</th><th>Winner</th></tr>';
+  html+='<tr><td>☀️ Sunshine hours/year</td><td><strong>'+Math.round(sunData.reduce(function(s,d){return s+d.sun_hours},0))+'h</strong></td><td>~1,250h</td><td class="winner">🇦🇺 +'+Math.round(sunData.reduce(function(s,d){return s+d.sun_hours},0)-1250)+'h</td></tr>';
+  html+='<tr><td>🌧️ Rain days/year</td><td><strong>'+rainDays+'</strong></td><td>~185</td><td class="winner">🇦🇺 '+(185-rainDays)+' fewer</td></tr>';
+  html+='<tr><td>🏖️ Beach days (25°+)</td><td><strong>'+beachDays+'</strong></td><td>~1–3</td><td class="winner">🇦🇺 '+beachDays+' vs ~2</td></tr>';
+  html+='<tr><td>🌊 Swimmable ocean</td><td><strong>'+swimDays+' days</strong> (18°+)</td><td>0 days (sea peaks ~13°C)</td><td class="winner">🇦🇺 Ocean swimming!</td></tr>';
+  html+='<tr><td>❄️ Frost days</td><td><strong>'+D.filter(function(d){return d.min!=null&&d.min<=0}).length+'</strong></td><td>~70</td><td class="winner">🇦🇺 Almost none</td></tr>';
+  html+='<tr><td>🌡️ Winter high</td><td><strong>14°C avg</strong></td><td>5–6°C avg</td><td class="winner">🇦🇺 Nearly 3x warmer</td></tr>';
+  html+='<tr><td>🌡️ Summer high</td><td><strong>25°C avg</strong></td><td>17°C avg</td><td class="winner">🇦🇺 Proper summer</td></tr>';
+  html+='<tr><td>🔥 Hot days (30°+)</td><td><strong>'+D.filter(function(d){return d.max>=30}).length+'</strong></td><td>0</td><td style="color:#f59e0b">🇦🇺 (need AC)</td></tr>';
+  html+='<tr><td>🌫️ Grey days (80%+ cloud)</td><td><strong>'+D.filter(function(d){return d.cloud!=null&&d.cloud>=80}).length+'</strong></td><td>~230</td><td class="winner">🇦🇺 Way less grey</td></tr>';
+  html+='<tr><td>🌅 Daylight (winter)</td><td><strong>~10h</strong></td><td>~7h</td><td class="winner">🇦🇺 3h more light</td></tr>';
+  html+='<tr><td>❄️ Snow days</td><td><strong>0</strong></td><td>~15–20</td><td class="winner">🇦🇺 No disruption</td></tr>';
   html+='</table></div></div>';
   
   // Family activities by season
@@ -182,7 +185,7 @@ function renderCharts(){
   
   html+='<div class="truth" style="margin-bottom:16px;border-color:rgba(6,182,212,.2);background:rgba(6,182,212,.04)"><h3 style="color:#67e8f9">🌧️ The Rain</h3><ul>';
   html+='<li><strong>'+rainDays+' rain days</strong> — but most are light. Only '+D.filter(function(d){return d.rain>=10}).length+' days had 10mm+.</li>';
-  html+='<li>Total rainfall: '+totalRain+'mm — less than London (600mm) or Birmingham (690mm).</li>';
+  html+='<li>Total rainfall: '+totalRain+'mm — less than Edinburgh (700mm) or Glasgow (1,100mm).</li>';
   html+='<li>Rain is different here — often a quick shower then sun. Not all-day drizzle like UK.</li>';
   html+='<li>Wettest day: '+D.reduce(function(a,b){return(b.rain||0)>(a.rain||0)?b:a}).rain+'mm — that\'s a proper downpour.</li>';
   html+='</ul></div>';
