@@ -27,11 +27,11 @@ document.getElementById('heroStats').innerHTML=
 '<div class="hero-card"><div class="emoji">🌡️</div><div class="val" style="color:#ef4444">'+avgMax+'°</div><div class="lbl">Avg high</div></div>';
 
 // ===== TABS =====
-function showTab(id){
-  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
-  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
+function showWTab(id,btn){
+  document.querySelectorAll('.wtab').forEach(function(t){t.classList.remove('active')});
+  document.querySelectorAll('.wpanel').forEach(function(p){p.classList.remove('active')});
   document.getElementById(id).classList.add('active');
-  event.target.classList.add('active');
+  btn.classList.add('active');
   if(id==='charts'&&!window._chartsRendered)renderCharts();
 }
 
