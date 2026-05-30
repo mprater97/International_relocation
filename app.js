@@ -1025,6 +1025,11 @@ function restoreCustomItems(){
 
 // ===== INIT =====
 restoreCustomItems();updateHeader();planSub='visa';renderPlanNew();
+// Auto-sync if visa tasks missing
+var _visaCats=['Immigration','Tax','Health','Travel','Schools'];
+if(!(state.todos||[]).some(function(t){return _visaCats.indexOf(t.cat)>=0})){
+  if(window._fbReady&&window._fbLoad){window._fbLoad().then(function(snap){if(snap.exists){var cloud=snap.data();if(cloud.todos&&cloud.todos.some(function(t){return _visaCats.indexOf(t.cat)>=0})){state.todos=cloud.todos;save();renderPlanNew()}}}).catch(function(){})}
+}
 
 // ===== PLAN (Combined: Phases + Tasks + To-Do) =====
 var planSub='visa';
