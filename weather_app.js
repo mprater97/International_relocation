@@ -12,10 +12,10 @@ var avgSun=(sunData.reduce(function(s,d){return s+d.sun_hours},0)/sunData.length
 var seaD=D.filter(function(d){return d.sea_temp!=null});
 var avgSea=seaD.length?(seaD.reduce(function(s,d){return s+d.sea_temp},0)/seaD.length).toFixed(1):'?';
 var swimDays=seaD.filter(function(d){return d.sea_temp>=18}).length;
-var beachDays=D.filter(function(d){return d.max>=25&&d.rain===0}).length;
-var perfectDays=D.filter(function(d){return d.max>=22&&d.max<=28&&d.rain===0&&d.cloud!=null&&d.cloud<50}).length;
-var tshirtDays=D.filter(function(d){return d.max>=20&&d.rain===0}).length;
-var coatDays=D.filter(function(d){return d.max!=null&&d.max<15}).length;
+var beachDays=D.filter(function(d){return d.max>=22&&d.rain===0}).length;
+var perfectDays=D.filter(function(d){return d.max>=20&&d.max<=28&&d.rain===0&&d.cloud!=null&&d.cloud<60}).length;
+var tshirtDays=D.filter(function(d){return d.max>=18&&d.rain===0}).length;
+var coatDays=D.filter(function(d){return d.max!=null&&d.max<13}).length;
 
 // ===== HERO STATS =====
 document.getElementById('heroStats').innerHTML=
@@ -51,10 +51,10 @@ function showWTab(id,btn){
   // What does a typical day look like?
   html+='<div class="section"><div class="section-title">📅 What Does a Typical Day Look Like?</div>';
   html+='<div class="daily-vibe">';
-  html+='<div class="vibe-item"><div class="num" style="color:#22c55e">'+perfectDays+'</div><div class="desc">Perfect days<br>(22-28°, sunny)</div></div>';
-  html+='<div class="vibe-item"><div class="num" style="color:#fbbf24">'+tshirtDays+'</div><div class="desc">T-shirt days<br>(20°+, dry)</div></div>';
-  html+='<div class="vibe-item"><div class="num" style="color:#f59e0b">'+beachDays+'</div><div class="desc">Beach days<br>(25°+, dry)</div></div>';
-  html+='<div class="vibe-item"><div class="num" style="color:#60a5fa">'+coatDays+'</div><div class="desc">Coat days<br>(under 15°)</div></div>';
+  html+='<div class="vibe-item"><div class="num" style="color:#22c55e">'+perfectDays+'</div><div class="desc">Perfect days<br>(20-28°, sunny)</div></div>';
+  html+='<div class="vibe-item"><div class="num" style="color:#fbbf24">'+tshirtDays+'</div><div class="desc">T-shirt days<br>(18°+, dry)</div></div>';
+  html+='<div class="vibe-item"><div class="num" style="color:#f59e0b">'+beachDays+'</div><div class="desc">Beach days<br>(22°+, dry)</div></div>';
+  html+='<div class="vibe-item"><div class="num" style="color:#60a5fa">'+coatDays+'</div><div class="desc">Coat days<br>(under 13°)</div></div>';
   html+='<div class="vibe-item"><div class="num" style="color:#06b6d4">'+D.filter(function(d){return d.rain>=5}).length+'</div><div class="desc">Umbrella days<br>(5mm+ rain)</div></div>';
   html+='<div class="vibe-item"><div class="num" style="color:#ef4444">'+D.filter(function(d){return d.max>=32}).length+'</div><div class="desc">AC days<br>(32°+ hot)</div></div>';
   html+='</div></div>';
@@ -65,7 +65,7 @@ function showWTab(id,btn){
   html+='<tr><th></th><th>Melbourne</th><th>Scotland</th><th>Winner</th></tr>';
   html+='<tr><td>☀️ Sunshine hours/year</td><td><strong>'+Math.round(sunData.reduce(function(s,d){return s+d.sun_hours},0))+'h</strong></td><td>~1,250h</td><td class="winner">🇦🇺 +'+Math.round(sunData.reduce(function(s,d){return s+d.sun_hours},0)-1250)+'h</td></tr>';
   html+='<tr><td>🌧️ Rain days/year</td><td><strong>'+rainDays+'</strong></td><td>~185</td><td class="winner">🇦🇺 '+(185-rainDays)+' fewer</td></tr>';
-  html+='<tr><td>🏖️ Beach days (25°+)</td><td><strong>'+beachDays+'</strong></td><td>~1–3</td><td class="winner">🇦🇺 '+beachDays+' vs ~2</td></tr>';
+  html+='<tr><td>🏖️ Beach days (22°+)</td><td><strong>'+beachDays+'</strong></td><td>~10–15</td><td class="winner">🇦🇺 '+beachDays+' vs ~12</td></tr>';
   html+='<tr><td>🌊 Swimmable ocean</td><td><strong>'+swimDays+' days</strong> (18°+)</td><td>0 days (sea peaks ~13°C)</td><td class="winner">🇦🇺 Ocean swimming!</td></tr>';
   html+='<tr><td>❄️ Frost days</td><td><strong>'+D.filter(function(d){return d.min!=null&&d.min<=0}).length+'</strong></td><td>~70</td><td class="winner">🇦🇺 Almost none</td></tr>';
   html+='<tr><td>🌡️ Winter high</td><td><strong>14°C avg</strong></td><td>5–6°C avg</td><td class="winner">🇦🇺 Nearly 3x warmer</td></tr>';
