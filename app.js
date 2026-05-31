@@ -1148,7 +1148,7 @@ function planPhase(phase){
   document.getElementById('planSub').innerHTML=html;
 }
 function renderTodo2(){
-  var todos=state.todos||[];
+  var todos=(state.todos||[]).filter(function(t){return ['Immigration','Tax','Health','Travel','Schools'].indexOf(t.cat)<0});
   var html='<div class="card"><h2>📌 To-Do List</h2><div class="flex g2 fw aic mb2"><input type="text" id="todoText" placeholder="What needs doing?" style="flex:1;min-width:200px" onkeydown="if(event.key===\'Enter\')addTodo()"><select id="todoCat" style="max-width:140px"><option>General</option><option>House Repairs</option><option>Packing</option><option>Admin</option><option>Shopping</option><option>Kids</option></select><select id="todoPri" style="max-width:100px"><option value="med">Medium</option><option value="high">High</option><option value="low">Low</option></select><button class="btn btn-p" onclick="addTodo()">+ Add</button></div>';
   if(todos.length){todos.forEach(function(t,i){var pri=t.pri==='high'?'🔴':t.pri==='low'?'🟢':'🟡';html+='<div class="ci'+(t.done?' done':'')+'"><input type="checkbox" '+(t.done?'checked':'')+' onchange="state.todos['+i+'].done=!state.todos['+i+'].done;save();renderPlanNew()"><div class="ct">'+pri+' '+t.text+'<div class="cm">'+t.cat+'</div></div><button class="btn btn-o" style="padding:2px 6px" onclick="state.todos.splice('+i+',1);save();renderPlanNew()">✕</button></div>';});}else{html+='<p class="tm ts">No to-dos yet.</p>';}
   html+='</div>';
