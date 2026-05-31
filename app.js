@@ -1110,6 +1110,43 @@ function renderVisaLegal(){
   });
   
   html+='</div>';
+  
+  // Document requirements detail
+  html+='<div class="card mt2"><h2>📄 Required Documents — Detail</h2><p class="tx tm mb2">TSS (482) Visa — what each document is, who provides it, and when.</p>';
+  html+='<h3 style="color:var(--accent)">🏢 Corporate Documents (Amazon provides)</h3>';
+  html+='<div class="table-wrap"><table><tr><th>Document</th><th>Description</th><th>Who</th><th>When</th></tr>';
+  html+='<tr><td style="font-weight:600">Nomination Application Form</td><td>Electronic submission of sponsorship nomination</td><td>Amazon / ISP</td><td>Before filing</td></tr>';
+  html+='<tr><td style="font-weight:600">Position Information</td><td>Start date, weekly hours, employment period, full compensation package</td><td>Amazon</td><td>Before filing</td></tr>';
+  html+='<tr><td style="font-weight:600">Job Description</td><td>Full-time position, title, ANZSCO code, responsibilities, duties, experience required, licensing</td><td>Amazon</td><td>Before filing</td></tr>';
+  html+='<tr><td style="font-weight:600">Evidence of Labour Market Testing</td><td>For ICT roles — alternative requirement applies (ICT occupation exemption)</td><td>Amazon</td><td>Before filing</td></tr>';
+  html+='<tr><td style="font-weight:600">Market Salary Rate (AMSR)</td><td>Evidence position meets Annual Market Salary Rate threshold</td><td>Amazon</td><td>Before filing</td></tr>';
+  html+='</table></div>';
+  
+  html+='<h3 style="color:var(--orange);margin-top:12px">👤 Personal Documents (You provide)</h3>';
+  html+='<div class="table-wrap"><table><tr><th>Document</th><th>Description</th><th>Format</th><th>When</th></tr>';
+  html+='<tr><td style="font-weight:600">Passport</td><td>Current valid passport for all family members</td><td>Copy</td><td>Before filing</td></tr>';
+  html+='<tr><td style="font-weight:600">Passport Photo</td><td>Recent passport-style photo</td><td>Copy</td><td>Before filing</td></tr>';
+  html+='<tr><td style="font-weight:600">CV / Resume</td><td>Up-to-date CV showing relevant experience</td><td>Copy</td><td>Before filing</td></tr>';
+  html+='<tr><td style="font-weight:600">Educational Certificates</td><td>Degree/diploma certificates proving qualifications</td><td>Copy</td><td>Before filing</td></tr>';
+  html+='<tr><td style="font-weight:600">Employment References</td><td>Letters from previous employers confirming experience</td><td>Copy</td><td>Before filing</td></tr>';
+  html+='<tr><td style="font-weight:600">English Language Evidence</td><td>UK passport holder = exempt (native English speaker). May need to declare.</td><td>Copy</td><td>Before filing</td></tr>';
+  html+='<tr><td style="font-weight:600">Family/Relationship Documents</td><td>Marriage certificate, kids\' birth certificates</td><td>Copy</td><td>Before filing</td></tr>';
+  html+='<tr><td style="font-weight:600">Police Certificates</td><td>For all adults — any country where stay exceeded 12 months in last 10 years (UK for you)</td><td>Copy</td><td>Before filing</td></tr>';
+  html+='<tr><td style="font-weight:600">Travel History (10 years)</td><td>All countries visited in last 10 years for all adult dependents</td><td>Copy</td><td>Before filing</td></tr>';
+  html+='<tr><td style="font-weight:600">Residential Address History (10 years)</td><td>All addresses lived at in last 10 years for all adult dependents</td><td>Copy</td><td>Before filing</td></tr>';
+  html+='<tr><td style="font-weight:600">Registration/Licensing</td><td>Professional memberships or registrations (if relevant to role)</td><td>Copy</td><td>Before filing</td></tr>';
+  html+='<tr style="background:rgba(59,130,246,.05)"><td style="font-weight:600">Health Assessment</td><td>Visa medical exam — book through BUPA panel clinic (all family members)</td><td>Original</td><td style="color:var(--orange)">After filing</td></tr>';
+  html+='<tr style="background:rgba(59,130,246,.05)"><td style="font-weight:600">Health Insurance</td><td>Proof of adequate health cover in Australia (Amazon provides through benefits)</td><td>N/A</td><td style="color:var(--orange)">Post-arrival</td></tr>';
+  html+='</table></div>';
+  
+  html+='<div style="margin-top:12px;font-size:.78rem;line-height:1.8">';
+  html+='<div>💡 <strong>All copies are fine</strong> — no originals, wet signatures, or lawyer authentication needed for 482 visa</div>';
+  html+='<div>💡 <strong>English language:</strong> UK passport = exempt as native English speaker</div>';
+  html+='<div>💡 <strong>Police check:</strong> Apply via <a href="https://www.acro.police.uk/police-certificates" target="_blank" style="color:var(--accent)">ACRO UK Police Certificate</a> — takes 2-4 weeks</div>';
+  html+='<div>💡 <strong>Health assessment:</strong> Booked AFTER visa application lodged — immigration team will instruct</div>';
+  html+='<div>💡 <strong>Frankie:</strong> Needs same personal documents as dependent (passport, police cert, health assessment, travel/address history)</div>';
+  html+='</div></div>';
+  
   document.getElementById('planSub').innerHTML=html;
 }
 
