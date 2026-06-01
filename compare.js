@@ -265,17 +265,21 @@ function renderSchoolStars(){
   var ratings=state.schoolRatings||{};
   rows.forEach(function(row){
     var link=row.querySelector('a');
-    if(!link||row.querySelector('td[style*="padding-left:20px"]'))return; // skip feeder rows only
+    if(!link||row.querySelector('td[style*="padding-left:20px"]'))return;
     var name=link.textContent.replace(' →','').trim();
     if(!name)return;
     var rating=ratings[name]||0;
     var td=document.createElement('td');
-    td.style.cssText='white-space:nowrap;font-size:1rem;cursor:pointer';
-    var stars='';
+    td.style.cssText='white-space:nowrap;font-size:1.1rem;cursor:pointer';
     for(var i=1;i<=5;i++){
-      stars+='<span onclick="rateSchool(\''+name+'\','+i+')" style="color:'+(i<=rating?'#f59e0b':'#4b5563')+'">'+(i<=rating?'★':'☆')+'</span>';
+      var span=document.createElement('span');
+      span.textContent=i<=rating?'★':'☆';
+      span.style.color=i<=rating?'#f59e0b':'#4b5563';
+      span.dataset.name=name;
+      span.dataset.val=i;
+      span.onclick=function(){rateSchool(this.dataset.name,parseInt(this.dataset.val))};
+      td.appendChild(span);
     }
-    td.innerHTML=stars;
     row.appendChild(td);
   });
 }
