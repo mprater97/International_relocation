@@ -24,6 +24,7 @@ function renderCompare(){
     '<div class="stab" onclick="showCmp(\'lifestyle\',this)">🎯 Lifestyle</div>'+
     '<div class="stab" onclick="showCmp(\'frankie\',this)">👩 Frankie</div>'+
     '<div class="stab" onclick="showCmp(\'sydney\',this)">🌊 Sydney</div>'+
+    '<div class="stab" onclick="showCmp(\'shortlist2\',this)">⭐ Shortlist</div>'+
     '<div class="stab" onclick="window.open(\'weather.html\',\'_blank\')">🌤️ Weather</div>'+
     '</div><div id="cmpContent"></div>';
   showCmp('suburbs',document.querySelector('#compare .stab'));
@@ -31,7 +32,7 @@ function renderCompare(){
 function showCmp(id,el){
   document.querySelectorAll('#locations .stab').forEach(function(t){t.classList.remove('active')});
   if(el)el.classList.add('active');
-  if(id==='suburbs'){renderSuburbsInteractive()}else{document.getElementById('cmpContent').innerHTML=CMP[id]||'';}
+  if(id==='suburbs'){renderSuburbsInteractive()}else if(id==='shortlist2'){renderShortlist2()}else if(id==='schools'){document.getElementById('cmpContent').innerHTML=CMP[id]||'';setTimeout(renderSchoolStars,100)}else{document.getElementById('cmpContent').innerHTML=CMP[id]||'';}
 }
 CMP.lifestyle='';
 CMP.frankie='';
@@ -255,6 +256,115 @@ function showSuburbDetail(name){
 }
 
 
+
+function renderSchoolStars(){
+  // Add star ratings to school table rows after render
+  var table=document.querySelector('#cmpContent table');
+  if(!table)return;
+  var rows=table.querySelectorAll('tr');
+  var ratings=state.schoolRatings||{};
+  rows.forEach(function(row){
+    var link=row.querySelector('a');
+    if(!link||row.style.background)return; // skip feeder rows
+    var name=link.textContent.replace(' →','').trim();
+    if(!name)return;
+    var rating=ratings[name]||0;
+    var td=document.createElement('td');
+    td.style.cssText='white-space:nowrap;font-size:1rem;cursor:pointer';
+    var stars='';
+    for(var i=1;i<=5;i++){
+      stars+='<span onclick="rateSchool(\''+name+'\','+i+')" style="color:'+(i<=rating?'#f59e0b':'#4b5563')+'">'+(i<=rating?'★':'☆')+'</span>';
+    }
+    td.innerHTML=stars;
+    row.appendChild(td);
+  });
+}
+function rateSchool(name,rating){
+  if(!state.schoolRatings)state.schoolRatings={};
+  state.schoolRatings[name]=state.schoolRatings[name]===rating?0:rating;
+  save();
+  // Re-render current view
+  if(document.querySelector('#cmpContent table'))renderSchoolStars();
+}
+
+function renderShortlist2(){
+  var html='<div class="card"><h2>⭐ My Shortlist</h2><p class="tx tm mb2">Suburbs and schools you\'ve rated 5 stars appear here automatically.</p></div>';
+  
+  // Get 5-star suburbs
+  var subRatings=state.suburbRatings||{};
+  var topSuburbs=Object.keys(subRatings).filter(function(k){return subRatings[k]===5});
+  
+  // Get 5-star schools
+  var schRatings=state.schoolRatings||{};
+  var topSchools=Object.keys(schRatings).filter(function(k){return schRatings[k]===5});
+  
+  if(!topSuburbs.length&&!topSchools.length){
+    html+='<div class="card"><p class="tm">No 5-star ratings yet. Rate suburbs (on Suburbs tab) and schools (on Schools tab) with 5 stars to add them here.</p></div>';
+    document.getElementById('cmpContent').innerHTML=html;
+    return;
+  }
+  
+  // Map
+  if(topSuburbs.length){
+    html+='<div class="card"><h3>🗺️ Shortlisted Suburbs</h3><div id="shortlistMap" style="height:300px;border-radius:10px;margin:8px 0"></div></div>';
+  }
+  
+  // Suburb details
+  topSuburbs.forEach(function(name){
+    var s=SUBURBS_DATA.find(function(x){return x.name===name});
+    if(!s)return;
+    var bed4mo=Math.round(parseInt(s.bed4)*52/12);
+    var disposable=9571-bed4mo-3345;
+    html+='<div class="card" style="border-left:4px solid var(--green);margin-top:8px">';
+    html+='<h3>🏘️ '+s.name+' ⭐⭐⭐⭐⭐</h3>';
+    html+='<div style="font-size:.82rem;line-height:1.8">';
+    html+='<div><strong>Rent:</strong> $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+') — $'+s.bed4+'/wk (4-bed)</div>';
+    html+='<div><strong>Disposable:</strong> $'+disposable+'/mo (£'+Math.round(disposable*0.532)+')</div>';
+    html+='<div><strong>Train:</strong> '+s.train+' min | <strong>Beach:</strong> '+s.beach+'</div>';
+    html+='<div><strong>Vibe:</strong> '+s.vibe+'</div>';
+    html+='<div><strong>School:</strong> '+s.school+' ('+s.schoolRating+')</div>';
+    html+='<div style="color:var(--green)"><strong>Pros:</strong> '+s.pros+'</div>';
+    html+='<div style="color:var(--orange)"><strong>Cons:</strong> '+s.cons+'</div>';
+    html+='<div><strong>Cafes:</strong> '+s.cafes+'</div>';
+    html+='<div><strong>Outdoors:</strong> '+s.outdoors+'</div>';
+    // Photos
+    var photos=SUBURB_PHOTOS[s.name]||[];
+    if(photos.length){
+      html+='<div style="display:flex;gap:4px;overflow-x:auto;margin-top:6px">';
+      photos.slice(0,6).forEach(function(url,i){html+='<img src="'+url+'" style="height:70px;border-radius:6px;object-fit:cover;flex:0 0 auto" loading="lazy" onerror="this.style.display=\'none\'">'});
+      html+='</div>';
+    }
+    html+='</div></div>';
+  });
+  
+  // School details
+  if(topSchools.length){
+    html+='<div class="card" style="margin-top:12px"><h3>🎓 Shortlisted Schools</h3></div>';
+    topSchools.forEach(function(name){
+      html+='<div class="card" style="border-left:4px solid var(--accent);margin-top:8px">';
+      html+='<h3>🎓 '+name+' ⭐⭐⭐⭐⭐</h3>';
+      html+='<p class="tx tm">Rated 5 stars — see Schools tab for full detail.</p>';
+      html+='</div>';
+    });
+  }
+  
+  document.getElementById('cmpContent').innerHTML=html;
+  
+  // Init map if suburbs shortlisted
+  if(topSuburbs.length){
+    setTimeout(function(){
+      var map=L.map('shortlistMap').setView([-37.95,145.05],11);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+      topSuburbs.forEach(function(name){
+        var s=SUBURBS_DATA.find(function(x){return x.name===name});
+        if(!s)return;
+        var bed4mo=Math.round(parseInt(s.bed4)*52/12);
+        L.marker([s.lat,s.lng]).addTo(map).bindPopup('<strong>'+s.name+'</strong><br>$'+bed4mo+'/mo | '+s.train+' min train<br>'+s.beach);
+      });
+    },200);
+  }
+}
+
 function renderSuburbsInteractive(){
   var sd=state.suburbData||{};
   var html='<div class="card"><h2>🏘️ Melbourne Suburbs</h2><div class="flex g2 mb2"><button class="btn '+(suburbView==='map'?'btn-p':'btn-o')+'" onclick="suburbView=\'map\';renderSuburbsInteractive()">🗺️ Map View</button><button class="btn '+(suburbView==='list'?'btn-p':'btn-o')+'" onclick="suburbView=\'list\';renderSuburbsInteractive()">📋 List View</button></div><details style="margin-top:8px"><summary style="cursor:pointer;font-size:.8rem;color:var(--accent);font-weight:600">🎯 How scores are calculated</summary><div style="font-size:.75rem;margin-top:8px;line-height:1.8"><div style="margin-bottom:6px"><strong>Weighted Score /5</strong> = Family 25% + Lifestyle 20% + Financial 17.5% + Commute 17.5% + Beach 10% + School 10%</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px"><div>👨‍👩‍👧‍👦 <strong>Family (30%)</strong> — safety, schools, parks, family-friendly</div><div>☕ <strong>Lifestyle (25%)</strong> — walkability + safety average</div><div>💰 <strong>Financial (17.5%)</strong> — rent affordability (4-bed price)</div><div>🚆 <strong>Commute (17.5%)</strong> — train time to CBD</div><div>🤝 <strong>Social (10%)</strong> — walkability to cafes, shops, community</div></div><div style="margin-top:6px"><span style="background:#16a34a;color:#fff;padding:1px 6px;border-radius:8px;font-size:.65rem">4.0+ Great</span> <span style="background:#3b82f6;color:#fff;padding:1px 6px;border-radius:8px;font-size:.65rem">3.0–3.9 Good</span> <span style="background:#6b7280;color:#fff;padding:1px 6px;border-radius:8px;font-size:.65rem">&lt;3.0 Weaker</span></div></div></details></div>';
@@ -415,7 +525,7 @@ function addSuburbToShortlist(name){
 
 
 
-CMP.schools='<div class="card"><h2>🎓 School Comparison — Best for Bella (14) & Jack (11)</h2><p class="tx tm mb2">Priority: hands-on learning, extracurriculars, physical/active sessions, learning support, fun & relaxed vibe. All FREE for 482 visa holders.</p><p class="tx tm mb2">🟡 Yellow rows = Jack\'s feeder primary school (Aug–Dec 2026, Year 6) before joining Bella at secondary in Jan 2027.</p><div class="table-wrap"><table><tr><th>School</th><th>Suburb</th><th>VCE</th><th>Size</th><th>🤸 Active</th><th>🎭 Creative</th><th>⛺ Outdoor</th><th>😊 Vibe</th><th style="min-width:200px">Notes</th></tr>'
+CMP.schools='<div class="card"><h2>🎓 School Comparison — Best for Bella (14) & Jack (11)</h2><p class="tx tm mb2">Priority: hands-on learning, extracurriculars, physical/active sessions, learning support, fun & relaxed vibe. All FREE for 482 visa holders.</p><p class="tx tm mb2">🟡 Yellow rows = Jack\'s feeder primary school (Aug–Dec 2026, Year 6) before joining Bella at secondary in Jan 2027.</p><div class="table-wrap"><table><tr><th>School</th><th>Suburb</th><th>VCE</th><th>Size</th><th>🤸</th><th>🎭</th><th>⛺</th><th>😊</th><th style="min-width:180px">Notes</th><th>⭐</th></tr>'
 +'<tr style="background:rgba(34,197,94,.05)"><td style="font-weight:600"><a href="https://www.parkdalesc.vic.edu.au" target="_blank" style="color:var(--accent)">Parkdale SC →</a></td><td>Mordialloc</td><td style="font-weight:700;color:var(--green)">30</td><td>~1,500</td><td>5/5</td><td>4/5</td><td>4/5</td><td>4/5</td><td>Sports Academy (AFL, netball, soccer), state champions, annual musical, outdoor camps, STEM<br><details style="margin-top:4px"><summary style="cursor:pointer;color:var(--accent);font-size:.7rem">▶ Full profile</summary><div style="margin-top:4px;font-size:.7rem;line-height:1.7"><strong>Sports:</strong> AFL Academy, Netball Academy, Soccer, Swimming (pool), Athletics, Cross country, Basketball, Cricket, Volleyball, Surfing, Gymnastics (interschool)<br><strong>Drama:</strong> Annual musical (200+ students), Drama Yr 7-12, Dance, Music ensembles, Visual arts, Media, Theatre<br><strong>Outdoor Ed:</strong> Year 7-10 camps, VCE Outdoor Ed, Surfing, Kayaking, Rock climbing, Bushwalking<br><strong>Facilities:</strong> Swimming pool, Gym, Performing arts centre, Multiple ovals, Tennis/basketball courts, Recording studio<br><strong>Vibe:</strong> Bigger school, more structured but still beach lifestyle. Strong community.<br><strong>International:</strong> Buddy program, EAL support, transition coordinator, wellbeing team</div></details></td></tr>'
 +'<tr style="background:rgba(251,191,36,.05)"><td style="padding-left:20px;font-size:.75rem">↳ <a href="https://www.pardaleps.vic.edu.au" target="_blank" style="color:var(--accent)">Parkdale Primary</a> / <a href="https://www.mordiallocps.vic.edu.au" target="_blank" style="color:var(--accent)">Mordialloc Beach Primary</a></td><td style="font-size:.75rem">Parkdale/Mordialloc</td><td colspan="2" style="font-size:.75rem">~400 students</td><td colspan="4" style="font-size:.75rem">Jack\'s feeder primary (Aug–Dec). Sports, outdoor ed, beach lifestyle.</td><td style="font-size:.75rem;color:var(--green)">Feeds → Parkdale SC ✓</td></tr>'
 +'<tr style="background:rgba(34,197,94,.05)"><td style="font-weight:600"><a href="https://www.sandringhamsc.vic.edu.au" target="_blank" style="color:var(--accent)">Sandringham College →</a></td><td>Sandringham</td><td style="font-weight:700;color:var(--green)">30</td><td>~1,200</td><td>4/5</td><td>5/5</td><td>4/5</td><td>4/5</td><td>Elite performing arts (TOP Arts), dance, drama, music, sports academy, beach programs<br><details style="margin-top:4px"><summary style="cursor:pointer;color:var(--accent);font-size:.7rem">▶ Full profile</summary><div style="margin-top:4px;font-size:.7rem;line-height:1.7"><strong>Sports:</strong> Sports Academy, AFL, Netball, Soccer, Swimming, Surfing, Beach volleyball, Sailing<br><strong>Drama:</strong> TOP Arts (state-recognised), Dance Academy, Drama, Music (bands, choirs), Film, Photography<br><strong>Outdoor Ed:</strong> Beach programs (5 min), Surfing, Kayaking, Year level camps, VCE Outdoor Ed<br><strong>Facilities:</strong> Professional performing arts centre, Dance studios, Recording studio, Art galleries, Gym<br><strong>Vibe:</strong> Creative, beach lifestyle, strong arts culture</div></details></td></tr>'
