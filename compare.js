@@ -18,13 +18,13 @@ function openGallery(name,startIdx){
 function renderCompare(){
   document.getElementById('locations').innerHTML=
     '<div class="stabs">'+
-    '<div class="stab active" onclick="showCmp(\'suburbs\',this)">🏘️ Suburbs</div>'+
+    '<div class="stab active" onclick="showCmp(\'shortlist2\',this)">⭐ Shortlist</div>'+
+    '<div class="stab" onclick="showCmp(\'suburbs\',this)">🏘️ Suburbs</div>'+
     '<div class="stab" onclick="showCmp(\'schools\',this)">🎓 Schools</div>'+
     '<div class="stab" onclick="showCmp(\'costs\',this)">💰 Living Costs</div>'+
     '<div class="stab" onclick="showCmp(\'lifestyle\',this)">🎯 Lifestyle</div>'+
     '<div class="stab" onclick="showCmp(\'frankie\',this)">👩 Frankie</div>'+
     '<div class="stab" onclick="showCmp(\'sydney\',this)">🌊 Sydney</div>'+
-    '<div class="stab" onclick="showCmp(\'shortlist2\',this)">⭐ Shortlist</div>'+
     '<div class="stab" onclick="window.open(\'weather.html\',\'_blank\')">🌤️ Weather</div>'+
     '</div><div id="cmpContent"></div>';
   showCmp('suburbs',document.querySelector('#compare .stab'));
