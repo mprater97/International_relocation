@@ -265,7 +265,7 @@ function renderSchoolStars(){
   var ratings=state.schoolRatings||{};
   rows.forEach(function(row){
     var link=row.querySelector('a');
-    if(!link||row.style.background)return; // skip feeder rows
+    if(!link||row.querySelector('td[style*="padding-left:20px"]'))return; // skip feeder rows only
     var name=link.textContent.replace(' →','').trim();
     if(!name)return;
     var rating=ratings[name]||0;
