@@ -71,7 +71,7 @@ const FORECAST_ITEMS = [
   {id:'co_tax',type:'oneoff',cat:'Company Funded',desc:'Tax advice service',week:1,forecastLow:0,forecastHigh:0,forecast:0,phase:1,defaultFund:'company_direct'},
   // Separate budget items (tracked but not in personal budget)
   {id:'sep_car',type:'oneoff',defaultFund:'sale_proceeds',cat:'Separate Budget',desc:'AU car (used)',week:15,forecastLow:6000,forecastHigh:10000,forecast:8000,phase:4,defaultFund:'lump_sum'},
-  {id:'sep_furniture',type:'oneoff',defaultFund:'savings',cat:'Separate Budget',desc:'AU furniture/essentials',week:15,forecastLow:500,forecastHigh:1500,forecast:1000,phase:4,defaultFund:'lump_sum'},
+  {id:'sep_furniture',type:'oneoff',defaultFund:'savings',cat:'Separate Budget',desc:'AU furniture (beds, mattresses, sofa, dining, fridge, washing machine, desks, basics)',week:15,forecastLow:7000,forecastHigh:12000,forecast:10000,phase:4,defaultFund:'lump_sum'},
   {id:'sep_util',type:'oneoff',defaultFund:'savings',cat:'Separate Budget',desc:'AU utilities setup',week:15,forecastLow:100,forecastHigh:250,forecast:150,phase:4,defaultFund:'lump_sum'},
 ];
 
