@@ -306,22 +306,20 @@ function moneyOverview(){
   html+='<div style="text-align:right"><div style="font-size:.7rem;color:var(--muted)">NET POSITION</div><div style="font-size:1.3rem;font-weight:700;color:'+(netPosition>=0?'var(--green)':'var(--red)')+'">'+(netPosition>=0?'+':'-')+'£'+Math.round(Math.abs(netPosition)*0.526).toLocaleString()+'</div></div>';
   html+='</div><div class="pb mt2" style="height:10px"><div class="pf" style="width:'+Math.min(100,Math.round((incomeTotal-costTotal)/incomeTotal*100+50))+'%;background:'+(netPosition>=0?'var(--green)':'var(--red)')+'"></div></div></div>';
   
-  // DEBTS - editable amounts + part payments + add new
+  // DEBTS - editable amounts + add new
   html+='<div class="card" style="padding:12px;margin-bottom:8px"><h3 style="font-size:.9rem;color:var(--red)">🔴 Debts to Clear — £'+debtRemaining.toLocaleString()+' remaining</h3>';
-  html+='<div style="font-size:.7rem;color:var(--muted);margin-bottom:6px">Edit owed/paid amounts directly. Tick when fully cleared.</div>';
+  html+='<div style="font-size:.7rem;color:var(--muted);margin-bottom:6px">Edit the amount as you pay them down. Tick when cleared.</div>';
   html+='<div style="display:flex;flex-direction:column;gap:4px;margin-top:8px">';
   debts.forEach(function(d){
     var cleared=d.left<=0;
     html+='<div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:6px;background:'+(cleared?'rgba(34,197,94,.08)':'rgba(239,68,68,.05)')+';opacity:'+(cleared?'.6':'1')+'">';
     html+='<input type="checkbox" '+(cleared?'checked':'')+' style="width:18px;height:18px" onchange="markDebtPaid(\''+d.id+'\',this.checked)">';
     html+='<input type="text" value="'+d.desc+'" style="flex:1;min-width:100px;background:transparent;border:none;border-bottom:1px dashed rgba(255,255,255,.15);color:var(--text);font-size:.78rem" onchange="renameDebt(\''+d.id+'\',this.value)">';
-    html+='<div style="display:flex;align-items:center;gap:4px;font-size:.7rem"><span>Owed:</span><input type="number" value="'+d.owed+'" style="width:60px;text-align:right;font-size:.78rem" onchange="updDebt(\''+d.id+'\',+this.value)"></div>';
-    html+='<div style="display:flex;align-items:center;gap:4px;font-size:.7rem"><span>Paid:</span><input type="number" value="'+(d.paid||0)+'" style="width:60px;text-align:right;font-size:.78rem" onchange="if(!state.debtPaid)state.debtPaid={};state.debtPaid[\''+d.id+'\']=+this.value;save();renderMoney()"></div>';
-    html+='<span style="font-size:.78rem;font-weight:600;min-width:55px;text-align:right;color:'+(cleared?'var(--green)':'var(--red)')+'">£'+d.left.toLocaleString()+'</span>';
+    html+='<span style="font-size:.7rem;color:var(--muted)">£</span><input type="number" value="'+d.left+'" style="width:65px;text-align:right;font-size:.8rem;font-weight:600" onchange="updDebt(\''+d.id+'\',+this.value)">';
     html+='<button class="btn btn-o" style="padding:2px 5px;color:var(--red);font-size:.65rem" onclick="removeDebt(\''+d.id+'\')">✕</button>';
     html+='</div>';
   });
-  html+='<div style="display:flex;gap:4px;margin-top:6px"><input type="text" id="ndDesc" placeholder="+ Add debt..." style="flex:1;font-size:.75rem"><input type="number" id="ndAmt" placeholder="Owed £" style="width:70px;font-size:.75rem"><button class="btn btn-o" style="padding:2px 8px;font-size:.7rem" onclick="addDebt()">+</button></div>';
+  html+='<div style="display:flex;gap:4px;margin-top:6px"><input type="text" id="ndDesc" placeholder="+ Add debt..." style="flex:1;font-size:.75rem"><input type="number" id="ndAmt" placeholder="£" style="width:70px;font-size:.75rem"><button class="btn btn-o" style="padding:2px 8px;font-size:.7rem" onclick="addDebt()">+</button></div>';
   html+='</div></div>';
   
   // UK PROPERTY PREP - editable + tickable + add new
