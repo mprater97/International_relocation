@@ -55,9 +55,9 @@ function getStart(){if(state.auStart){const d=new Date(state.auStart);d.setDate(
 function wkDate(w){const d=new Date(getStart());d.setDate(d.getDate()+(w-1)*7);return d}
 function fd(d){return d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}
 function fdf(d){return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}
-function fG(v){var gbp=Math.round(v*0.532);return'$'+Math.round(v).toLocaleString()+' (£'+gbp.toLocaleString()+')'}
-function fGBP(v){var aud=Math.round(v*1.88);return'£'+Math.round(v).toLocaleString()+' ($'+aud.toLocaleString()+')'}
-function fA(v){var gbp=Math.round(v*0.532);return'$'+Math.round(v).toLocaleString()+' (£'+gbp.toLocaleString()+')'}
+function fG(v){var gbp=Math.round(v*0.526);return'$'+Math.round(v).toLocaleString()+' (£'+gbp.toLocaleString()+')'}
+function fGBP(v){var aud=Math.round(v*1.90);return'£'+Math.round(v).toLocaleString()+' ($'+aud.toLocaleString()+')'}
+function fA(v){var gbp=Math.round(v*0.526);return'$'+Math.round(v).toLocaleString()+' (£'+gbp.toLocaleString()+')'}
 function curWk(){const n=new Date(),d=Math.floor((n-getStart())/(7*864e5));return Math.max(1,Math.min(22,d+1))}
 function daysTo(s){if(!s)return null;return Math.ceil((new Date(s)-new Date())/(864e5))}
 function getBudget(){
@@ -155,32 +155,32 @@ let moneySub='overview';
 function renderPointsAllocator(){
   var services=[
     // Best value first (by ratio)
-    {id:'flights',name:'Final Trip Airfare (4 pax)',points:15,market:Math.round(3200*1.88),ratio:'9.3x',desc:'4x one-way economy',cat:'Travel'},
-    {id:'homefind',name:'Home Finding Trip (4 pax)',points:35,market:Math.round(5750*1.88),ratio:'7.1x',desc:'4 ret. flights + hotel + car',cat:'Travel'},
-    {id:'coaching',name:'Family Relocation Support',points:10,market:Math.round(1500*1.88),ratio:'6.5x',desc:'6 coaching sessions',cat:'Support'},
-    {id:'cultural',name:'Cross Cultural Training',points:15,market:Math.round(1575*1.88),ratio:'4.6x',desc:'1-day session',cat:'Support'},
-    {id:'hotel7',name:'Short Term Hotel (7 days)',points:21,market:Math.round(1950*1.88),ratio:'4.0x',desc:'2 rooms, 4 pax',cat:'Housing'},
-    {id:'hotel14',name:'Short Term Hotel (14 days)',points:42,market:Math.round(3900*1.88),ratio:'4.0x',desc:'2 rooms, 4 pax',cat:'Housing'},
-    {id:'temp30',name:'Temp Housing (30 days)',points:70,market:Math.round(4250*1.88),ratio:'2.6x',desc:'2-bed furnished apt',cat:'Housing'},
-    {id:'temp45',name:'Temp Housing (45 days)',points:105,market:Math.round(6400*1.88),ratio:'2.6x',desc:'2-bed furnished apt',cat:'Housing'},
-    {id:'temp60',name:'Temp Housing (60 days)',points:140,market:Math.round(8500*1.88),ratio:'2.6x',desc:'2-bed furnished apt',cat:'Housing'},
-    {id:'temp75',name:'Temp Housing (75 days)',points:175,market:Math.round(10650*1.88),ratio:'2.6x',desc:'2-bed furnished apt',cat:'Housing'},
-    {id:'temp90',name:'Temp Housing (90 days)',points:210,market:Math.round(12750*1.88),ratio:'2.6x',desc:'2-bed furnished apt',cat:'Housing'},
-    {id:'shipping',name:'Assisted Move — Full HHG',points:190,market:Math.round(9500*1.88),ratio:'2.2x',desc:'Full intl. sea freight + 30d storage',cat:'Shipping'},
-    {id:'storage15',name:'Addtl HHG Storage (15d)',points:5,market:Math.round(300*1.88),ratio:'2.6x',desc:'Storage extension',cat:'Shipping'},
-    {id:'storage30',name:'Addtl HHG Storage (30d)',points:10,market:Math.round(525*1.88),ratio:'2.3x',desc:'Storage extension',cat:'Shipping'},
-    {id:'storage45',name:'Addtl HHG Storage (45d)',points:15,market:Math.round(750*1.88),ratio:'2.2x',desc:'Storage extension',cat:'Shipping'},
-    {id:'air',name:'Ship Goods by Air',points:60,market:Math.round(2500*1.88),ratio:'1.8x',desc:'Small/soft items',cat:'Shipping'},
-    {id:'dsp1',name:'Dest. Service Provider (1d)',points:10,market:Math.round(475*1.88),ratio:'2.1x',desc:'Local relocation expert',cat:'Support'},
-    {id:'dsp2',name:'Dest. Service Provider (2d)',points:20,market:Math.round(950*1.88),ratio:'2.1x',desc:'Local relocation expert',cat:'Support'},
-    {id:'dsp3',name:'Dest. Service Provider (3d)',points:30,market:Math.round(1425*1.88),ratio:'2.1x',desc:'Local relocation expert',cat:'Support'},
-    {id:'car15',name:'Rental Car (15 days)',points:10,market:Math.round(525*1.88),ratio:'2.3x',desc:'Mid-size vehicle',cat:'Transport'},
-    {id:'car30',name:'Rental Car (30 days)',points:20,market:Math.round(1000*1.88),ratio:'2.2x',desc:'Mid-size vehicle',cat:'Transport'},
-    {id:'car45',name:'Rental Car (45 days)',points:30,market:Math.round(1475*1.88),ratio:'2.1x',desc:'Mid-size vehicle',cat:'Transport'},
-    {id:'car60',name:'Rental Car (60 days)',points:40,market:Math.round(1950*1.88),ratio:'2.1x',desc:'Mid-size vehicle',cat:'Transport'},
-    {id:'furn30',name:'Furniture Rental (30d)',points:35,market:Math.round(450*1.88),ratio:'0.6x',desc:'2-bed setup — POOR VALUE',cat:'Housing'},
-    {id:'furn60',name:'Furniture Rental (60d)',points:70,market:Math.round(900*1.88),ratio:'0.6x',desc:'2-bed setup — POOR VALUE',cat:'Housing'},
-    {id:'furn90',name:'Furniture Rental (90d)',points:105,market:Math.round(1350*1.88),ratio:'0.6x',desc:'2-bed setup — POOR VALUE',cat:'Housing'},
+    {id:'flights',name:'Final Trip Airfare (4 pax)',points:15,market:Math.round(3200*1.90),ratio:'9.3x',desc:'4x one-way economy',cat:'Travel'},
+    {id:'homefind',name:'Home Finding Trip (4 pax)',points:35,market:Math.round(5750*1.90),ratio:'7.1x',desc:'4 ret. flights + hotel + car',cat:'Travel'},
+    {id:'coaching',name:'Family Relocation Support',points:10,market:Math.round(1500*1.90),ratio:'6.5x',desc:'6 coaching sessions',cat:'Support'},
+    {id:'cultural',name:'Cross Cultural Training',points:15,market:Math.round(1575*1.90),ratio:'4.6x',desc:'1-day session',cat:'Support'},
+    {id:'hotel7',name:'Short Term Hotel (7 days)',points:21,market:Math.round(1950*1.90),ratio:'4.0x',desc:'2 rooms, 4 pax',cat:'Housing'},
+    {id:'hotel14',name:'Short Term Hotel (14 days)',points:42,market:Math.round(3900*1.90),ratio:'4.0x',desc:'2 rooms, 4 pax',cat:'Housing'},
+    {id:'temp30',name:'Temp Housing (30 days)',points:70,market:Math.round(4250*1.90),ratio:'2.6x',desc:'2-bed furnished apt',cat:'Housing'},
+    {id:'temp45',name:'Temp Housing (45 days)',points:105,market:Math.round(6400*1.90),ratio:'2.6x',desc:'2-bed furnished apt',cat:'Housing'},
+    {id:'temp60',name:'Temp Housing (60 days)',points:140,market:Math.round(8500*1.90),ratio:'2.6x',desc:'2-bed furnished apt',cat:'Housing'},
+    {id:'temp75',name:'Temp Housing (75 days)',points:175,market:Math.round(10650*1.90),ratio:'2.6x',desc:'2-bed furnished apt',cat:'Housing'},
+    {id:'temp90',name:'Temp Housing (90 days)',points:210,market:Math.round(12750*1.90),ratio:'2.6x',desc:'2-bed furnished apt',cat:'Housing'},
+    {id:'shipping',name:'Assisted Move — Full HHG',points:190,market:Math.round(9500*1.90),ratio:'2.2x',desc:'Full intl. sea freight + 30d storage',cat:'Shipping'},
+    {id:'storage15',name:'Addtl HHG Storage (15d)',points:5,market:Math.round(300*1.90),ratio:'2.6x',desc:'Storage extension',cat:'Shipping'},
+    {id:'storage30',name:'Addtl HHG Storage (30d)',points:10,market:Math.round(525*1.90),ratio:'2.3x',desc:'Storage extension',cat:'Shipping'},
+    {id:'storage45',name:'Addtl HHG Storage (45d)',points:15,market:Math.round(750*1.90),ratio:'2.2x',desc:'Storage extension',cat:'Shipping'},
+    {id:'air',name:'Ship Goods by Air',points:60,market:Math.round(2500*1.90),ratio:'1.8x',desc:'Small/soft items',cat:'Shipping'},
+    {id:'dsp1',name:'Dest. Service Provider (1d)',points:10,market:Math.round(475*1.90),ratio:'2.1x',desc:'Local relocation expert',cat:'Support'},
+    {id:'dsp2',name:'Dest. Service Provider (2d)',points:20,market:Math.round(950*1.90),ratio:'2.1x',desc:'Local relocation expert',cat:'Support'},
+    {id:'dsp3',name:'Dest. Service Provider (3d)',points:30,market:Math.round(1425*1.90),ratio:'2.1x',desc:'Local relocation expert',cat:'Support'},
+    {id:'car15',name:'Rental Car (15 days)',points:10,market:Math.round(525*1.90),ratio:'2.3x',desc:'Mid-size vehicle',cat:'Transport'},
+    {id:'car30',name:'Rental Car (30 days)',points:20,market:Math.round(1000*1.90),ratio:'2.2x',desc:'Mid-size vehicle',cat:'Transport'},
+    {id:'car45',name:'Rental Car (45 days)',points:30,market:Math.round(1475*1.90),ratio:'2.1x',desc:'Mid-size vehicle',cat:'Transport'},
+    {id:'car60',name:'Rental Car (60 days)',points:40,market:Math.round(1950*1.90),ratio:'2.1x',desc:'Mid-size vehicle',cat:'Transport'},
+    {id:'furn30',name:'Furniture Rental (30d)',points:35,market:Math.round(450*1.90),ratio:'0.6x',desc:'2-bed setup — POOR VALUE',cat:'Housing'},
+    {id:'furn60',name:'Furniture Rental (60d)',points:70,market:Math.round(900*1.90),ratio:'0.6x',desc:'2-bed setup — POOR VALUE',cat:'Housing'},
+    {id:'furn90',name:'Furniture Rental (90d)',points:105,market:Math.round(1350*1.90),ratio:'0.6x',desc:'2-bed setup — POOR VALUE',cat:'Housing'},
   ];
   var selected=state.pointsSelected||{};
   var usedPts=0;var totalMarketValue=0;
@@ -203,7 +203,7 @@ function renderPointsAllocator(){
     html+='<tr'+(checked?' style="background:rgba(34,197,94,.08)"':'')+'><td><input type="checkbox" '+(checked?'checked':'')+' onchange="togglePoint(this.checked,\''+s.id+'\')">';
     html+='</td><td><strong>'+s.name+'</strong><br><span class="tx tm">'+s.desc+'</span></td>';
     html+='<td style="text-align:center">'+s.points+'</td>';
-    html+='<td>£'+Math.round(s.market*0.532).toLocaleString()+' <span class="tx tm">($'+s.market.toLocaleString()+')</span></td>';
+    html+='<td>£'+Math.round(s.market*0.526).toLocaleString()+' <span class="tx tm">($'+s.market.toLocaleString()+')</span></td>';
     html+='<td style="font-weight:700;color:'+ratioColor+'">'+s.ratio+'</td></tr>';
   });
   html+='</table></div>';
@@ -276,34 +276,34 @@ function moneyOverview(){
     if(coSep.indexOf(i.id)>=0)return;
     var fund=(state.funding||{})[i.id]||i.defaultFund||'lump_sum';
     var amt=state.actuals[i.id]!=null?state.actuals[i.id]:(state.forecasts&&state.forecasts[i.id]?state.forecasts[i.id]:i.forecast);
-    if(fund==='uk_wages')ukItems.push({id:i.id,desc:i.desc,aud:amt,gbp:Math.round(amt*0.532)});
-    else if(fund==='lump_sum')auItems.push({id:i.id,desc:i.desc,aud:amt,gbp:Math.round(amt*0.532)});
+    if(fund==='uk_wages')ukItems.push({id:i.id,desc:i.desc,aud:amt,gbp:Math.round(amt*0.526)});
+    else if(fund==='lump_sum')auItems.push({id:i.id,desc:i.desc,aud:amt,gbp:Math.round(amt*0.526)});
   });
   
   // Calculate totals (only unpaid items count)
   var debtRemaining=debts.reduce(function(s,d){return s+d.left},0);
-  var debtAud=Math.round(debtRemaining*1.88);
+  var debtAud=Math.round(debtRemaining*1.90);
   var ukRemaining=ukItems.filter(function(i){return !state.paidItems[i.id]}).reduce(function(s,i){return s+i.aud},0);
   var auRemaining=auItems.filter(function(i){return !state.paidItems[i.id]}).reduce(function(s,i){return s+i.aud},0);
   var extraCosts=state.extraCosts||[];
-  var extraRemaining=extraCosts.filter(function(i,idx){return !state.paidItems['extra_'+idx]}).reduce(function(s,i){return s+(i.currency==='gbp'?Math.round(i.amount*1.88):i.amount)},0);
+  var extraRemaining=extraCosts.filter(function(i,idx){return !state.paidItems['extra_'+idx]}).reduce(function(s,i){return s+(i.currency==='gbp'?Math.round(i.amount*1.90):i.amount)},0);
   var costTotal=debtAud+ukRemaining+auRemaining+extraRemaining;
   
   // Income
   var incomeLines=state.incomeLines||[{name:'Car sale 2',amount:14000,currency:'gbp'},{name:'Car sale 1',amount:3900,currency:'gbp'},{name:'Home item sales',amount:1500,currency:'gbp'},{name:'Wages saved',amount:1000,currency:'gbp'}];
   if(!state.incomeLines){state.incomeLines=incomeLines;save()}
   var incomeTotal=pointsCash;
-  incomeLines.forEach(function(i){incomeTotal+=(i.currency==='gbp'?Math.round(i.amount*1.88):i.amount)});
+  incomeLines.forEach(function(i){incomeTotal+=(i.currency==='gbp'?Math.round(i.amount*1.90):i.amount)});
   var netPosition=incomeTotal-costTotal;
   
-  var html='<div style="background:rgba(59,130,246,.08);padding:6px 12px;border-radius:8px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;font-size:.75rem"><span>💱 Live rate: £1 = $1.88 AUD</span><span id="fxLive" class="tm">fetching...</span></div>';
+  var html='<div style="background:rgba(59,130,246,.08);padding:6px 12px;border-radius:8px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;font-size:.75rem"><span>💱 Live rate: £1 = $1.90 AUD</span><span id="fxLive" class="tm">fetching...</span></div>';
   fetch("https://api.exchangerate-api.com/v4/latest/AUD").then(function(r){return r.json()}).then(function(d){var el=document.getElementById("fxLive");if(el)el.textContent="Live: £"+d.rates.GBP.toFixed(4)}).catch(function(){});
   
   // NET POSITION BANNER
   html+='<div class="card" style="padding:12px;border-left:4px solid '+(netPosition>=0?'var(--green)':'var(--red)')+';margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">';
-  html+='<div><div style="font-size:.7rem;color:var(--muted)">REMAINING TO PAY</div><div style="font-size:1.3rem;font-weight:700;color:var(--orange)">£'+Math.round(costTotal*0.532).toLocaleString()+' <span style="font-size:.8rem">($'+costTotal.toLocaleString()+')</span></div></div>';
-  html+='<div style="text-align:center"><div style="font-size:.7rem;color:var(--muted)">FUNDING</div><div style="font-size:1.3rem;font-weight:700;color:var(--green)">£'+Math.round(incomeTotal*0.532).toLocaleString()+'</div></div>';
-  html+='<div style="text-align:right"><div style="font-size:.7rem;color:var(--muted)">NET POSITION</div><div style="font-size:1.3rem;font-weight:700;color:'+(netPosition>=0?'var(--green)':'var(--red)')+'">'+(netPosition>=0?'+':'-')+'£'+Math.round(Math.abs(netPosition)*0.532).toLocaleString()+'</div></div>';
+  html+='<div><div style="font-size:.7rem;color:var(--muted)">REMAINING TO PAY</div><div style="font-size:1.3rem;font-weight:700;color:var(--orange)">£'+Math.round(costTotal*0.526).toLocaleString()+' <span style="font-size:.8rem">($'+costTotal.toLocaleString()+')</span></div></div>';
+  html+='<div style="text-align:center"><div style="font-size:.7rem;color:var(--muted)">FUNDING</div><div style="font-size:1.3rem;font-weight:700;color:var(--green)">£'+Math.round(incomeTotal*0.526).toLocaleString()+'</div></div>';
+  html+='<div style="text-align:right"><div style="font-size:.7rem;color:var(--muted)">NET POSITION</div><div style="font-size:1.3rem;font-weight:700;color:'+(netPosition>=0?'var(--green)':'var(--red)')+'">'+(netPosition>=0?'+':'-')+'£'+Math.round(Math.abs(netPosition)*0.526).toLocaleString()+'</div></div>';
   html+='</div><div class="pb mt2" style="height:10px"><div class="pf" style="width:'+Math.min(100,Math.round((incomeTotal-costTotal)/incomeTotal*100+50))+'%;background:'+(netPosition>=0?'var(--green)':'var(--red)')+'"></div></div></div>';
   
   // DEBTS - editable amounts + part payments + add new
@@ -364,7 +364,7 @@ function moneyOverview(){
     html+='<div style="display:flex;flex-direction:column;gap:3px;margin-top:8px">';
     extraCosts.forEach(function(item,idx){
       var paid=state.paidItems['extra_'+idx];
-      var aud=item.currency==='gbp'?Math.round(item.amount*1.88):item.amount;
+      var aud=item.currency==='gbp'?Math.round(item.amount*1.90):item.amount;
       var sym=item.currency==='gbp'?'£':'$';
       html+='<div style="display:flex;align-items:center;gap:8px;padding:5px 10px;border-radius:6px;background:'+(paid?'rgba(34,197,94,.06)':'rgba(239,68,68,.04)')+';opacity:'+(paid?'.6':'1')+'"><input type="checkbox" '+(paid?'checked':'')+' style="width:16px;height:16px" onchange="state.paidItems[\'extra_'+idx+'\']=this.checked;save();renderMoney()"><span style="flex:1;font-size:.78rem;'+(paid?'text-decoration:line-through':'')+'">'+item.name+'</span><span style="font-size:.78rem;font-weight:600">'+sym+item.amount.toLocaleString()+'</span><button class="btn btn-o" style="padding:2px 6px;color:var(--red);font-size:.65rem" onclick="state.extraCosts.splice('+idx+',1);delete state.paidItems[\'extra_'+idx+'\'];save();renderMoney()">✕</button></div>';
     });
@@ -374,11 +374,11 @@ function moneyOverview(){
   html+='<div style="display:flex;gap:4px;margin-bottom:12px"><input type="text" id="newCostName" placeholder="+ Add cost..." style="flex:1;font-size:.75rem"><select id="newCostCur" style="font-size:.7rem"><option value="gbp">£</option><option value="aud">$</option></select><input type="number" id="newCostAmt" placeholder="Amount" style="width:70px;font-size:.75rem"><button class="btn btn-o" style="padding:2px 8px;font-size:.7rem" onclick="addCostLine()">+</button></div>';
   
   // INCOME
-  html+='<div class="card" style="padding:12px;margin-bottom:8px"><h3 style="font-size:.9rem;color:var(--green)">📥 Income & Funding — £'+Math.round(incomeTotal*0.532).toLocaleString()+'</h3>';
+  html+='<div class="card" style="padding:12px;margin-bottom:8px"><h3 style="font-size:.9rem;color:var(--green)">📥 Income & Funding — £'+Math.round(incomeTotal*0.526).toLocaleString()+'</h3>';
   html+='<div style="display:flex;flex-direction:column;gap:4px;margin-top:8px">';
   html+='<div style="display:flex;justify-content:space-between;padding:6px 10px;background:rgba(59,130,246,.08);border-radius:6px;font-size:.8rem"><span>Relo points cash</span><strong>'+fG(pointsCash)+'</strong></div>';
   incomeLines.forEach(function(item,idx){
-    var aud=item.currency==='gbp'?Math.round(item.amount*1.88):item.amount;
+    var aud=item.currency==='gbp'?Math.round(item.amount*1.90):item.amount;
     var sym=item.currency==='gbp'?'£':'$';
     html+='<div style="display:flex;align-items:center;gap:8px;padding:5px 10px;background:rgba(34,197,94,.06);border-radius:6px"><span style="flex:1;font-size:.78rem">'+item.name+'</span><span style="font-size:.75rem">'+sym+'</span><input type="number" value="'+item.amount+'" style="width:70px;text-align:right;font-weight:600;font-size:.8rem" onchange="state.incomeLines['+idx+'].amount=+this.value;save();renderMoney()"><button class="btn btn-o" style="padding:2px 6px;color:var(--red);font-size:.65rem" onclick="state.incomeLines.splice('+idx+',1);save();renderMoney()">✕</button></div>';
   });
@@ -408,7 +408,7 @@ function removeDebt(id){
   save();renderMoney();
 }
 function updateForecastGBP(id,gbp){
-  var aud=Math.round(gbp*1.88);
+  var aud=Math.round(gbp*1.90);
   var item=FORECAST_ITEMS.find(function(x){return x.id===id});
   if(item)item.forecast=aud;
   if(!state.forecasts)state.forecasts={};
@@ -427,11 +427,11 @@ function addUKCost(){
   var amt=+(document.getElementById('ukNewAmt').value)||0;
   if(!desc)return;
   var id='uk_'+Date.now();
-  FORECAST_ITEMS.push({id:id,type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:desc,week:curWk(),forecastLow:amt,forecastHigh:amt,forecast:Math.round(amt*1.88),phase:2});
+  FORECAST_ITEMS.push({id:id,type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:desc,week:curWk(),forecastLow:amt,forecastHigh:amt,forecast:Math.round(amt*1.90),phase:2});
   if(!state.forecasts)state.forecasts={};
-  state.forecasts[id]=Math.round(amt*1.88);
+  state.forecasts[id]=Math.round(amt*1.90);
   if(!state.customCosts)state.customCosts=[];
-  state.customCosts.push({id:id,desc:desc,forecast:Math.round(amt*1.88),fund:'uk_wages'});
+  state.customCosts.push({id:id,desc:desc,forecast:Math.round(amt*1.90),fund:'uk_wages'});
   save();renderMoney();
 }
 function addAUCost(){
@@ -467,12 +467,12 @@ function moneyCosts(){
       '<td><button class="btn btn-o" style="padding:2px 6px;color:var(--red)" onclick="removeCost(\''+i.id+'\')">✕</button></td></tr>';
   }
   function costRowGBP(i){
-    var fc=Math.round(i.forecast*0.532);
+    var fc=Math.round(i.forecast*0.526);
     var act=state.actuals[i.id];
-    var actGBP=act!=null?Math.round(act*0.532):'';
+    var actGBP=act!=null?Math.round(act*0.526):'';
     return '<tr><td><input type="text" value="'+i.desc+'" style="min-width:140px" oninput="renameCost(\''+i.id+'\',this.value)"></td>'+
-      '<td><input type="number" class="ism" value="'+fc+'" oninput="FORECAST_ITEMS.find(function(x){return x.id===\''+i.id+'\'}).forecast=Math.round(+this.value*1.88);if(!state.forecasts)state.forecasts={};state.forecasts[\''+i.id+'\']=Math.round(+this.value*1.88);dbSave(renderMoney)"></td>'+
-      '<td><input type="number" class="ism" value="'+actGBP+'" placeholder="—" oninput="state.actuals[\''+i.id+'\']=this.value===\'\'?null:Math.round(+this.value*1.88);dbSave(renderMoney)"></td>'+
+      '<td><input type="number" class="ism" value="'+fc+'" oninput="FORECAST_ITEMS.find(function(x){return x.id===\''+i.id+'\'}).forecast=Math.round(+this.value*1.90);if(!state.forecasts)state.forecasts={};state.forecasts[\''+i.id+'\']=Math.round(+this.value*1.90);dbSave(renderMoney)"></td>'+
+      '<td><input type="number" class="ism" value="'+actGBP+'" placeholder="—" oninput="state.actuals[\''+i.id+'\']=this.value===\'\'?null:Math.round(+this.value*1.90);dbSave(renderMoney)"></td>'+
       '<td><button class="btn btn-o" style="padding:2px 6px;color:var(--red)" onclick="removeCost(\''+i.id+'\')">✕</button></td></tr>';
   }
   
@@ -494,7 +494,7 @@ function moneyCosts(){
   
   // UK PROPERTY PREP
   html+='<div class="card"><h2>🏠 UK Property Prep</h2>';
-  html+='<p class="tx tm mb2">Total: '+fGBP(Math.round(ukItems.reduce(function(s,i){return s+i.forecast},0)*0.532))+' — funded from UK wages</p>';
+  html+='<p class="tx tm mb2">Total: '+fGBP(Math.round(ukItems.reduce(function(s,i){return s+i.forecast},0)*0.526))+' — funded from UK wages</p>';
   html+='<div class="table-wrap"><table><tr><th>Item</th><th>Forecast (£)</th><th>Actual (£)</th><th></th></tr>';
   ukItems.forEach(function(i){html+=costRowGBP(i)});
   html+='</table></div></div>';
@@ -518,7 +518,7 @@ function moneyCosts(){
     html+='<p class="tx tm mb2">These are paid later and not included in the move funding calculation.</p>';
     html+='<div class="table-wrap"><table><tr><th>Item</th><th>Forecast (£)</th><th>When</th><th></th></tr>';
     deferredItems.forEach(function(i){
-      var fc=Math.round(i.forecast*0.532);
+      var fc=Math.round(i.forecast*0.526);
       html+='<tr><td>'+i.desc+'</td><td>£'+fc.toLocaleString()+'</td><td>Nov 2026</td><td></td></tr>';
     });
     html+='</table></div></div>';
@@ -668,7 +668,7 @@ function moneyAUMonthly(){
   
   var totalOut=Object.values(mCosts).reduce(function(a,b){return a+b},0);
   var disposable=totalIn-totalOut;
-  var disposableGBP=Math.round(disposable*0.532);
+  var disposableGBP=Math.round(disposable*0.526);
   var annualDisp=disposable*12;
   
   var html='';
@@ -694,7 +694,7 @@ function moneyAUMonthly(){
   html+='<div style="display:flex;justify-content:space-between;padding:6px 10px;background:rgba(34,197,94,.08);border-radius:6px"><span>Your net salary ($159k gross)</span><input type="number" value="'+salary+'" style="width:80px;text-align:right;font-weight:600" onchange="state.auSalary=+this.value;save();renderMoney()"></div>';
   html+='<div style="display:flex;justify-content:space-between;padding:6px 10px;background:rgba(34,197,94,.08);border-radius:6px"><span>UK property surplus (rent - mortgage/agent)</span><input type="number" value="'+ukSurplus+'" style="width:80px;text-align:right;font-weight:600" onchange="state.ukSurplus=+this.value;save();renderMoney()"></div>';
   html+='<div style="display:flex;justify-content:space-between;padding:6px 10px;background:rgba(34,197,94,.08);border-radius:6px"><span>Frankie income (when working)</span><input type="number" value="'+frankieIncome+'" style="width:80px;text-align:right;font-weight:600" onchange="state.frankieIncome=+this.value;save();renderMoney()"></div>';
-  html+='<div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--card2);border-radius:6px;font-weight:700"><span>TOTAL IN</span><span>$'+totalIn.toLocaleString()+' (£'+Math.round(totalIn*0.532).toLocaleString()+')</span></div>';
+  html+='<div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--card2);border-radius:6px;font-weight:700"><span>TOTAL IN</span><span>$'+totalIn.toLocaleString()+' (£'+Math.round(totalIn*0.526).toLocaleString()+')</span></div>';
   html+='</div></div>';
   
   // EXPENSES breakdown - editable
@@ -702,9 +702,9 @@ function moneyAUMonthly(){
   html+='<div style="display:flex;flex-direction:column;gap:3px">';
   var costLabels={rent:'🏠 Rent (4-bed, '+suburb+')',groceries:'🛒 Groceries (~$265/wk)',eating_out:'☕ Eating out / coffees',fuel:'⛽ Car fuel',car_lease:'🚗 Car lease (all-inclusive)',electricity:'⚡ Electricity + gas',water:'💧 Water',internet:'🌐 Internet (NBN)',health:'🏥 Health insurance (your 20%)',mobiles:'📱 Mobiles (family)',streaming:'📺 Streaming',contents_ins:'🔒 Contents insurance',kids_activities:'⚽ Kids activities',school:'📚 School supplies/excursions',clothing:'👕 Clothing/shoes',personal:'💇 Haircuts/personal',medical:'🩺 Medical/dental gap',pet:'🐕 Pet insurance + vet',household:'🏡 Household supplies',school_vol:'🎒 School voluntary (x2)'};
   Object.keys(mCosts).forEach(function(k){
-    html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 10px;background:rgba(239,68,68,.05);border-radius:6px;font-size:.8rem"><span style="flex:1">'+(costLabels[k]||k)+'</span><span style="color:var(--muted);font-size:.7rem;min-width:55px;text-align:right">£'+Math.round(mCosts[k]*0.532).toLocaleString()+'</span><input type="number" value="'+mCosts[k]+'" style="width:70px;text-align:right;font-size:.8rem" onchange="state.auMonthlyCosts.'+k+'=+this.value;if(\''+k+'\'===\'rent\')state._rentOverride=true;save();renderMoney()"></div>';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 10px;background:rgba(239,68,68,.05);border-radius:6px;font-size:.8rem"><span style="flex:1">'+(costLabels[k]||k)+'</span><span style="color:var(--muted);font-size:.7rem;min-width:55px;text-align:right">£'+Math.round(mCosts[k]*0.526).toLocaleString()+'</span><input type="number" value="'+mCosts[k]+'" style="width:70px;text-align:right;font-size:.8rem" onchange="state.auMonthlyCosts.'+k+'=+this.value;if(\''+k+'\'===\'rent\')state._rentOverride=true;save();renderMoney()"></div>';
   });
-  html+='<div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--card2);border-radius:6px;font-weight:700;margin-top:4px"><span>TOTAL OUT</span><span style="color:var(--orange)">$'+totalOut.toLocaleString()+' (£'+Math.round(totalOut*0.532).toLocaleString()+')</span></div>';
+  html+='<div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--card2);border-radius:6px;font-weight:700;margin-top:4px"><span>TOTAL OUT</span><span style="color:var(--orange)">$'+totalOut.toLocaleString()+' (£'+Math.round(totalOut*0.526).toLocaleString()+')</span></div>';
   html+='</div></div>';
   
   // What disposable income means
@@ -737,7 +737,7 @@ function moneyCashflow(){
   var cw=curWk();
   var cumulative=0;
   var budget=getBudget();
-  var totalIncome=(state.incomeLines||[]).reduce(function(s,i){return s+(i.currency==='gbp'?Math.round(i.amount*1.88):i.amount)},0)+budget;
+  var totalIncome=(state.incomeLines||[]).reduce(function(s,i){return s+(i.currency==='gbp'?Math.round(i.amount*1.90):i.amount)},0)+budget;
   
   var html='<div class="card" style="padding:12px"><h3 style="font-size:.9rem">📅 Week-by-Week Cashflow</h3>';
   html+='<p class="tx tm mb2">Shows when money goes out. Green = paid. Grey = forecast. Current week highlighted.</p>';

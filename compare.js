@@ -200,7 +200,7 @@ function initSuburbMap(){
       var s=SUBURBS_DATA.find(function(x){return x.name===sname});
       if(!s)return;
       var bed4mo=Math.round(parseInt(s.bed4)*52/12);
-      var icon=L.divIcon({html:'<div style="background:'+color+';padding:2px 6px;border-radius:10px;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,.3);font-size:10px;font-weight:700;color:#fff;white-space:nowrap">£'+Math.round(bed4mo*0.532)+'</div>',iconSize:[50,20],iconAnchor:[25,10],className:''});
+      var icon=L.divIcon({html:'<div style="background:'+color+';padding:2px 6px;border-radius:10px;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,.3);font-size:10px;font-weight:700;color:#fff;white-space:nowrap">£'+Math.round(bed4mo*0.526)+'</div>',iconSize:[50,20],iconAnchor:[25,10],className:''});
       var marker=L.marker([s.lat,s.lng],{icon:icon}).addTo(map);
       var mc=s.train<=15?5:s.train<=30?4:s.train<=45?3:s.train<=60?2:1;
       var mf=s.familyScore;var ml=Math.round((s.walk+(s.safety||3))/2);
@@ -209,7 +209,7 @@ function initSuburbMap(){
       var mvce=parseInt((s.schoolRating||'').match(/\d+/)||[0]);var msc=mvce>=32?5:mvce>=29?4:mvce>=27?3:mvce>=25?2:1;
       var mw=((mf*25+ml*20+mfi*17.5+mc*17.5+mb*10+msc*10)/100).toFixed(1);
       var mwc=mw>=4?'#16a34a':mw>=3?'#3b82f6':'#6b7280';
-      marker.bindPopup('<div style="min-width:240px"><strong>'+s.name+'</strong> <span style="background:'+mwc+';color:#fff;padding:1px 6px;border-radius:8px;font-size:.7rem">'+mw+'/5</span><br><span style="font-size:.85rem">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')<br>Train: '+s.train+' min | Beach: '+s.beach+'<br>School: '+s.school+' ('+s.schoolRating+')</span><button onclick="showSuburbDetail(\''+s.name+'\')" style="margin-top:6px;padding:4px 10px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.75rem;width:100%">View full details</button></div>');
+      marker.bindPopup('<div style="min-width:240px"><strong>'+s.name+'</strong> <span style="background:'+mwc+';color:#fff;padding:1px 6px;border-radius:8px;font-size:.7rem">'+mw+'/5</span><br><span style="font-size:.85rem">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.526)+')<br>Train: '+s.train+' min | Beach: '+s.beach+'<br>School: '+s.school+' ('+s.schoolRating+')</span><button onclick="showSuburbDetail(\''+s.name+'\')" style="margin-top:6px;padding:4px 10px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:.75rem;width:100%">View full details</button></div>');
 
     });
   });
@@ -235,8 +235,8 @@ function showSuburbDetail(name){
   el.innerHTML='<div class="flex jcb aic"><h2 style="margin:0">'+s.name+'</h2><button class="btn btn-o" style="padding:4px 10px" onclick="this.parentElement.parentElement.style.display=\'none\'">✕ Close</button></div>'+
     '<p class="ts tm">'+s.vibe+'</p>'+
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0">'+
-    '<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem">💰 Rent</h3><div style="font-size:.9rem"><strong>4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')</strong><br>3-bed: $'+bed3mo+'/mo (£'+Math.round(bed3mo*0.532)+')<br><span class="tx tm">($'+s.bed4+'/wk | $'+s.bed3+'/wk)</span></div></div>'+
-    '<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem">💰 Budget</h3><div style="font-size:.9rem">Disposable: <strong>$'+disposable+'/mo (£'+Math.round(disposable*0.532)+')</strong><br><span class="tx tm">After all expenses on $159k salary</span></div></div>'+
+    '<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem">💰 Rent</h3><div style="font-size:.9rem"><strong>4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.526)+')</strong><br>3-bed: $'+bed3mo+'/mo (£'+Math.round(bed3mo*0.526)+')<br><span class="tx tm">($'+s.bed4+'/wk | $'+s.bed3+'/wk)</span></div></div>'+
+    '<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem">💰 Budget</h3><div style="font-size:.9rem">Disposable: <strong>$'+disposable+'/mo (£'+Math.round(disposable*0.526)+')</strong><br><span class="tx tm">After all expenses on $159k salary</span></div></div>'+
     '</div>'+
     '<div class="card" style="margin:8px 0;padding:12px"><h3 style="font-size:.9rem">🚆 Location</h3><div style="font-size:.85rem">Train to CBD (MEL12): <strong>'+s.train+' min</strong><br>Beach: <strong>'+s.beach+'</strong><br>Garden: '+s.garden+'</div></div>'+
     '<div class="card" style="margin:8px 0;padding:12px"><h3 style="font-size:.9rem">🏫 School</h3><div style="font-size:.85rem"><a href="'+s.schoolLink+'" target="_blank" style="color:var(--accent)"><strong>'+s.school+'</strong></a><br>'+s.schoolRating+'<br>'+(si.students?'👥 '+si.students+' · '+si.type+'<br>':'')+( si.extra?'✨ '+si.extra:'')+'</div></div>'+
@@ -352,8 +352,8 @@ function renderShortlist2(){
     html+='<div class="card" style="border-left:4px solid var(--green);margin-top:8px">';
     html+='<h3>🏘️ '+s.name+' ⭐⭐⭐⭐⭐</h3>';
     html+='<div style="font-size:.82rem;line-height:1.8">';
-    html+='<div><strong>Rent:</strong> $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+') — $'+s.bed4+'/wk (4-bed)</div>';
-    html+='<div><strong>Disposable:</strong> $'+disposable+'/mo (£'+Math.round(disposable*0.532)+')</div>';
+    html+='<div><strong>Rent:</strong> $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.526)+') — $'+s.bed4+'/wk (4-bed)</div>';
+    html+='<div><strong>Disposable:</strong> $'+disposable+'/mo (£'+Math.round(disposable*0.526)+')</div>';
     html+='<div><strong>Train:</strong> '+s.train+' min | <strong>Beach:</strong> '+s.beach+'</div>';
     html+='<div><strong>Vibe:</strong> '+s.vibe+'</div>';
     html+='<div><strong>School:</strong> '+s.school+' ('+s.schoolRating+')</div>';
@@ -476,7 +476,7 @@ function renderSuburbsInteractive(){
       html+='<div class="flex jcb aic fw" style="gap:8px">';
       html+='<div><a href="'+mapUrl+'" target="_blank" style="color:var(--accent);font-weight:700;font-size:1rem">'+s.name+' 📍</a> <span style="background:'+_wc+';color:#fff;padding:2px 7px;border-radius:10px;font-size:.7rem;font-weight:700">'+_w+'/5</span>';
       html+='<div class="tx tm">'+s.vibe+'</div></div>';
-      var bed4mid=parseInt(s.bed4);var bed3mid=parseInt(s.bed3);var bed4mo=Math.round(bed4mid*52/12);var bed3mo=Math.round(bed3mid*52/12);html+='<div style="text-align:right"><div style="font-weight:700">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')</div><div class="tx tm">3-bed: $'+bed3mo+'/mo (£'+Math.round(bed3mo*0.532)+')</div><div class="tx tm" style="font-size:.65rem">($'+s.bed4+'/wk)</div>';
+      var bed4mid=parseInt(s.bed4);var bed3mid=parseInt(s.bed3);var bed4mo=Math.round(bed4mid*52/12);var bed3mo=Math.round(bed3mid*52/12);html+='<div style="text-align:right"><div style="font-weight:700">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.526)+')</div><div class="tx tm">3-bed: $'+bed3mo+'/mo (£'+Math.round(bed3mo*0.526)+')</div><div class="tx tm" style="font-size:.65rem">($'+s.bed4+'/wk)</div>';
       html+='<div class="tx tm">'+s.train+' min train · '+s.beach+'</div></div>';
       html+='</div>';
       
@@ -492,7 +492,7 @@ function renderSuburbsInteractive(){
       // Quick stats row
       html+='<div class="flex g2 fw mt2" style="font-size:.78rem">';
       html+='<span>🏫 <a href="'+(s.schoolLink||'')+'" target="_blank" style="color:var(--accent)">'+( s.school||'—')+'</a> ('+( s.schoolRating||'—')+')</span>';
-      html+='<span>💰 ~$'+disposable+'/mo (£'+Math.round(disposable*0.532)+') disposable</span>';
+      html+='<span>💰 ~$'+disposable+'/mo (£'+Math.round(disposable*0.526)+') disposable</span>';
       html+='</div>';
       
 
@@ -541,7 +541,7 @@ function renderSuburbsInteractive(){
       html+='<div class="flex jcb aic fw" style="gap:8px">';
       html+='<div><a href="'+mapUrl+'" target="_blank" style="color:var(--muted);font-weight:700;font-size:1rem">'+s.name+' 📍</a> <span style="background:'+_wc+';color:#fff;padding:2px 7px;border-radius:10px;font-size:.7rem;font-weight:700">'+_w+'/5</span>';
       html+='<div class="tx tm">'+s.vibe+'</div></div>';
-      html+='<div style="text-align:right"><div style="font-weight:700">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.532)+')</div>';
+      html+='<div style="text-align:right"><div style="font-weight:700">4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.526)+')</div>';
       html+='<div class="tx tm">'+s.train+' min train · '+s.beach+'</div></div>';
       html+='</div></div>';
     });
