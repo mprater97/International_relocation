@@ -71,7 +71,18 @@ const FORECAST_ITEMS = [
   {id:'co_tax',type:'oneoff',cat:'Company Funded',desc:'Tax advice service',week:1,forecastLow:0,forecastHigh:0,forecast:0,phase:1,defaultFund:'company_direct'},
   // Separate budget items (tracked but not in personal budget)
   {id:'sep_car',type:'oneoff',defaultFund:'sale_proceeds',cat:'Separate Budget',desc:'AU car (used)',week:15,forecastLow:6000,forecastHigh:10000,forecast:8000,phase:4,defaultFund:'lump_sum'},
-  {id:'sep_furniture',type:'oneoff',defaultFund:'savings',cat:'Separate Budget',desc:'AU furniture (beds, mattresses, sofa, dining, fridge, washing machine, desks, basics)',week:15,forecastLow:7000,forecastHigh:12000,forecast:10000,phase:4,defaultFund:'lump_sum'},
+  {id:'au_furn_beds',type:'oneoff',cat:'AU Furnishing',desc:'Beds + mattresses (queen + 2 singles)',week:14,forecastLow:2000,forecastHigh:3500,forecast:2800,phase:4,defaultFund:'lump_sum'},
+  {id:'au_furn_sofa',type:'oneoff',cat:'AU Furnishing',desc:'Sofa (3-seater)',week:14,forecastLow:400,forecastHigh:1200,forecast:800,phase:4,defaultFund:'lump_sum'},
+  {id:'au_furn_dining',type:'oneoff',cat:'AU Furnishing',desc:'Dining table + chairs',week:14,forecastLow:200,forecastHigh:800,forecast:500,phase:4,defaultFund:'lump_sum'},
+  {id:'au_furn_desks',type:'oneoff',cat:'AU Furnishing',desc:'Desks x3 (2 kids + 1 adult)',week:14,forecastLow:300,forecastHigh:700,forecast:500,phase:4,defaultFund:'lump_sum'},
+  {id:'au_furn_fridge',type:'oneoff',cat:'AU Furnishing',desc:'Fridge (400L+)',week:14,forecastLow:600,forecastHigh:1200,forecast:900,phase:4,defaultFund:'lump_sum'},
+  {id:'au_furn_washer',type:'oneoff',cat:'AU Furnishing',desc:'Washing machine',week:14,forecastLow:400,forecastHigh:900,forecast:650,phase:4,defaultFund:'lump_sum'},
+  {id:'au_furn_kitchen',type:'oneoff',cat:'AU Furnishing',desc:'Kitchenware (pots, pans, plates, cutlery, utensils)',week:14,forecastLow:200,forecastHigh:500,forecast:350,phase:4,defaultFund:'lump_sum'},
+  {id:'au_furn_linen',type:'oneoff',cat:'AU Furnishing',desc:'Bedding, linen, towels, pillows',week:14,forecastLow:300,forecastHigh:600,forecast:450,phase:4,defaultFund:'lump_sum'},
+  {id:'au_furn_curtains',type:'oneoff',cat:'AU Furnishing',desc:'Curtains / blinds',week:15,forecastLow:150,forecastHigh:400,forecast:250,phase:4,defaultFund:'lump_sum'},
+  {id:'au_furn_tv_unit',type:'oneoff',cat:'AU Furnishing',desc:'TV unit + bookshelf + storage',week:15,forecastLow:150,forecastHigh:400,forecast:250,phase:4,defaultFund:'lump_sum'},
+  {id:'au_furn_misc',type:'oneoff',cat:'AU Furnishing',desc:'Household basics (vacuum, iron, bins, cleaning, bathroom)',week:14,forecastLow:200,forecastHigh:500,forecast:350,phase:4,defaultFund:'lump_sum'},
+  {id:'sep_furniture',type:'oneoff',defaultFund:'savings',cat:'Separate Budget',desc:'AU furniture contingency / extras',week:15,forecastLow:0,forecastHigh:2000,forecast:1000,phase:4,defaultFund:'lump_sum'},
   {id:'sep_util',type:'oneoff',defaultFund:'savings',cat:'Separate Budget',desc:'AU utilities setup',week:15,forecastLow:100,forecastHigh:250,forecast:150,phase:4,defaultFund:'lump_sum'},
 ];
 

@@ -334,6 +334,7 @@ function moneyOverview(){
     html+='<span style="flex:1;font-size:.78rem;'+(paid?'text-decoration:line-through':'')+'">'+i.desc+'</span>';
     html+='<input type="number" value="'+i.gbp+'" style="width:60px;text-align:right;font-size:.78rem;font-weight:600" onchange="updateForecastGBP(\''+i.id+'\',+this.value)">';
     html+='<span style="font-size:.65rem;color:var(--muted)">£</span>';
+    html+='<button class="btn btn-o" style="padding:2px 5px;color:var(--red);font-size:.65rem" onclick="removeCost(\''+i.id+'\')">✕</button>';
     html+='</div>';
   });
   html+='<div style="display:flex;gap:4px;margin-top:6px"><input type="text" id="ukNewDesc" placeholder="+ Add UK cost..." style="flex:1;font-size:.75rem"><input type="number" id="ukNewAmt" placeholder="£" style="width:60px;font-size:.75rem"><button class="btn btn-o" style="padding:2px 8px;font-size:.7rem" onclick="addUKCost()">+</button></div>';
@@ -351,6 +352,7 @@ function moneyOverview(){
     html+='<span style="flex:1;font-size:.78rem;'+(paid?'text-decoration:line-through':'')+'">'+i.desc+'</span>';
     html+='<input type="number" value="'+i.aud+'" style="width:70px;text-align:right;font-size:.78rem;font-weight:600" onchange="updateForecastAUD(\''+i.id+'\',+this.value)">';
     html+='<span style="font-size:.65rem;color:var(--muted)">$</span>';
+    html+='<button class="btn btn-o" style="padding:2px 5px;color:var(--red);font-size:.65rem" onclick="removeCost(\''+i.id+'\')">✕</button>';
     html+='</div>';
   });
   html+='<div style="display:flex;gap:4px;margin-top:6px"><input type="text" id="auNewDesc" placeholder="+ Add AU cost..." style="flex:1;font-size:.75rem"><input type="number" id="auNewAmt" placeholder="$" style="width:70px;font-size:.75rem"><button class="btn btn-o" style="padding:2px 8px;font-size:.7rem" onclick="addAUCost()">+</button></div>';
