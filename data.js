@@ -49,7 +49,7 @@ const FORECAST_ITEMS = [
   {id:'paint',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Paint touch-up (£80 = ~$150 AUD)',week:6,forecastLow:94,forecastHigh:376,forecast:150,phase:2},
   {id:'clean',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Professional deep clean (£200 = ~$376 AUD)',week:7,forecastLow:282,forecastHigh:564,forecast:376,phase:2},
   {id:'photos',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Professional photos (£150 = ~$282 AUD)',week:7,forecastLow:188,forecastHigh:376,forecast:282,phase:2},
-  {id:'landlord_ins',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Landlord insurance (annual ~£960)',week:3,forecastLow:800,forecastHigh:1000,forecast:960,phase:1},
+  {id:'landlord_ins',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Landlord insurance (annual £382)',week:3,forecastLow:350,forecastHigh:420,forecast:382,phase:1},
   {id:'agent_fee',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Letting agent setup fee (LAP £358 = ~$673 AUD)',week:4,forecastLow:600,forecastHigh:700,forecast:673,phase:1},
   {id:'skip',type:'oneoff',defaultFund:'uk_wages',cat:'Declutter',desc:'Skip / bulk waste (£200 = ~$376 AUD)',week:2,forecastLow:280,forecastHigh:560,forecast:376,phase:1},
   {id:'fx_cost',type:'oneoff',defaultFund:'uk_wages',cat:'Financial',desc:'FX conversion costs (~$752 AUD)',week:3,forecastLow:564,forecastHigh:1128,forecast:752,phase:1},

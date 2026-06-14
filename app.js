@@ -626,22 +626,41 @@ async function moneyFX(){
 function addFX(){const date=document.getElementById('fxD').value,gbp=+document.getElementById('fxG').value,rate=+document.getElementById('fxR').value,aud=+document.getElementById('fxA').value,fee=+document.getElementById('fxF').value,via=document.getElementById('fxP').value;if(!gbp||!aud)return;if(!state.fx)state.fx=[];state.fx.push({date,gbp,rate:rate||aud/gbp,aud,fee,via});save();renderMoney()}
 
 function moneyUK(){
-  document.getElementById('moneySub').innerHTML=`<div class="card">
-    <h2>UK Monthly Costs — What Happens</h2>
-    <div class="table-wrap"><table><tr><th>Item</th><th>£/mo</th><th>Action</th><th>Notes</th></tr>
-    ${MONTHLY_UK.map(m=>{const a=UK_COST_ACTIONS.find(x=>x.id===m.id)||{};
-      return`<tr><td>${m.desc}</td><td>${fGBP(m.monthly_gbp)}</td>
-      <td><span class="badge b-${(a.action||'').toLowerCase()}">${a.action||'—'}</span></td>
-      <td class="tx tm">${a.note||''}</td></tr>`}).join('')}
-    <tr style="font-weight:700"><td>Current total</td><td>${fGBP(MONTHLY_UK.reduce((s,m)=>s+m.monthly_gbp,0))}/mo</td><td colspan="2"></td></tr>
-    </table></div>
-    <h3>After Move (ongoing UK costs)</h3>
-    <div class="table-wrap"><table><tr><th>Item</th><th>£/mo</th></tr>
-    ${MONTHLY_UK.filter(m=>{const a=UK_COST_ACTIONS.find(x=>x.id===m.id);return a&&['STAYS','KEEP','KEEPS','REVIEW'].includes(a.action)}).map(m=>`<tr><td>${m.desc}</td><td>${fGBP(m.monthly_gbp)}</td></tr>`).join('')}
-    <tr><td>LAP Letting Agent plan</td><td>${fGBP(109)}</td></tr>
-    <tr><td>Landlord insurance</td><td>${fGBP(80)}</td></tr>
-    <tr class="tg"><td>Rental income</td><td>+${fGBP(UK_RENTAL_INCOME)}</td></tr>
-    </table></div></div>`;
+  if(!state.ukDone)state.ukDone={};
+  var remaining=MONTHLY_UK.filter(function(m){return !state.ukDone[m.id]});
+  var done=MONTHLY_UK.filter(function(m){return state.ukDone[m.id]});
+  var html='<div class="card"><h2>UK Monthly Costs — What Happens</h2>';
+  html+='<p class="tx tm mb2">Tick items as you cancel/clear them. '+done.length+'/'+MONTHLY_UK.length+' actioned.</p>';
+  html+='<div style="display:flex;flex-direction:column;gap:3px">';
+  MONTHLY_UK.forEach(function(m){
+    var a=UK_COST_ACTIONS.find(function(x){return x.id===m.id})||{};
+    var isDone=state.ukDone[m.id];
+    html+='<div style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;background:'+(isDone?'rgba(34,197,94,.06)':'rgba(255,255,255,.02)')+';opacity:'+(isDone?'.5':'1')+'">';
+    html+='<input type="checkbox" '+(isDone?'checked':'')+' style="width:16px;height:16px" onchange="state.ukDone[\''+m.id+'\']=this.checked;save();renderMoney()">';
+    html+='<span style="flex:1;font-size:.78rem;'+(isDone?'text-decoration:line-through':'')+'">'+m.desc+'</span>';
+    html+='<span style="min-width:50px;text-align:right;font-size:.78rem;font-weight:600">£'+Math.round(m.monthly_gbp)+'</span>';
+    html+='<span class="badge b-'+(a.action||'').toLowerCase()+'" style="font-size:.6rem;min-width:50px;text-align:center">'+(a.action||'—')+'</span>';
+    html+='<span style="font-size:.65rem;color:var(--muted);min-width:100px">'+( a.note||'')+'</span>';
+    html+='</div>';
+  });
+  html+='</div>';
+  html+='<div style="margin-top:8px;padding:8px 12px;background:var(--card2);border-radius:8px;display:flex;justify-content:space-between;font-weight:700;font-size:.85rem"><span>Remaining monthly</span><span style="color:var(--orange)">£'+remaining.reduce(function(s,m){return s+m.monthly_gbp},0).toLocaleString()+'/mo</span></div>';
+  html+='</div>';
+  
+  html+='<div class="card"><h3>After Move (ongoing UK costs)</h3>';
+  html+='<div class="table-wrap"><table><tr><th>Item</th><th>£/mo</th></tr>';
+  MONTHLY_UK.filter(function(m){var a=UK_COST_ACTIONS.find(function(x){return x.id===m.id});return a&&['STAYS','KEEP','KEEPS','REVIEW'].indexOf(a.action)>=0}).forEach(function(m){
+    html+='<tr><td>'+m.desc+'</td><td>£'+Math.round(m.monthly_gbp)+'</td></tr>';
+  });
+  html+='<tr><td>LAP Letting Agent plan</td><td>£109</td></tr>';
+  html+='<tr><td>Landlord insurance (£382/yr)</td><td>£29</td></tr>';
+  html+='<tr class="tg"><td>Rental income</td><td>+£'+UK_RENTAL_INCOME+'</td></tr>';
+  var postMoveCosts=MONTHLY_UK.filter(function(m){var a=UK_COST_ACTIONS.find(function(x){return x.id===m.id});return a&&['STAYS','KEEP','KEEPS','REVIEW'].indexOf(a.action)>=0}).reduce(function(s,m){return s+m.monthly_gbp},0)+109+29;
+  var surplus=UK_RENTAL_INCOME-postMoveCosts;
+  html+='<tr style="font-weight:700"><td>Net monthly</td><td style="color:'+(surplus>=0?'var(--green)':'var(--red)')+'">'+(surplus>=0?'+':'-')+'£'+Math.abs(Math.round(surplus))+'</td></tr>';
+  html+='</table></div></div>';
+  
+  document.getElementById('moneySub').innerHTML=html;
 }
 
 // ===== AU MONTHLY BUDGET (adaptive to suburb) =====
