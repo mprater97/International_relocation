@@ -1,5 +1,7 @@
 // ===== STATE =====
 let state=load();
+// Restore custom costs into FORECAST_ITEMS
+(function(){if(state.customCosts&&state.customCosts.length){state.customCosts.forEach(function(c){if(!FORECAST_ITEMS.find(function(x){return x.id===c.id})){FORECAST_ITEMS.push({id:c.id,type:'oneoff',defaultFund:c.fund,cat:c.fund==='uk_wages'?'UK Property':'AU Setup',desc:c.desc,week:10,forecastLow:c.forecast,forecastHigh:c.forecast,forecast:c.forecast,phase:c.fund==='uk_wages'?2:4})}})}})();
 function defaults(){return{auStart:null,moveDate:null,lumpSum:14900,checked:{},actuals:{},funding:{},forecasts:{},contacts:{},decisions:{},weeklySpend:{},fx:[],income:[],debtPaid:{},debts:null,journal:{},riskStatus:{},docChecked:{},todos:[],customTasks:[],customCosts:[],customDocs:[],pins:[],_collapsed:{}}}
 function load(){
   var d=defaults();
@@ -304,35 +306,56 @@ function moneyOverview(){
   html+='<div style="text-align:right"><div style="font-size:.7rem;color:var(--muted)">NET POSITION</div><div style="font-size:1.3rem;font-weight:700;color:'+(netPosition>=0?'var(--green)':'var(--red)')+'">'+(netPosition>=0?'+':'-')+'£'+Math.round(Math.abs(netPosition)*0.532).toLocaleString()+'</div></div>';
   html+='</div><div class="pb mt2" style="height:10px"><div class="pf" style="width:'+Math.min(100,Math.round((incomeTotal-costTotal)/incomeTotal*100+50))+'%;background:'+(netPosition>=0?'var(--green)':'var(--red)')+'"></div></div></div>';
   
-  // DEBTS - tick off as cleared
+  // DEBTS - editable amounts + part payments + add new
   html+='<div class="card" style="padding:12px;margin-bottom:8px"><h3 style="font-size:.9rem;color:var(--red)">🔴 Debts to Clear — £'+debtRemaining.toLocaleString()+' remaining</h3>';
+  html+='<div style="font-size:.7rem;color:var(--muted);margin-bottom:6px">Edit owed/paid amounts directly. Tick when fully cleared.</div>';
   html+='<div style="display:flex;flex-direction:column;gap:4px;margin-top:8px">';
   debts.forEach(function(d){
     var cleared=d.left<=0;
-    html+='<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:'+(cleared?'rgba(34,197,94,.08)':'rgba(239,68,68,.05)')+';opacity:'+(cleared?'.6':'1')+'"><input type="checkbox" '+(cleared?'checked disabled':'')+' style="width:18px;height:18px"'+(cleared?'':' onchange="markDebtPaid(\''+d.id+'\',this.checked)"')+'><span style="flex:1;font-size:.8rem;'+(cleared?'text-decoration:line-through':'')+'">'+d.desc+'</span><span style="font-size:.8rem;font-weight:600;min-width:70px;text-align:right;color:'+(cleared?'var(--green)':'var(--text)')+'">£'+(cleared?'0':d.left.toLocaleString())+'</span></div>';
+    html+='<div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:6px;background:'+(cleared?'rgba(34,197,94,.08)':'rgba(239,68,68,.05)')+';opacity:'+(cleared?'.6':'1')+'">';
+    html+='<input type="checkbox" '+(cleared?'checked':'')+' style="width:18px;height:18px" onchange="markDebtPaid(\''+d.id+'\',this.checked)">';
+    html+='<input type="text" value="'+d.desc+'" style="flex:1;min-width:100px;background:transparent;border:none;border-bottom:1px dashed rgba(255,255,255,.15);color:var(--text);font-size:.78rem" onchange="renameDebt(\''+d.id+'\',this.value)">';
+    html+='<div style="display:flex;align-items:center;gap:4px;font-size:.7rem"><span>Owed:</span><input type="number" value="'+d.owed+'" style="width:60px;text-align:right;font-size:.78rem" onchange="updDebt(\''+d.id+'\',+this.value)"></div>';
+    html+='<div style="display:flex;align-items:center;gap:4px;font-size:.7rem"><span>Paid:</span><input type="number" value="'+(d.paid||0)+'" style="width:60px;text-align:right;font-size:.78rem" onchange="if(!state.debtPaid)state.debtPaid={};state.debtPaid[\''+d.id+'\']=+this.value;save();renderMoney()"></div>';
+    html+='<span style="font-size:.78rem;font-weight:600;min-width:55px;text-align:right;color:'+(cleared?'var(--green)':'var(--red)')+'">£'+d.left.toLocaleString()+'</span>';
+    html+='<button class="btn btn-o" style="padding:2px 5px;color:var(--red);font-size:.65rem" onclick="removeDebt(\''+d.id+'\')">✕</button>';
+    html+='</div>';
   });
+  html+='<div style="display:flex;gap:4px;margin-top:6px"><input type="text" id="ndDesc" placeholder="+ Add debt..." style="flex:1;font-size:.75rem"><input type="number" id="ndAmt" placeholder="Owed £" style="width:70px;font-size:.75rem"><button class="btn btn-o" style="padding:2px 8px;font-size:.7rem" onclick="addDebt()">+</button></div>';
   html+='</div></div>';
   
-  // UK PROPERTY PREP - tick off items
+  // UK PROPERTY PREP - editable + tickable + add new
   var ukTotal=ukItems.reduce(function(s,i){return s+i.gbp},0);
   var ukPaid=ukItems.filter(function(i){return state.paidItems[i.id]}).reduce(function(s,i){return s+i.gbp},0);
   html+='<div class="card" style="padding:12px;margin-bottom:8px"><h3 style="font-size:.9rem;color:var(--orange)">🏠 UK Property Prep — £'+(ukTotal-ukPaid).toLocaleString()+' remaining <span style="font-size:.7rem;color:var(--muted)">(£'+ukPaid.toLocaleString()+' paid)</span></h3>';
   html+='<div style="display:flex;flex-direction:column;gap:3px;margin-top:8px">';
   ukItems.forEach(function(i){
     var paid=state.paidItems[i.id];
-    html+='<div style="display:flex;align-items:center;gap:8px;padding:5px 10px;border-radius:6px;background:'+(paid?'rgba(34,197,94,.06)':'rgba(239,68,68,.04)')+';opacity:'+(paid?'.6':'1')+'"><input type="checkbox" '+(paid?'checked':'')+' style="width:16px;height:16px" onchange="state.paidItems[\''+i.id+'\']=this.checked;save();renderMoney()"><span style="flex:1;font-size:.78rem;'+(paid?'text-decoration:line-through':'')+'">'+i.desc+'</span><span style="font-size:.78rem;font-weight:600;min-width:60px;text-align:right;color:'+(paid?'var(--green)':'var(--text)')+'">£'+i.gbp.toLocaleString()+'</span></div>';
+    html+='<div style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;background:'+(paid?'rgba(34,197,94,.06)':'rgba(239,68,68,.04)')+';opacity:'+(paid?'.6':'1')+'">';
+    html+='<input type="checkbox" '+(paid?'checked':'')+' style="width:16px;height:16px" onchange="state.paidItems[\''+i.id+'\']=this.checked;save();renderMoney()">';
+    html+='<span style="flex:1;font-size:.78rem;'+(paid?'text-decoration:line-through':'')+'">'+i.desc+'</span>';
+    html+='<input type="number" value="'+i.gbp+'" style="width:60px;text-align:right;font-size:.78rem;font-weight:600" onchange="updateForecastGBP(\''+i.id+'\',+this.value)">';
+    html+='<span style="font-size:.65rem;color:var(--muted)">£</span>';
+    html+='</div>';
   });
+  html+='<div style="display:flex;gap:4px;margin-top:6px"><input type="text" id="ukNewDesc" placeholder="+ Add UK cost..." style="flex:1;font-size:.75rem"><input type="number" id="ukNewAmt" placeholder="£" style="width:60px;font-size:.75rem"><button class="btn btn-o" style="padding:2px 8px;font-size:.7rem" onclick="addUKCost()">+</button></div>';
   html+='</div></div>';
   
-  // AU SETUP - tick off items
+  // AU SETUP - editable + tickable + add new
   var auTotal=auItems.reduce(function(s,i){return s+i.aud},0);
   var auPaid=auItems.filter(function(i){return state.paidItems[i.id]}).reduce(function(s,i){return s+i.aud},0);
   html+='<div class="card" style="padding:12px;margin-bottom:8px"><h3 style="font-size:.9rem;color:var(--orange)">🦘 AU Setup — $'+(auTotal-auPaid).toLocaleString()+' remaining <span style="font-size:.7rem;color:var(--muted)">($'+auPaid.toLocaleString()+' paid)</span></h3>';
   html+='<div style="display:flex;flex-direction:column;gap:3px;margin-top:8px">';
   auItems.forEach(function(i){
     var paid=state.paidItems[i.id];
-    html+='<div style="display:flex;align-items:center;gap:8px;padding:5px 10px;border-radius:6px;background:'+(paid?'rgba(34,197,94,.06)':'rgba(239,68,68,.04)')+';opacity:'+(paid?'.6':'1')+'"><input type="checkbox" '+(paid?'checked':'')+' style="width:16px;height:16px" onchange="state.paidItems[\''+i.id+'\']=this.checked;save();renderMoney()"><span style="flex:1;font-size:.78rem;'+(paid?'text-decoration:line-through':'')+'">'+i.desc+'</span><span style="font-size:.78rem;font-weight:600;min-width:60px;text-align:right;color:'+(paid?'var(--green)':'var(--text)')+'">$'+i.aud.toLocaleString()+' <span style="font-size:.65rem;color:var(--muted)">(£'+i.gbp.toLocaleString()+')</span></span></div>';
+    html+='<div style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;background:'+(paid?'rgba(34,197,94,.06)':'rgba(239,68,68,.04)')+';opacity:'+(paid?'.6':'1')+'">';
+    html+='<input type="checkbox" '+(paid?'checked':'')+' style="width:16px;height:16px" onchange="state.paidItems[\''+i.id+'\']=this.checked;save();renderMoney()">';
+    html+='<span style="flex:1;font-size:.78rem;'+(paid?'text-decoration:line-through':'')+'">'+i.desc+'</span>';
+    html+='<input type="number" value="'+i.aud+'" style="width:70px;text-align:right;font-size:.78rem;font-weight:600" onchange="updateForecastAUD(\''+i.id+'\',+this.value)">';
+    html+='<span style="font-size:.65rem;color:var(--muted)">$</span>';
+    html+='</div>';
   });
+  html+='<div style="display:flex;gap:4px;margin-top:6px"><input type="text" id="auNewDesc" placeholder="+ Add AU cost..." style="flex:1;font-size:.75rem"><input type="number" id="auNewAmt" placeholder="$" style="width:70px;font-size:.75rem"><button class="btn btn-o" style="padding:2px 8px;font-size:.7rem" onclick="addAUCost()">+</button></div>';
   html+='</div></div>';
   
   // EXTRA COSTS - tick off
@@ -371,6 +394,56 @@ function markDebtPaid(id,checked){
   var d=getDebts().find(function(x){return x.id===id});
   if(checked&&d)state.debtPaid[id]=d.owed;
   else state.debtPaid[id]=0;
+  save();renderMoney();
+}
+function renameDebt(id,name){
+  if(!state.debts)state.debts=DEFAULT_DEBTS.map(function(d){return Object.assign({},d)});
+  var d=state.debts.find(function(x){return x.id===id});
+  if(d)d.desc=name;
+  save();
+}
+function removeDebt(id){
+  if(!state.debts)state.debts=DEFAULT_DEBTS.map(function(d){return Object.assign({},d)});
+  state.debts=state.debts.filter(function(x){return x.id!==id});
+  save();renderMoney();
+}
+function updateForecastGBP(id,gbp){
+  var aud=Math.round(gbp*1.88);
+  var item=FORECAST_ITEMS.find(function(x){return x.id===id});
+  if(item)item.forecast=aud;
+  if(!state.forecasts)state.forecasts={};
+  state.forecasts[id]=aud;
+  save();renderMoney();
+}
+function updateForecastAUD(id,aud){
+  var item=FORECAST_ITEMS.find(function(x){return x.id===id});
+  if(item)item.forecast=aud;
+  if(!state.forecasts)state.forecasts={};
+  state.forecasts[id]=aud;
+  save();renderMoney();
+}
+function addUKCost(){
+  var desc=document.getElementById('ukNewDesc').value;
+  var amt=+(document.getElementById('ukNewAmt').value)||0;
+  if(!desc)return;
+  var id='uk_'+Date.now();
+  FORECAST_ITEMS.push({id:id,type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:desc,week:curWk(),forecastLow:amt,forecastHigh:amt,forecast:Math.round(amt*1.88),phase:2});
+  if(!state.forecasts)state.forecasts={};
+  state.forecasts[id]=Math.round(amt*1.88);
+  if(!state.customCosts)state.customCosts=[];
+  state.customCosts.push({id:id,desc:desc,forecast:Math.round(amt*1.88),fund:'uk_wages'});
+  save();renderMoney();
+}
+function addAUCost(){
+  var desc=document.getElementById('auNewDesc').value;
+  var amt=+(document.getElementById('auNewAmt').value)||0;
+  if(!desc)return;
+  var id='au_'+Date.now();
+  FORECAST_ITEMS.push({id:id,type:'oneoff',defaultFund:'lump_sum',cat:'AU Setup',desc:desc,week:curWk(),forecastLow:amt,forecastHigh:amt,forecast:amt,phase:4});
+  if(!state.forecasts)state.forecasts={};
+  state.forecasts[id]=amt;
+  if(!state.customCosts)state.customCosts=[];
+  state.customCosts.push({id:id,desc:desc,forecast:amt,fund:'lump_sum'});
   save();renderMoney();
 }
 
