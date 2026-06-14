@@ -652,10 +652,10 @@ function moneyUK(){
   MONTHLY_UK.filter(function(m){var a=UK_COST_ACTIONS.find(function(x){return x.id===m.id});return a&&['STAYS','KEEP','KEEPS','REVIEW'].indexOf(a.action)>=0}).forEach(function(m){
     html+='<tr><td>'+m.desc+'</td><td>£'+Math.round(m.monthly_gbp)+'</td></tr>';
   });
-  html+='<tr><td>LAP Letting Agent plan</td><td>£109</td></tr>';
+  html+='<tr><td>LAP Letting Agent plan (£1,044/yr)</td><td>£87</td></tr>';
   html+='<tr><td>Landlord insurance (£382/yr)</td><td>£29</td></tr>';
   html+='<tr class="tg"><td>Rental income</td><td>+£'+UK_RENTAL_INCOME+'</td></tr>';
-  var postMoveCosts=MONTHLY_UK.filter(function(m){var a=UK_COST_ACTIONS.find(function(x){return x.id===m.id});return a&&['STAYS','KEEP','KEEPS','REVIEW'].indexOf(a.action)>=0}).reduce(function(s,m){return s+m.monthly_gbp},0)+109+29;
+  var postMoveCosts=MONTHLY_UK.filter(function(m){var a=UK_COST_ACTIONS.find(function(x){return x.id===m.id});return a&&['STAYS','KEEP','KEEPS','REVIEW'].indexOf(a.action)>=0}).reduce(function(s,m){return s+m.monthly_gbp},0)+87+29;
   var surplus=UK_RENTAL_INCOME-postMoveCosts;
   html+='<tr style="font-weight:700"><td>Net monthly</td><td style="color:'+(surplus>=0?'var(--green)':'var(--red)')+'">'+(surplus>=0?'+':'-')+'£'+Math.abs(Math.round(surplus))+'</td></tr>';
   html+='</table></div></div>';

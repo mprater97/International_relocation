@@ -50,7 +50,7 @@ const FORECAST_ITEMS = [
   {id:'clean',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Professional deep clean (£200 = ~$376 AUD)',week:7,forecastLow:282,forecastHigh:564,forecast:376,phase:2},
   {id:'photos',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Professional photos (£150 = ~$282 AUD)',week:7,forecastLow:188,forecastHigh:376,forecast:282,phase:2},
   {id:'landlord_ins',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Landlord insurance (annual £382)',week:3,forecastLow:350,forecastHigh:420,forecast:382,phase:1},
-  {id:'agent_fee',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Letting agent setup fee (LAP £358 = ~$673 AUD)',week:4,forecastLow:600,forecastHigh:700,forecast:673,phase:1},
+  {id:'agent_fee',type:'oneoff',defaultFund:'uk_wages',cat:'UK Property',desc:'Letting agent setup fee (LAP £87/mo plan, £358 setup = ~$673 AUD)',week:4,forecastLow:600,forecastHigh:700,forecast:673,phase:1},
   {id:'skip',type:'oneoff',defaultFund:'uk_wages',cat:'Declutter',desc:'Skip / bulk waste (£200 = ~$376 AUD)',week:2,forecastLow:280,forecastHigh:560,forecast:376,phase:1},
   {id:'fx_cost',type:'oneoff',defaultFund:'uk_wages',cat:'Financial',desc:'FX conversion costs (~$752 AUD)',week:3,forecastLow:564,forecastHigh:1128,forecast:752,phase:1},
   {id:'mail_redirect',type:'oneoff',defaultFund:'uk_wages',cat:'UK Exit',desc:'Royal Mail redirect 12mo (£80 = ~$150 AUD)',week:8,forecastLow:110,forecastHigh:190,forecast:150,phase:2},
@@ -138,7 +138,7 @@ const MONTHLY_UK = [
   {id:'m_mbna',desc:'MBNA',monthly_gbp:200.00},
   {id:'m_klarna',desc:'Klarna (Vic Plumb)',monthly_gbp:46.98},
   {id:'m_vk12',desc:'VK12 Bike Finance',monthly_gbp:83.56},
-  {id:'m_agent_lap',desc:'LAP Letting Agent Plan',monthly_gbp:109},
+  {id:'m_agent_lap',desc:'LAP Letting Agent Plan',monthly_gbp:87},
 ];
 const UK_RENTAL_INCOME = 1400;
 
