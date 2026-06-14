@@ -263,116 +263,115 @@ function moneyOverview(){
   var servicesData={temp30:{pts:70,market:3600},temp45:{pts:105,market:5400},temp60:{pts:140,market:7200},shipping:{pts:190,market:2882},flights:{pts:15,market:6542},car:{pts:15,market:1050},homefind:{pts:35,market:1000}};
   var pointsMarketCost=0;
   Object.keys(selectedServices).forEach(function(k){if(selectedServices[k]&&servicesData[k])pointsMarketCost+=servicesData[k].market});
+  var pointsCash=budget;
+  if(!state.paidItems)state.paidItems={};
   
-  // Dynamic calculations from actual data
-  var debts=getDebts();
-  var debtTotal=debts.reduce(function(s,d){return s+d.left},0); // remaining debt in GBP
-  var debtAud=Math.round(debtTotal*1.88);
-  
-  // Calculate costs by funding source from FORECAST_ITEMS
+  // Build itemised cost lists
   var coSep=['co_visa','co_flights','co_temp','co_tax','sep_car','sep_furniture','sep_util'];
-  var ukPrepCosts=0;var auSetupCosts=0;
+  var debts=getDebts();
+  var ukItems=[];var auItems=[];
   FORECAST_ITEMS.forEach(function(i){
     if(coSep.indexOf(i.id)>=0)return;
     var fund=(state.funding||{})[i.id]||i.defaultFund||'lump_sum';
     var amt=state.actuals[i.id]!=null?state.actuals[i.id]:(state.forecasts&&state.forecasts[i.id]?state.forecasts[i.id]:i.forecast);
-    if(fund==='uk_wages')ukPrepCosts+=amt;
-    else if(fund==='lump_sum')auSetupCosts+=amt;
+    if(fund==='uk_wages')ukItems.push({id:i.id,desc:i.desc,aud:amt,gbp:Math.round(amt*0.532)});
+    else if(fund==='lump_sum')auItems.push({id:i.id,desc:i.desc,aud:amt,gbp:Math.round(amt*0.532)});
   });
-  // totalCosts calculated from costLines below
   
-  // Income - use state values so user can edit
-  var savings=state.savings||0;
-  var carSale2=state.carSale2||Math.round(14000*1.88);
-  var carSale1=state.carSale1||Math.round(3900*1.88);
-  var homeSales=state.homeSales||Math.round(1500*1.88);
-  var wagesSaved=state.wagesSaved||Math.round(1000*1.88);
-  var pointsCash=budget;
-  // totalIncome calculated from incomeLines below
-  // netPosition calculated after rendering sections
-  
-  var html='<div style="background:rgba(59,130,246,.08);padding:6px 12px;border-radius:8px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;font-size:.75rem"><span>💱 Live rate: <strong>$1 AUD = £0.532</strong> | £1 = $1.88 AUD | $1 USD = $1.55 AUD</span><span id="fxLive" class="tm">fetching...</span></div>';
-  fetch("https://api.exchangerate-api.com/v4/latest/AUD").then(function(r){return r.json()}).then(function(d){var el=document.getElementById("fxLive");if(el)el.textContent="Live: £"+d.rates.GBP.toFixed(4)}).catch(function(){var el=document.getElementById("fxLive");if(el)el.textContent=""});
-  html+=renderPointsAllocator();
-  
-  html+='<div style="display:flex;flex-direction:column;gap:10px;margin-top:16px">';
-  
-  // COSTS
-  html+='<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem;color:var(--orange)">📤 Forecast Costs</h3>';
-  html+='<div style="display:flex;flex-direction:column;gap:6px">';
-  // Core costs - all shown as £ with ($) since Mike thinks in £
-  var coreCosts=[
-    {name:'Debts to clear',aud:debtAud,gbp:debtTotal},
-    {name:'UK property prep',aud:ukPrepCosts,gbp:Math.round(ukPrepCosts*0.532)},
-    {name:'AU setup (bond, ship, dog)',aud:auSetupCosts,gbp:Math.round(auSetupCosts*0.532)}
-  ];
+  // Calculate totals (only unpaid items count)
+  var debtRemaining=debts.reduce(function(s,d){return s+d.left},0);
+  var debtAud=Math.round(debtRemaining*1.88);
+  var ukRemaining=ukItems.filter(function(i){return !state.paidItems[i.id]}).reduce(function(s,i){return s+i.aud},0);
+  var auRemaining=auItems.filter(function(i){return !state.paidItems[i.id]}).reduce(function(s,i){return s+i.aud},0);
   var extraCosts=state.extraCosts||[];
-  var costTotal=0;
-  coreCosts.forEach(function(item){
-    costTotal+=item.aud;
-    html+='<div style="background:rgba(239,68,68,.08);padding:8px 12px;border-radius:8px;display:flex;align-items:center;gap:8px"><span style="flex:2;font-size:.8rem">'+item.name+'</span><strong style="min-width:80px;text-align:right;font-size:.85rem">\u00a3'+item.gbp.toLocaleString()+' <span style="font-size:.7rem;color:var(--muted)">($'+item.aud.toLocaleString()+')</span></strong></div>';
+  var extraRemaining=extraCosts.filter(function(i,idx){return !state.paidItems['extra_'+idx]}).reduce(function(s,i){return s+(i.currency==='gbp'?Math.round(i.amount*1.88):i.amount)},0);
+  var costTotal=debtAud+ukRemaining+auRemaining+extraRemaining;
+  
+  // Income
+  var incomeLines=state.incomeLines||[{name:'Car sale 2',amount:14000,currency:'gbp'},{name:'Car sale 1',amount:3900,currency:'gbp'},{name:'Home item sales',amount:1500,currency:'gbp'},{name:'Wages saved',amount:1000,currency:'gbp'}];
+  if(!state.incomeLines){state.incomeLines=incomeLines;save()}
+  var incomeTotal=pointsCash;
+  incomeLines.forEach(function(i){incomeTotal+=(i.currency==='gbp'?Math.round(i.amount*1.88):i.amount)});
+  var netPosition=incomeTotal-costTotal;
+  
+  var html='<div style="background:rgba(59,130,246,.08);padding:6px 12px;border-radius:8px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;font-size:.75rem"><span>💱 Live rate: £1 = $1.88 AUD</span><span id="fxLive" class="tm">fetching...</span></div>';
+  fetch("https://api.exchangerate-api.com/v4/latest/AUD").then(function(r){return r.json()}).then(function(d){var el=document.getElementById("fxLive");if(el)el.textContent="Live: £"+d.rates.GBP.toFixed(4)}).catch(function(){});
+  
+  // NET POSITION BANNER
+  html+='<div class="card" style="padding:12px;border-left:4px solid '+(netPosition>=0?'var(--green)':'var(--red)')+';margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">';
+  html+='<div><div style="font-size:.7rem;color:var(--muted)">REMAINING TO PAY</div><div style="font-size:1.3rem;font-weight:700;color:var(--orange)">£'+Math.round(costTotal*0.532).toLocaleString()+' <span style="font-size:.8rem">($'+costTotal.toLocaleString()+')</span></div></div>';
+  html+='<div style="text-align:center"><div style="font-size:.7rem;color:var(--muted)">FUNDING</div><div style="font-size:1.3rem;font-weight:700;color:var(--green)">£'+Math.round(incomeTotal*0.532).toLocaleString()+'</div></div>';
+  html+='<div style="text-align:right"><div style="font-size:.7rem;color:var(--muted)">NET POSITION</div><div style="font-size:1.3rem;font-weight:700;color:'+(netPosition>=0?'var(--green)':'var(--red)')+'">'+(netPosition>=0?'+':'-')+'£'+Math.round(Math.abs(netPosition)*0.532).toLocaleString()+'</div></div>';
+  html+='</div><div class="pb mt2" style="height:10px"><div class="pf" style="width:'+Math.min(100,Math.round((incomeTotal-costTotal)/incomeTotal*100+50))+'%;background:'+(netPosition>=0?'var(--green)':'var(--red)')+'"></div></div></div>';
+  
+  // DEBTS - tick off as cleared
+  html+='<div class="card" style="padding:12px;margin-bottom:8px"><h3 style="font-size:.9rem;color:var(--red)">🔴 Debts to Clear — £'+debtRemaining.toLocaleString()+' remaining</h3>';
+  html+='<div style="display:flex;flex-direction:column;gap:4px;margin-top:8px">';
+  debts.forEach(function(d){
+    var cleared=d.left<=0;
+    html+='<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:'+(cleared?'rgba(34,197,94,.08)':'rgba(239,68,68,.05)')+';opacity:'+(cleared?'.6':'1')+'"><input type="checkbox" '+(cleared?'checked disabled':'')+' style="width:18px;height:18px"'+(cleared?'':' onchange="markDebtPaid(\''+d.id+'\',this.checked)"')+'><span style="flex:1;font-size:.8rem;'+(cleared?'text-decoration:line-through':'')+'">'+d.desc+'</span><span style="font-size:.8rem;font-weight:600;min-width:70px;text-align:right;color:'+(cleared?'var(--green)':'var(--text)')+'">£'+(cleared?'0':d.left.toLocaleString())+'</span></div>';
   });
-  extraCosts.forEach(function(item,idx){
-    var aud=item.currency==='gbp'?Math.round(item.amount*1.88):item.amount;
-    costTotal+=aud;
-    var conv=item.currency==='gbp'?'($'+aud.toLocaleString()+')':'(\u00a3'+Math.round(item.amount*0.532).toLocaleString()+')';
-    var sym=item.currency==='gbp'?'\u00a3':'$';
-    html+='<div style="background:rgba(239,68,68,.08);padding:8px 12px;border-radius:8px;display:flex;align-items:center;gap:8px"><input type="text" value="'+item.name+'" style="flex:2;min-width:120px;background:transparent;border:none;border-bottom:1px dashed rgba(255,255,255,.2);color:var(--text);font-size:.8rem;padding:2px 0" onchange="state.extraCosts['+idx+'].name=this.value;save()"><span style="font-size:.75rem">'+sym+'</span><input type="number" value="'+item.amount+'" style="flex:1;max-width:80px;text-align:right;font-weight:600;font-size:.85rem" onchange="state.extraCosts['+idx+'].amount=+this.value;save();renderMoney()"><span style="font-size:.7rem;color:var(--muted);min-width:60px;text-align:right">'+conv+'</span><button class="btn btn-o" style="padding:2px 6px;color:var(--red);font-size:.7rem" onclick="state.extraCosts.splice('+idx+',1);save();renderMoney()">\u2715</button></div>';
-  });
-
-  html+='<div style="display:flex;gap:4px;margin-top:4px"><input type="text" id="newCostName" placeholder="+ Add cost..." style="flex:1;font-size:.75rem"><select id="newCostCur" style="font-size:.7rem"><option value="gbp">£</option><option value="aud">$</option></select><input type="number" id="newCostAmt" placeholder="Amount" style="width:70px;font-size:.75rem"><button class="btn btn-o" style="padding:2px 8px;font-size:.7rem" onclick="addCostLine()">+</button></div>';
-  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>TOTAL COSTS</span><span style="color:var(--orange)">\u00a3'+Math.round(costTotal*0.532).toLocaleString()+' ($'+costTotal.toLocaleString()+')</span></div>';
   html+='</div></div>';
+  
+  // UK PROPERTY PREP - tick off items
+  var ukTotal=ukItems.reduce(function(s,i){return s+i.gbp},0);
+  var ukPaid=ukItems.filter(function(i){return state.paidItems[i.id]}).reduce(function(s,i){return s+i.gbp},0);
+  html+='<div class="card" style="padding:12px;margin-bottom:8px"><h3 style="font-size:.9rem;color:var(--orange)">🏠 UK Property Prep — £'+(ukTotal-ukPaid).toLocaleString()+' remaining <span style="font-size:.7rem;color:var(--muted)">(£'+ukPaid.toLocaleString()+' paid)</span></h3>';
+  html+='<div style="display:flex;flex-direction:column;gap:3px;margin-top:8px">';
+  ukItems.forEach(function(i){
+    var paid=state.paidItems[i.id];
+    html+='<div style="display:flex;align-items:center;gap:8px;padding:5px 10px;border-radius:6px;background:'+(paid?'rgba(34,197,94,.06)':'rgba(239,68,68,.04)')+';opacity:'+(paid?'.6':'1')+'"><input type="checkbox" '+(paid?'checked':'')+' style="width:16px;height:16px" onchange="state.paidItems[\''+i.id+'\']=this.checked;save();renderMoney()"><span style="flex:1;font-size:.78rem;'+(paid?'text-decoration:line-through':'')+'">'+i.desc+'</span><span style="font-size:.78rem;font-weight:600;min-width:60px;text-align:right;color:'+(paid?'var(--green)':'var(--text)')+'">£'+i.gbp.toLocaleString()+'</span></div>';
+  });
+  html+='</div></div>';
+  
+  // AU SETUP - tick off items
+  var auTotal=auItems.reduce(function(s,i){return s+i.aud},0);
+  var auPaid=auItems.filter(function(i){return state.paidItems[i.id]}).reduce(function(s,i){return s+i.aud},0);
+  html+='<div class="card" style="padding:12px;margin-bottom:8px"><h3 style="font-size:.9rem;color:var(--orange)">🦘 AU Setup — $'+(auTotal-auPaid).toLocaleString()+' remaining <span style="font-size:.7rem;color:var(--muted)">($'+auPaid.toLocaleString()+' paid)</span></h3>';
+  html+='<div style="display:flex;flex-direction:column;gap:3px;margin-top:8px">';
+  auItems.forEach(function(i){
+    var paid=state.paidItems[i.id];
+    html+='<div style="display:flex;align-items:center;gap:8px;padding:5px 10px;border-radius:6px;background:'+(paid?'rgba(34,197,94,.06)':'rgba(239,68,68,.04)')+';opacity:'+(paid?'.6':'1')+'"><input type="checkbox" '+(paid?'checked':'')+' style="width:16px;height:16px" onchange="state.paidItems[\''+i.id+'\']=this.checked;save();renderMoney()"><span style="flex:1;font-size:.78rem;'+(paid?'text-decoration:line-through':'')+'">'+i.desc+'</span><span style="font-size:.78rem;font-weight:600;min-width:60px;text-align:right;color:'+(paid?'var(--green)':'var(--text)')+'">$'+i.aud.toLocaleString()+' <span style="font-size:.65rem;color:var(--muted)">(£'+i.gbp.toLocaleString()+')</span></span></div>';
+  });
+  html+='</div></div>';
+  
+  // EXTRA COSTS - tick off
+  if(extraCosts.length){
+    html+='<div class="card" style="padding:12px;margin-bottom:8px"><h3 style="font-size:.9rem;color:var(--orange)">📋 Other Costs — $'+extraRemaining.toLocaleString()+' remaining</h3>';
+    html+='<div style="display:flex;flex-direction:column;gap:3px;margin-top:8px">';
+    extraCosts.forEach(function(item,idx){
+      var paid=state.paidItems['extra_'+idx];
+      var aud=item.currency==='gbp'?Math.round(item.amount*1.88):item.amount;
+      var sym=item.currency==='gbp'?'£':'$';
+      html+='<div style="display:flex;align-items:center;gap:8px;padding:5px 10px;border-radius:6px;background:'+(paid?'rgba(34,197,94,.06)':'rgba(239,68,68,.04)')+';opacity:'+(paid?'.6':'1')+'"><input type="checkbox" '+(paid?'checked':'')+' style="width:16px;height:16px" onchange="state.paidItems[\'extra_'+idx+'\']=this.checked;save();renderMoney()"><span style="flex:1;font-size:.78rem;'+(paid?'text-decoration:line-through':'')+'">'+item.name+'</span><span style="font-size:.78rem;font-weight:600">'+sym+item.amount.toLocaleString()+'</span><button class="btn btn-o" style="padding:2px 6px;color:var(--red);font-size:.65rem" onclick="state.extraCosts.splice('+idx+',1);delete state.paidItems[\'extra_'+idx+'\'];save();renderMoney()">✕</button></div>';
+    });
+    html+='</div></div>';
+  }
+  // Add extra cost
+  html+='<div style="display:flex;gap:4px;margin-bottom:12px"><input type="text" id="newCostName" placeholder="+ Add cost..." style="flex:1;font-size:.75rem"><select id="newCostCur" style="font-size:.7rem"><option value="gbp">£</option><option value="aud">$</option></select><input type="number" id="newCostAmt" placeholder="Amount" style="width:70px;font-size:.75rem"><button class="btn btn-o" style="padding:2px 8px;font-size:.7rem" onclick="addCostLine()">+</button></div>';
   
   // INCOME
-  html+='<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem;color:var(--green)">📥 Forecast Income</h3>';
-  html+='<div style="display:flex;flex-direction:column;gap:6px">';
-  var incomeLines=state.incomeLines||[
-    {name:'Car sale 2',amount:14000,currency:'gbp'},
-    {name:'Car sale 1',amount:3900,currency:'gbp'},
-    {name:'Home item sales',amount:1500,currency:'gbp'},
-    {name:'Wages saved',amount:1000,currency:'gbp'},
-    {name:'Savings',amount:0,currency:'gbp'}
-  ];
-  if(!state.incomeLines){state.incomeLines=incomeLines;save()}
-  var incomeTotal=0;
+  html+='<div class="card" style="padding:12px;margin-bottom:8px"><h3 style="font-size:.9rem;color:var(--green)">📥 Income & Funding — £'+Math.round(incomeTotal*0.532).toLocaleString()+'</h3>';
+  html+='<div style="display:flex;flex-direction:column;gap:4px;margin-top:8px">';
+  html+='<div style="display:flex;justify-content:space-between;padding:6px 10px;background:rgba(59,130,246,.08);border-radius:6px;font-size:.8rem"><span>Relo points cash</span><strong>'+fG(pointsCash)+'</strong></div>';
   incomeLines.forEach(function(item,idx){
     var aud=item.currency==='gbp'?Math.round(item.amount*1.88):item.amount;
-    incomeTotal+=aud;
-    var conv=item.currency==='gbp'?'($'+aud.toLocaleString()+')':'(\u00a3'+Math.round(item.amount*0.532).toLocaleString()+')';
-    var sym=item.currency==='gbp'?'\u00a3':'$';
-    html+='<div style="background:rgba(34,197,94,.08);padding:8px 12px;border-radius:8px;display:flex;align-items:center;gap:8px"><input type="text" value="'+item.name+'" style="flex:2;min-width:120px;background:transparent;border:none;border-bottom:1px dashed rgba(255,255,255,.2);color:var(--text);font-size:.8rem;padding:2px 0" onchange="state.incomeLines['+idx+'].name=this.value;save()"><span style="font-size:.75rem">'+sym+'</span><input type="number" value="'+item.amount+'" style="flex:1;max-width:80px;text-align:right;font-weight:600;font-size:.85rem" onchange="state.incomeLines['+idx+'].amount=+this.value;save();renderMoney()"><span style="font-size:.7rem;color:var(--muted);min-width:60px;text-align:right">'+conv+'</span><button class="btn btn-o" style="padding:2px 6px;color:var(--red);font-size:.7rem" onclick="state.incomeLines.splice('+idx+',1);save();renderMoney()">\u2715</button></div>';
+    var sym=item.currency==='gbp'?'£':'$';
+    html+='<div style="display:flex;align-items:center;gap:8px;padding:5px 10px;background:rgba(34,197,94,.06);border-radius:6px"><span style="flex:1;font-size:.78rem">'+item.name+'</span><span style="font-size:.75rem">'+sym+'</span><input type="number" value="'+item.amount+'" style="width:70px;text-align:right;font-weight:600;font-size:.8rem" onchange="state.incomeLines['+idx+'].amount=+this.value;save();renderMoney()"><button class="btn btn-o" style="padding:2px 6px;color:var(--red);font-size:.65rem" onclick="state.incomeLines.splice('+idx+',1);save();renderMoney()">✕</button></div>';
   });
-  html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>Points cash</span><strong>'+fG(pointsCash)+'</strong></div>';
-  incomeTotal+=pointsCash;
   html+='<div style="display:flex;gap:4px;margin-top:4px"><input type="text" id="newIncomeName" placeholder="+ Add income..." style="flex:1;font-size:.75rem"><select id="newIncomeCur" style="font-size:.7rem"><option value="gbp">£</option><option value="aud">$</option></select><input type="number" id="newIncomeAmt" placeholder="Amount" style="width:70px;font-size:.75rem"><button class="btn btn-o" style="padding:2px 8px;font-size:.7rem" onclick="addIncomeLine()">+</button></div>';
-  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>TOTAL INCOME</span><span style="color:var(--green)">\u00a3'+Math.round(incomeTotal*0.532).toLocaleString()+' ($'+incomeTotal.toLocaleString()+')</span></div>';
   html+='</div></div>';
   
-  // POINTS
-  html+='<div class="card" style="margin:0;padding:12px"><h3 style="font-size:.9rem;color:var(--accent)">🎯 Points Summary</h3>';
-  html+='<div style="display:flex;flex-direction:column;gap:6px">';
-  if(selectedServices.temp30)html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>✅ Housing 30 days</span><strong>'+fG(3600)+'</strong></div>';
-  if(selectedServices.temp45)html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>✅ Housing 45 days</span><strong>'+fG(5400)+'</strong></div>';
-  if(selectedServices.temp60)html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>✅ Housing 60 days</span><strong>'+fG(7200)+'</strong></div>';
-  if(selectedServices.shipping)html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>✅ Shipping</span><strong>'+fG(2882)+'</strong></div>';
-  if(selectedServices.flights)html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>✅ Flights</span><strong>'+fG(6542)+'</strong></div>';
-  if(selectedServices.car)html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>✅ Rental car</span><strong>'+fG(1050)+'</strong></div>';
-  if(selectedServices.homefind)html+='<div style="background:rgba(59,130,246,.08);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span>✅ Home finding</span><strong>'+fG(1000)+'</strong></div>';
-  if(!Object.values(selectedServices).some(function(v){return v}))html+='<div style="background:var(--card2);padding:8px 12px;border-radius:8px;text-align:center;color:var(--muted)">No services selected yet</div>';
-  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>Services value</span><span style="color:var(--accent)">'+fG(pointsMarketCost)+'</span></div>';
-  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:.9rem"><span>Cash remaining</span><span style="color:var(--green)">'+fG(pointsCash)+'</span></div>';
-  html+='</div></div>';
-  
-  html+='</div>';
-  
-  // NET POSITION - calculate from rendered totals
-  var netPosition=incomeTotal-(costTotal>0?costTotal:0);
-  html+='<div class="card mt2" style="text-align:center;border-left:4px solid '+(netPosition>=0?'var(--green)':'var(--red)')+'"><h3>Net Position: <span style="color:'+(netPosition>=0?'var(--green)':'var(--red)')+'">\u00a3'+Math.round(Math.abs(netPosition)*0.532).toLocaleString()+' ($'+Math.abs(netPosition).toLocaleString()+')</span></h3>';
-  html+='<p class="tx tm">'+(netPosition>=0?'✅ Fully funded — surplus of '+fG(netPosition):'⚠️ Shortfall of '+fG(Math.abs(netPosition)))+'</p></div>';
-
+  html+=renderPointsAllocator();
   
   document.getElementById('moneySub').innerHTML=html;
+}
+function markDebtPaid(id,checked){
+  if(!state.debtPaid)state.debtPaid={};
+  var d=getDebts().find(function(x){return x.id===id});
+  if(checked&&d)state.debtPaid[id]=d.owed;
+  else state.debtPaid[id]=0;
+  save();renderMoney();
 }
 
 function moneyCosts(){
