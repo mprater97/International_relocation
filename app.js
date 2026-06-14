@@ -228,11 +228,13 @@ function renderMoney(){
   el.innerHTML=`
     <div class="stabs">
       <div class="stab ${moneySub==='overview'?'active':''}" onclick="moneySub='overview';renderMoney()">Overview</div>
+      <div class="stab ${moneySub==='aumonthly'?'active':''}" onclick="moneySub='aumonthly';renderMoney()">AU Monthly</div>
       <div class="stab ${moneySub==='costs'?'active':''}" onclick="moneySub='costs';renderMoney()">Costs</div>
+      <div class="stab ${moneySub==='cashflow'?'active':''}" onclick="moneySub='cashflow';renderMoney()">Cashflow</div>
       <div class="stab ${moneySub==='uk'?'active':''}" onclick="moneySub='uk';renderMoney()">UK Costs</div>
     </div>
     <div id="moneySub"></div>`;
-  ({overview:moneyOverview,costs:moneyCosts,uk:moneyUK})[moneySub]?.();
+  ({overview:moneyOverview,aumonthly:moneyAUMonthly,costs:moneyCosts,cashflow:moneyCashflow,uk:moneyUK})[moneySub]?.();
 }
 
 
@@ -568,6 +570,141 @@ function moneyUK(){
     <tr><td>Landlord insurance</td><td>${fGBP(80)}</td></tr>
     <tr class="tg"><td>Rental income</td><td>+${fGBP(UK_RENTAL_INCOME)}</td></tr>
     </table></div></div>`;
+}
+
+// ===== AU MONTHLY BUDGET (adaptive to suburb) =====
+function moneyAUMonthly(){
+  var suburb=state.selectedSuburb||'Mordialloc';
+  var suburbData=typeof SUBURBS_DATA!=='undefined'?SUBURBS_DATA:[];
+  var s=suburbData.find(function(x){return x.name===suburb});
+  var rent4=s?Math.round(parseInt(s.bed4)*52/12):3163;
+  var salary=state.auSalary||9571;
+  var ukSurplus=state.ukSurplus||228;
+  var frankieIncome=state.frankieIncome||0;
+  var totalIn=salary+ukSurplus+frankieIncome;
+  
+  // Editable monthly costs
+  var mCosts=state.auMonthlyCosts||{
+    rent:rent4,groceries:1150,eating_out:200,fuel:200,car_lease:600,
+    electricity:250,water:50,internet:80,health:80,mobiles:60,
+    streaming:35,contents_ins:40,kids_activities:250,school:50,
+    clothing:80,personal:40,medical:30,pet:60,household:40,school_vol:50
+  };
+  if(!state.auMonthlyCosts){state.auMonthlyCosts=mCosts;save()}
+  // Update rent if suburb changed
+  if(s&&mCosts.rent!==rent4&&!state._rentOverride){mCosts.rent=rent4;state.auMonthlyCosts=mCosts;save()}
+  
+  var totalOut=Object.values(mCosts).reduce(function(a,b){return a+b},0);
+  var disposable=totalIn-totalOut;
+  var disposableGBP=Math.round(disposable*0.532);
+  var annualDisp=disposable*12;
+  
+  var html='';
+  // Suburb selector
+  html+='<div class="card" style="padding:12px"><div class="flex jcb aic fw" style="gap:8px"><div><strong>📍 Suburb:</strong> <select onchange="state.selectedSuburb=this.value;state._rentOverride=false;save();renderMoney()" style="font-size:.85rem;padding:4px 8px">';
+  suburbData.forEach(function(sub){html+='<option value="'+sub.name+'"'+(sub.name===suburb?' selected':'')+'>'+sub.name+' ($'+parseInt(sub.bed4)+'/wk)</option>'});
+  html+='</select></div>';
+  html+='<div style="text-align:right"><div style="font-size:.7rem;color:var(--muted)">Monthly disposable</div><div style="font-size:1.3rem;font-weight:700;color:'+(disposable>=2000?'var(--green)':disposable>=1000?'var(--orange)':'var(--red)')+'">$'+disposable.toLocaleString()+'/mo <span style="font-size:.8rem">(£'+disposableGBP.toLocaleString()+')</span></div></div></div></div>';
+  
+  // Visual summary
+  var pctSpent=Math.round(totalOut/totalIn*100);
+  html+='<div class="card" style="padding:12px"><div style="display:flex;gap:12px;flex-wrap:wrap">';
+  html+='<div style="flex:1;min-width:120px;text-align:center"><div class="tm" style="font-size:.65rem">INCOME</div><div style="font-size:1.1rem;font-weight:700;color:var(--green)">$'+totalIn.toLocaleString()+'</div></div>';
+  html+='<div style="flex:1;min-width:120px;text-align:center"><div class="tm" style="font-size:.65rem">EXPENSES</div><div style="font-size:1.1rem;font-weight:700;color:var(--orange)">$'+totalOut.toLocaleString()+'</div></div>';
+  html+='<div style="flex:1;min-width:120px;text-align:center"><div class="tm" style="font-size:.65rem">LEFT OVER</div><div style="font-size:1.1rem;font-weight:700;color:'+(disposable>=0?'var(--green)':'var(--red)')+'">$'+disposable.toLocaleString()+'</div></div>';
+  html+='<div style="flex:1;min-width:120px;text-align:center"><div class="tm" style="font-size:.65rem">ANNUAL SAVINGS</div><div style="font-size:1.1rem;font-weight:700;color:var(--accent)">$'+annualDisp.toLocaleString()+'</div></div>';
+  html+='</div>';
+  html+='<div class="pb mt2" style="height:14px;position:relative"><div class="pf" style="width:'+Math.min(pctSpent,100)+'%;background:'+(pctSpent>90?'var(--red)':pctSpent>75?'var(--orange)':'var(--green)')+'"></div><div style="position:absolute;top:-1px;right:4px;font-size:.6rem;color:var(--muted)">'+pctSpent+'% of income</div></div></div>';
+  
+  // INCOME breakdown
+  html+='<div class="card" style="padding:12px"><h3 style="font-size:.9rem;color:var(--green)">📥 Monthly Income</h3>';
+  html+='<div style="display:flex;flex-direction:column;gap:4px">';
+  html+='<div style="display:flex;justify-content:space-between;padding:6px 10px;background:rgba(34,197,94,.08);border-radius:6px"><span>Your net salary ($159k gross)</span><input type="number" value="'+salary+'" style="width:80px;text-align:right;font-weight:600" onchange="state.auSalary=+this.value;save();renderMoney()"></div>';
+  html+='<div style="display:flex;justify-content:space-between;padding:6px 10px;background:rgba(34,197,94,.08);border-radius:6px"><span>UK property surplus (rent - mortgage/agent)</span><input type="number" value="'+ukSurplus+'" style="width:80px;text-align:right;font-weight:600" onchange="state.ukSurplus=+this.value;save();renderMoney()"></div>';
+  html+='<div style="display:flex;justify-content:space-between;padding:6px 10px;background:rgba(34,197,94,.08);border-radius:6px"><span>Frankie income (when working)</span><input type="number" value="'+frankieIncome+'" style="width:80px;text-align:right;font-weight:600" onchange="state.frankieIncome=+this.value;save();renderMoney()"></div>';
+  html+='<div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--card2);border-radius:6px;font-weight:700"><span>TOTAL IN</span><span>$'+totalIn.toLocaleString()+' (£'+Math.round(totalIn*0.532).toLocaleString()+')</span></div>';
+  html+='</div></div>';
+  
+  // EXPENSES breakdown - editable
+  html+='<div class="card" style="padding:12px"><h3 style="font-size:.9rem;color:var(--orange)">📤 Monthly Expenses</h3>';
+  html+='<div style="display:flex;flex-direction:column;gap:3px">';
+  var costLabels={rent:'🏠 Rent (4-bed, '+suburb+')',groceries:'🛒 Groceries (~$265/wk)',eating_out:'☕ Eating out / coffees',fuel:'⛽ Car fuel',car_lease:'🚗 Car lease (all-inclusive)',electricity:'⚡ Electricity + gas',water:'💧 Water',internet:'🌐 Internet (NBN)',health:'🏥 Health insurance (your 20%)',mobiles:'📱 Mobiles (family)',streaming:'📺 Streaming',contents_ins:'🔒 Contents insurance',kids_activities:'⚽ Kids activities',school:'📚 School supplies/excursions',clothing:'👕 Clothing/shoes',personal:'💇 Haircuts/personal',medical:'🩺 Medical/dental gap',pet:'🐕 Pet insurance + vet',household:'🏡 Household supplies',school_vol:'🎒 School voluntary (x2)'};
+  Object.keys(mCosts).forEach(function(k){
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 10px;background:rgba(239,68,68,.05);border-radius:6px;font-size:.8rem"><span style="flex:1">'+(costLabels[k]||k)+'</span><span style="color:var(--muted);font-size:.7rem;min-width:55px;text-align:right">£'+Math.round(mCosts[k]*0.532).toLocaleString()+'</span><input type="number" value="'+mCosts[k]+'" style="width:70px;text-align:right;font-size:.8rem" onchange="state.auMonthlyCosts.'+k+'=+this.value;if(\''+k+'\'===\'rent\')state._rentOverride=true;save();renderMoney()"></div>';
+  });
+  html+='<div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--card2);border-radius:6px;font-weight:700;margin-top:4px"><span>TOTAL OUT</span><span style="color:var(--orange)">$'+totalOut.toLocaleString()+' (£'+Math.round(totalOut*0.532).toLocaleString()+')</span></div>';
+  html+='</div></div>';
+  
+  // What disposable income means
+  html+='<div class="card" style="padding:12px;border-left:4px solid '+(disposable>=2000?'var(--green)':'var(--orange)')+'"><h3 style="font-size:.9rem">💡 What $'+disposable.toLocaleString()+'/mo gets you</h3>';
+  html+='<div style="font-size:.8rem;line-height:1.8">';
+  if(disposable>=3000)html+='<div>✅ Very comfortable — can save $1,500+/mo and still enjoy dining, activities, holidays</div><div>✅ Could afford private school fees if ever needed later</div><div>✅ Emergency fund builds fast</div>';
+  else if(disposable>=2000)html+='<div>✅ Comfortable — dining out weekly, kids activities, weekend trips</div><div>✅ Saving $500–$1,000/mo realistic</div><div>✅ No financial stress</div>';
+  else if(disposable>=1000)html+='<div>⚡ Manageable — need to budget, but not tight</div><div>⚡ Saving $200–$500/mo with discipline</div><div>⚡ Occasional dining/activities fine</div>';
+  else html+='<div>⚠️ Tight — need careful budgeting</div><div>⚠️ Limited savings capacity</div><div>⚠️ Consider cheaper suburb or Frankie working to improve</div>';
+  html+='</div>';
+  if(frankieIncome===0)html+='<p class="tx tm mt2">💡 <strong>If Frankie works part-time (3 days):</strong> +$2,600/mo → disposable would be <strong style="color:var(--green)">$'+(disposable+2600).toLocaleString()+'/mo</strong></p>';
+  html+='</div>';
+  
+  document.getElementById('moneySub').innerHTML=html;
+}
+
+// ===== CASHFLOW TIMELINE =====
+function moneyCashflow(){
+  var coSep=['co_visa','co_flights','co_temp','co_tax','sep_car','sep_furniture','sep_util'];
+  var weeks={};
+  FORECAST_ITEMS.forEach(function(i){
+    if(coSep.indexOf(i.id)>=0)return;
+    var w=i.week||1;
+    if(!weeks[w])weeks[w]={out:0,items:[]};
+    var amt=state.actuals[i.id]!=null?state.actuals[i.id]:i.forecast;
+    weeks[w].out+=amt;
+    weeks[w].items.push({desc:i.desc,amt:amt,paid:state.actuals[i.id]!=null});
+  });
+  
+  var cw=curWk();
+  var cumulative=0;
+  var budget=getBudget();
+  var totalIncome=(state.incomeLines||[]).reduce(function(s,i){return s+(i.currency==='gbp'?Math.round(i.amount*1.88):i.amount)},0)+budget;
+  
+  var html='<div class="card" style="padding:12px"><h3 style="font-size:.9rem">📅 Week-by-Week Cashflow</h3>';
+  html+='<p class="tx tm mb2">Shows when money goes out. Green = paid. Grey = forecast. Current week highlighted.</p>';
+  html+='<div style="display:flex;flex-direction:column;gap:2px">';
+  
+  for(var w=1;w<=22;w++){
+    var wk=weeks[w]||{out:0,items:[]};
+    cumulative+=wk.out;
+    var pct=totalIncome>0?Math.round(cumulative/totalIncome*100):0;
+    var isCurrent=w===cw;
+    var isPast=w<cw;
+    
+    if(wk.items.length===0&&!isCurrent)continue;
+    
+    html+='<div style="padding:8px 10px;border-radius:8px;border:1px solid '+(isCurrent?'var(--accent)':'var(--border)')+';background:'+(isCurrent?'rgba(59,130,246,.08)':'transparent')+'">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center">';
+    html+='<div><strong style="font-size:.8rem">Wk '+w+'</strong> <span class="tm" style="font-size:.7rem">'+fd(wkDate(w))+'</span>'+(isCurrent?' <span style="background:var(--accent);color:#fff;padding:1px 6px;border-radius:8px;font-size:.6rem">NOW</span>':'')+'</div>';
+    html+='<div style="text-align:right"><strong style="color:var(--orange);font-size:.85rem">-'+fA(wk.out)+'</strong><div style="font-size:.65rem;color:var(--muted)">Cum: '+fA(cumulative)+' ('+pct+'%)</div></div>';
+    html+='</div>';
+    if(wk.items.length){
+      html+='<div style="margin-top:4px;padding-left:8px;border-left:2px solid var(--border)">';
+      wk.items.forEach(function(item){
+        html+='<div style="font-size:.72rem;display:flex;justify-content:space-between;padding:2px 0;color:'+(item.paid?'var(--green)':'var(--muted)')+'"><span>'+(item.paid?'✅':'⬜')+' '+item.desc+'</span><span>'+fA(item.amt)+'</span></div>';
+      });
+      html+='</div>';
+    }
+    html+='</div>';
+  }
+  html+='</div>';
+  
+  // Summary bar
+  var totalCosts=cumulative;
+  var remaining=totalIncome-totalCosts;
+  html+='<div style="margin-top:12px;padding:10px 12px;background:var(--card2);border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700"><span>Total move costs</span><span style="color:var(--orange)">'+fA(totalCosts)+'</span></div>';
+  html+='<div style="padding:10px 12px;background:var(--card2);border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;margin-top:4px"><span>Funding available</span><span style="color:var(--green)">'+fA(totalIncome)+'</span></div>';
+  html+='<div style="padding:10px 12px;background:'+(remaining>=0?'rgba(34,197,94,.1)':'rgba(239,68,68,.1)')+';border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-weight:700;margin-top:4px"><span>Net position</span><span style="color:'+(remaining>=0?'var(--green)':'var(--red)')+'">'+fA(remaining)+'</span></div>';
+  html+='</div>';
+  
+  document.getElementById('moneySub').innerHTML=html;
 }
 
 // ===== TASKS (Checklist + Documents) =====
