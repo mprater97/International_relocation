@@ -68,7 +68,7 @@ function getBudget(){
   var services={temp30:70,temp45:105,temp60:140,shipping:190,flights:15,car:15,homefind:35};
   if(state.pointsSelected){Object.keys(state.pointsSelected).forEach(function(k){if(state.pointsSelected[k]&&services[k])used+=services[k]})}
   var remain=total-used;
-  var usdPerPoint=36;
+  var usdPerPoint=31;
   var usdValue=remain*usdPerPoint;
   return Math.round(usdValue*1.42); // Convert USD to AUD
 }
@@ -191,20 +191,20 @@ function renderPointsAllocator(){
   var usedPts=0;var totalMarketValue=0;
   services.forEach(function(s){if(selected[s.id]){usedPts+=s.points;var actual=(state.pointsActual||{})[s.id];totalMarketValue+=(actual||s.market)}});
   var remainPts=310-usedPts;
-  var cashValue=Math.round(remainPts*36*1.42);
+  var cashValue=Math.round(remainPts*31*1.42);
   var cashAUD=cashValue; // $36 USD per pt * 1.42 = AUD
   var totalValue=totalMarketValue+cashAUD;
 
   var html='<div class="card"><h2>🎯 Points Allocator — 310 Total</h2>';
   html+='<div class="sg"><div class="sb blue"><div class="l">Total Points</div><div class="v">310</div></div><div class="sb orange"><div class="l">Used</div><div class="v">'+usedPts+'</div></div><div class="sb green"><div class="l">Remaining</div><div class="v">'+remainPts+'</div></div><div class="sb green"><div class="l">Cash Value</div><div class="v">$'+cashValue+' AUD</div></div></div>';
-  html+='<p class="tx tm mb2">Tick services to use points. Remaining convert to cash at $36 USD/pt ($51 AUD). Sorted by value ratio.</p>';
+  html+='<p class="tx tm mb2">Tick services to use points. Remaining convert to cash at $31 USD/pt ($44 AUD). Sorted by value ratio.</p>';
   html+='<p class="tx tm mb2" style="font-size:.7rem">🟢 4x+ = excellent value | 🔵 2x+ = good | 🔴 <1x = take cash instead</p>';
   html+='<div class="table-wrap"><table><tr><th></th><th>Service</th><th>Pts</th><th>Market Value</th><th>Ratio</th></tr>';
   services.forEach(function(s){
     var checked=selected[s.id];
     var ratioNum=parseFloat(s.ratio);
     var ratioColor=ratioNum>=4?'var(--green)':ratioNum>=2?'var(--accent)':'var(--red)';
-    var cashCost=Math.round(s.points*36*1.42);
+    var cashCost=Math.round(s.points*31*1.42);
     html+='<tr'+(checked?' style="background:rgba(34,197,94,.08)"':'')+'><td><input type="checkbox" '+(checked?'checked':'')+' onchange="togglePoint(this.checked,\''+s.id+'\')">';
     html+='</td><td><strong>'+s.name+'</strong><br><span class="tx tm">'+s.desc+'</span></td>';
     html+='<td style="text-align:center">'+s.points+'</td>';
