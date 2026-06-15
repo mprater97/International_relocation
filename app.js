@@ -196,7 +196,7 @@ function renderPointsAllocator(){
   var totalValue=totalMarketValue+cashAUD;
 
   var html='<div class="card"><h2>🎯 Points Allocator — 310 Total</h2>';
-  html+='<div class="sg"><div class="sb blue"><div class="l">Total Points</div><div class="v">310</div></div><div class="sb orange"><div class="l">Used</div><div class="v">'+usedPts+'</div></div><div class="sb green"><div class="l">Remaining</div><div class="v">'+remainPts+'</div></div><div class="sb green"><div class="l">Cash Value</div><div class="v">$'+cashValue+' AUD</div></div></div>';
+  html+='<div class="sg"><div class="sb blue"><div class="l">Total Points</div><div class="v">310 <span style="font-size:.6rem">($9,610)</span></div></div><div class="sb orange"><div class="l">Used</div><div class="v">'+usedPts+' <span style="font-size:.6rem">($'+(usedPts*31).toLocaleString()+')</span></div></div><div class="sb green"><div class="l">Remaining</div><div class="v">'+remainPts+' <span style="font-size:.6rem">($'+(remainPts*31).toLocaleString()+')</span></div></div><div class="sb green"><div class="l">Cash Value (AUD)</div><div class="v">$'+cashValue.toLocaleString()+'</div></div></div>';
   html+='<p class="tx tm mb2">Tick services to use points. Remaining convert to cash at $31 USD/pt ($44 AUD). Sorted by value ratio.</p>';
   html+='<p class="tx tm mb2" style="font-size:.7rem">🟢 4x+ = excellent value | 🔵 2x+ = good | 🔴 <1x = take cash instead</p>';
   html+='<div class="table-wrap"><table><tr><th></th><th>Service</th><th>Pts</th><th>Market Value</th><th>Ratio</th></tr>';
