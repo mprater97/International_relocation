@@ -851,7 +851,7 @@ function movePlanHouses(){
   
   // Quick add form
   html+='<div class="card" style="padding:12px"><h3 style="font-size:.9rem">+ Add Property</h3>';
-  html+='<p class="tx tm" style="font-size:.7rem;margin-bottom:8px">Found one on Domain? Paste the details below.</p>';
+  html+='<p class="tx tm" style="font-size:.7rem;margin-bottom:8px">Found one on Domain? Paste details below. Right-click the main photo → "Copy Image Address" for the image.</p>';
   html+='<div style="display:flex;flex-direction:column;gap:6px">';
   html+='<input type="text" id="hAddr" placeholder="Address (e.g. 14 Beach Rd)" style="font-size:.85rem">';
   html+='<div style="display:flex;gap:6px;flex-wrap:wrap">';
@@ -859,9 +859,18 @@ function movePlanHouses(){
   shortlistedSuburbs.forEach(function(n){html+='<option value="'+n+'">'+n+'</option>'});
   html+='<option value="Other">Other</option></select>';
   html+='<input type="number" id="hRent" placeholder="$/wk" style="width:80px">';
-  html+='<input type="number" id="hBeds" placeholder="Beds" style="width:60px" value="4"></div>';
+  html+='<input type="number" id="hBeds" placeholder="Beds" style="width:55px" value="4">';
+  html+='<input type="number" id="hBaths" placeholder="Bath" style="width:55px" value="2">';
+  html+='<input type="number" id="hCars" placeholder="Cars" style="width:55px" value="2"></div>';
+  html+='<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">';
+  html+='<label style="font-size:.72rem;display:flex;align-items:center;gap:3px"><input type="checkbox" id="hGarden"> Garden</label>';
+  html+='<label style="font-size:.72rem;display:flex;align-items:center;gap:3px"><input type="checkbox" id="hPool"> Pool</label>';
+  html+='<label style="font-size:.72rem;display:flex;align-items:center;gap:3px"><input type="checkbox" id="hAC"> Air con</label>';
+  html+='<label style="font-size:.72rem;display:flex;align-items:center;gap:3px"><input type="checkbox" id="hDishwasher"> Dishwasher</label>';
+  html+='</div>';
   html+='<input type="text" id="hLink" placeholder="Listing URL (paste from Domain/realestate)" style="font-size:.8rem">';
-  html+='<input type="text" id="hNotes" placeholder="Notes (garden? garage? near station? condition?)" style="font-size:.8rem">';
+  html+='<input type="text" id="hImage" placeholder="Main photo URL (right-click image → Copy Image Address)" style="font-size:.8rem">';
+  html+='<input type="text" id="hNotes" placeholder="Notes (condition? Street noise? Near station?)" style="font-size:.8rem">';
   html+='<button class="btn btn-p" onclick="addSavedHouse()">+ Save Property</button>';
   html+='</div></div>';
   
@@ -884,22 +893,34 @@ function movePlanHouses(){
       var statusColors={'Saved':'var(--accent)','Inspecting':'var(--orange)','Applied':'#8b5cf6','Offered':'var(--green)','Rejected':'var(--red)'};
       
       html+='<div class="card" style="padding:12px;margin-bottom:8px;border-left:3px solid '+statusColors[status]+'">';
-      html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">';
-      // Left side - address & details
-      html+='<div style="flex:1;min-width:200px">';
-      html+='<div style="display:flex;align-items:center;gap:6px"><strong style="font-size:.9rem">'+h.address+'</strong><span style="background:'+statusColors[status]+';color:#fff;padding:1px 6px;border-radius:8px;font-size:.6rem">'+status+'</span></div>';
-      html+='<div class="tx tm" style="font-size:.72rem">'+h.suburb+' | '+(h.beds||'?')+' bed | '+(s?s.train+' min train | '+s.beach:'')+'</div>';
-      if(h.link)html+='<a href="'+h.link+'" target="_blank" style="color:var(--accent);font-size:.72rem">View listing →</a>';
+      // Image + details row
+      html+='<div style="display:flex;gap:10px;flex-wrap:wrap">';
+      // Image
+      if(h.image)html+='<img src="'+h.image+'" style="width:120px;height:80px;object-fit:cover;border-radius:6px;flex:0 0 auto" onerror="this.style.display=\'none\'">';
+      // Main info
+      html+='<div style="flex:1;min-width:180px">';
+      html+='<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><strong style="font-size:.9rem">'+h.address+'</strong><span style="background:'+statusColors[status]+';color:#fff;padding:1px 6px;border-radius:8px;font-size:.6rem">'+status+'</span></div>';
+      html+='<div class="tx tm" style="font-size:.72rem">'+h.suburb+' | '+(s?s.train+' min train | '+s.beach:'')+'</div>';
+      // Features row
+      html+='<div style="display:flex;gap:6px;margin-top:4px;font-size:.7rem;flex-wrap:wrap">';
+      html+='<span>🛏️ '+(h.beds||'?')+'</span>';
+      if(h.baths)html+='<span>🚿 '+h.baths+'</span>';
+      if(h.cars)html+='<span>🚗 '+h.cars+'</span>';
+      if(h.garden)html+='<span style="color:var(--green)">🌳 Garden</span>';
+      if(h.pool)html+='<span style="color:var(--accent)">🏊 Pool</span>';
+      if(h.ac)html+='<span>❄️ AC</span>';
+      if(h.dishwasher)html+='<span>🍽️ DW</span>';
       html+='</div>';
-      // Right side - financials
-      html+='<div style="text-align:right;min-width:120px">';
+      if(h.link)html+='<a href="'+h.link+'" target="_blank" style="color:var(--accent);font-size:.7rem">View listing →</a>';
+      html+='</div>';
+      // Financials
+      html+='<div style="text-align:right;min-width:110px">';
       html+='<div style="font-size:1.1rem;font-weight:700">$'+weeklyRent+'/wk</div>';
       html+='<div style="font-size:.75rem">$'+monthlyRent+'/mo (£'+Math.round(monthlyRent*0.526)+')</div>';
       html+='<div style="font-size:.8rem;font-weight:600;color:'+(disposable>=2000?'var(--green)':disposable>=1000?'var(--orange)':'var(--red)')+'">$'+disposable+'/mo spare</div>';
       html+='</div></div>';
       // Notes
       if(h.notes)html+='<div style="font-size:.72rem;color:var(--muted);margin-top:6px;padding:4px 8px;background:var(--card2);border-radius:4px">📝 '+h.notes+'</div>';
-      // Inspection date
       if(h.inspectionDate)html+='<div style="font-size:.72rem;margin-top:4px">📅 Inspection: <strong>'+h.inspectionDate+'</strong></div>';
       // Actions
       html+='<div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;align-items:center">';
@@ -984,11 +1005,18 @@ function addSavedHouse(){
   var suburb=document.getElementById('hSuburb').value;
   var rent=+(document.getElementById('hRent').value)||0;
   var beds=+(document.getElementById('hBeds').value)||4;
+  var baths=+(document.getElementById('hBaths').value)||0;
+  var cars=+(document.getElementById('hCars').value)||0;
+  var garden=document.getElementById('hGarden').checked;
+  var pool=document.getElementById('hPool').checked;
+  var ac=document.getElementById('hAC').checked;
+  var dishwasher=document.getElementById('hDishwasher').checked;
   var link=document.getElementById('hLink').value;
+  var image=document.getElementById('hImage').value;
   var notes=document.getElementById('hNotes').value;
   if(!addr||!rent)return;
   if(!state.savedHouses)state.savedHouses=[];
-  state.savedHouses.push({address:addr,suburb:suburb,rent:rent,beds:beds,link:link,notes:notes,status:'Saved',added:new Date().toISOString()});
+  state.savedHouses.push({address:addr,suburb:suburb,rent:rent,beds:beds,baths:baths,cars:cars,garden:garden,pool:pool,ac:ac,dishwasher:dishwasher,link:link,image:image,notes:notes,status:'Saved',added:new Date().toISOString()});
   save();renderMovePlan();
 }
 function removeSavedHouse(i){
