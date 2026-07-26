@@ -890,9 +890,10 @@ function movePlanHouses(){
   
   // Quick add form
   html+='<div class="card" style="padding:12px"><h3 style="font-size:.9rem">+ Add Property</h3>';
-  html+='<p class="tx tm" style="font-size:.7rem;margin-bottom:8px">Paste a Domain URL below — address and suburb auto-fill. Or use the bookmarklet (see below) to capture everything in one click.</p>';
+  html+='<p class="tx tm" style="font-size:.7rem;margin-bottom:8px">Paste a Domain URL → address auto-fills → tap "Open Listing" to check details → fill in rent + beds.</p>';
   html+='<div style="display:flex;flex-direction:column;gap:6px">';
   html+='<input type="text" id="hLink" placeholder="Paste Domain / realestate URL here..." style="font-size:.85rem;padding:10px;border:2px dashed var(--accent);border-radius:8px" onpaste="setTimeout(function(){parseDomainUrl()},100)" onchange="parseDomainUrl()">';
+  html+='<div id="hPreview" style="display:none;padding:8px 12px;background:rgba(34,197,94,.06);border-radius:8px;font-size:.8rem"></div>';
   html+='<input type="text" id="hAddr" placeholder="Address (auto-fills from URL)" style="font-size:.85rem">';
   html+='<div style="display:flex;gap:6px;flex-wrap:wrap">';
   html+='<select id="hSuburb" style="flex:1;min-width:120px">';
@@ -1078,50 +1079,28 @@ function addSavedHouse(){
 }
 
 function parseDomainUrl(){
-  var url=document.getElementById('hLink').value.trim();
+  var url=document.getElementById("hLink").value.trim();
   if(!url)return;
-  
-  // Domain URL format: domain.com.au/ADDRESS-SUBURB-STATE-POSTCODE-ID
-  // e.g. domain.com.au/14-beach-road-mordialloc-vic-3195-17444583
+  var preview=document.getElementById("hPreview");
   var match=url.match(/domain\.com\.au\/([^?]+)/);
   if(match){
-    var parts=match[1].split('-');
-    // Remove the listing ID (last number) and state+postcode
+    var parts=match[1].split("-");
     if(parts.length>4){
-      // Find vic/nsw and postcode
-      var vicIdx=parts.indexOf('vic');
-      if(vicIdx===-1)vicIdx=parts.indexOf('nsw');
+      var vicIdx=parts.indexOf("vic");
+      if(vicIdx===-1)vicIdx=parts.indexOf("nsw");
       if(vicIdx>0){
         var addressParts=parts.slice(0,vicIdx);
-        var suburb=addressParts.pop(); // last part before state is suburb
-        // Sometimes suburb is two words
-        var knownSuburbs=['mordialloc','parkdale','mentone','aspendale','edithvale','chelsea','bonbeach','carrum','mordialloc','cheltenham','highett','bentleigh'];
-        // Check if previous word is part of suburb name
-        if(addressParts.length&&knownSuburbs.indexOf(addressParts[addressParts.length-1]+' '+suburb)>=0){
-          suburb=addressParts.pop()+' '+suburb;
-        }
-        var address=addressParts.map(function(w){return w.charAt(0).toUpperCase()+w.slice(1)}).join(' ');
+        var suburb=addressParts.pop();
+        var address=addressParts.map(function(w){return w.charAt(0).toUpperCase()+w.slice(1)}).join(" ");
         var suburbName=suburb.charAt(0).toUpperCase()+suburb.slice(1);
-        
-        // Auto-fill address
-        if(address)document.getElementById('hAddr').value=address;
-        
-        // Auto-select suburb
-        var sel=document.getElementById('hSuburb');
-        for(var i=0;i<sel.options.length;i++){
-          if(sel.options[i].value.toLowerCase()===suburbName.toLowerCase()){
-            sel.selectedIndex=i;break;
-          }
-        }
+        if(address)document.getElementById("hAddr").value=address;
+        var sel=document.getElementById("hSuburb");
+        for(var i=0;i<sel.options.length;i++){if(sel.options[i].value.toLowerCase()===suburbName.toLowerCase()){sel.selectedIndex=i;break}}
+        if(preview){preview.style.display="block";preview.innerHTML="<div style=\"display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px\"><div><strong>"+address+"</strong>, "+suburbName+"<br><span style=\"font-size:.7rem;color:var(--muted)\">Open listing to check rent, beds, photos →</span></div><a href=\""+url+"\" target=\"_blank\" class=\"btn btn-p\" style=\"font-size:.78rem;padding:8px 14px\">Open Listing</a></div>"}
       }
     }
   }
-  
-  // realestate.com.au format: realestate.com.au/property-unit+3-bed-...-ADDRESS+SUBURB
-  // Less consistent but try to extract
-  if(url.includes('realestate.com.au')&&url.includes('property-')){
-    // Just set the link, user fills rest
-  }
+  if(url.includes("realestate.com.au")&&preview){preview.style.display="block";preview.innerHTML="<div style=\"display:flex;justify-content:space-between;align-items:center\"><span>realestate.com.au listing</span><a href=\""+url+"\" target=\"_blank\" class=\"btn btn-p\" style=\"font-size:.78rem;padding:8px 14px\">Open Listing</a></div>"}
 }
 function removeSavedHouse(i){
   state.savedHouses.splice(i,1);save();renderMovePlan();
