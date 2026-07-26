@@ -1110,32 +1110,29 @@ function renderTodo(){
   const todos=state.todos||[];
   const done=todos.filter(t=>t.done).length;
   const cats=[...new Set(todos.map(t=>t.cat||'General'))];
-  el.innerHTML=`
-    <div class="sg">
-      <div class="sb ${done===todos.length&&todos.length?'green':'yellow'}"><div class="l">Done</div><div class="v">${done}/${todos.length}</div></div>
-    </div>
-    <div class="card">
-      <h2>📌 To-Do List</h2>
-      <p class="tx tm mb2">General tasks — house repairs, errands, prep work, anything that needs doing.</p>
-      <div class="flex g2 fw aic mb2">
-        <input type="text" id="todoText" placeholder="What needs doing?" style="flex:1;min-width:200px" onkeydown="if(event.key==='Enter')addTodo()">
-        <select id="todoCat" style="max-width:140px">
-          <option>General</option><option>House Repairs</option><option>Packing</option><option>Admin</option><option>Shopping</option><option>Kids</option><option>Other</option>
-        </select>
-        <select id="todoPri" style="max-width:100px">
-          <option value="med">Medium</option><option value="high">High</option><option value="low">Low</option>
-        </select>
-        <button class="btn btn-p" onclick="addTodo()">+ Add</button>
-      </div>
-      ${todos.length?todos.map((t,i)=>{
-        const pri=t.pri==='high'?'🔴':t.pri==='low'?'🟢':'🟡';
-        return '<div class="ci'+(t.done?' done':'')+'">'+
-          '<input type="checkbox" '+(t.done?'checked':'')+' onchange="state.todos['+i+'].done=!state.todos['+i+'].done;save();renderTodo()">'+
-          '<div class="ct">'+pri+' '+t.text+'<div class="cm">'+t.cat+'</div></div>'+
-          '<button class="btn btn-o" style="padding:2px 6px" onclick="state.todos.splice('+i+',1);save();renderTodo()">✕</button></div>';
-      }).join(''):'<p class="tm ts">No to-dos yet. Add one above.</p>'}
-    </div>`;
+  var html='<div class="sg"><div class="sb '+(done===todos.length&&todos.length?'green':'yellow')+'"><div class="l">Done</div><div class="v">'+done+'/'+todos.length+'</div></div></div>';
+  html+='<div class="card"><h2>📌 To-Do List</h2>';
+  html+='<p class="tx tm mb2">General tasks — house repairs, errands, prep work, anything that needs doing.</p>';
+  html+='<div class="flex g2 fw aic mb2">';
+  html+='<input type="text" id="todoText" placeholder="What needs doing?" style="flex:1;min-width:200px" onkeydown="if(event.key===\'Enter\')addTodo()">';
+  html+='<select id="todoCat" style="max-width:140px"><option>General</option><option>House Repairs</option><option>Packing</option><option>Admin</option><option>Shopping</option><option>Kids</option><option>Immigration</option><option>Tax</option><option>Health</option><option>Travel</option><option>Schools</option><option>Other</option></select>';
+  html+='<select id="todoPri" style="max-width:100px"><option value="med">Medium</option><option value="high">High</option><option value="low">Low</option></select>';
+  html+='<button class="btn btn-p" onclick="addTodo()">+ Add</button></div>';
+  if(todos.length){
+    todos.forEach(function(t,i){
+      var pri=t.pri==='high'?'🔴':t.pri==='low'?'🟢':'🟡';
+      html+='<div class="ci'+(t.done?' done':'')+'" style="display:flex;align-items:center;gap:8px">';
+      html+='<input type="checkbox" '+(t.done?'checked':'')+' onchange="todoToggle('+i+')">';
+      html+='<div class="ct" style="flex:1">'+pri+' '+t.text.replace(/'/g,'&#39;')+'<div class="cm">'+t.cat+'</div></div>';
+      html+='<button class="btn btn-o" style="padding:2px 6px;font-size:.7rem" onclick="todoDelete('+i+')">✕</button>';
+      html+='</div>';
+    });
+  }else{html+='<p class="tm ts">No to-dos yet. Add one above.</p>';}
+  html+='</div>';
+  el.innerHTML=html;
 }
+function todoToggle(i){state.todos[i].done=!state.todos[i].done;save();renderTodo()}
+function todoDelete(i){state.todos.splice(i,1);save();renderTodo()}
 function addTodo(){
   const text=document.getElementById('todoText').value;
   if(!text)return;
@@ -1420,7 +1417,9 @@ function planPhase(phase){
 function renderTodo2(){
   var todos=(state.todos||[]).filter(function(t){return ['Immigration','Tax','Health','Travel','Schools'].indexOf(t.cat)<0});
   var html='<div class="card"><h2>📌 To-Do List</h2><div class="flex g2 fw aic mb2"><input type="text" id="todoText" placeholder="What needs doing?" style="flex:1;min-width:200px" onkeydown="if(event.key===\'Enter\')addTodo()"><select id="todoCat" style="max-width:140px"><option>General</option><option>House Repairs</option><option>Packing</option><option>Admin</option><option>Shopping</option><option>Kids</option></select><select id="todoPri" style="max-width:100px"><option value="med">Medium</option><option value="high">High</option><option value="low">Low</option></select><button class="btn btn-p" onclick="addTodo()">+ Add</button></div>';
-  if(todos.length){todos.forEach(function(t,i){var pri=t.pri==='high'?'🔴':t.pri==='low'?'🟢':'🟡';html+='<div class="ci'+(t.done?' done':'')+'"><input type="checkbox" '+(t.done?'checked':'')+' onchange="state.todos['+i+'].done=!state.todos['+i+'].done;save();renderPlanNew()"><div class="ct">'+pri+' '+t.text+'<div class="cm">'+t.cat+'</div></div><button class="btn btn-o" style="padding:2px 6px" onclick="state.todos.splice('+i+',1);save();renderPlanNew()">✕</button></div>';});}else{html+='<p class="tm ts">No to-dos yet.</p>';}
+  if(todos.length){todos.forEach(function(t,i){var pri=t.pri==='high'?'🔴':t.pri==='low'?'🟢':'🟡';html+='<div class="ci'+(t.done?' done':'')+'" style="display:flex;align-items:center;gap:8px"><input type="checkbox" '+(t.done?'checked':'')+' onchange="todoTogglePlan('+i+')"><div class="ct" style="flex:1">'+pri+' '+t.text.replace(/'/g,'&#39;')+'<div class="cm">'+t.cat+'</div></div><button class="btn btn-o" style="padding:2px 6px;font-size:.7rem" onclick="todoDeletePlan('+i+')">✕</button></div>';});}else{html+='<p class="tm ts">No to-dos yet.</p>';}
   html+='</div>';
   document.getElementById('planSub').innerHTML=html;
 }
+function todoTogglePlan(i){state.todos[i].done=!state.todos[i].done;save();renderPlanNew()}
+function todoDeletePlan(i){state.todos.splice(i,1);save();renderPlanNew()}
