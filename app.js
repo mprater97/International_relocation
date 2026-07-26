@@ -34,34 +34,42 @@ function save(){
 // Auto-save every 30 seconds as safety net
 setInterval(function(){save()},30000);
 
-// Receive property data from Chrome extension via URL hash
+// Receive property data from Chrome extension/bookmarklet via URL hash
 (function(){
   if(window.location.hash.indexOf('#addhouse=')===0){
-    try{
-      var json=decodeURIComponent(window.location.hash.slice(10));
-      var h=JSON.parse(json);
-      if(h.address&&h.rent){
-        if(!state.savedHouses)state.savedHouses=[];
-        // Check for duplicates
-        var exists=state.savedHouses.some(function(x){return x.link===h.link});
-        if(!exists){
-          state.savedHouses.push({
-            address:h.address,suburb:h.suburb||'',rent:h.rent,beds:h.beds||4,baths:h.baths||0,cars:h.cars||0,
-            garden:h.features&&h.features.indexOf('garden')>=0,pool:h.features&&h.features.indexOf('pool')>=0,
-            ac:h.features&&h.features.indexOf('ac')>=0,dishwasher:h.features&&h.features.indexOf('dishwasher')>=0,
-            link:h.link||'',image:h.image||'',notes:'Added via extension',status:'Saved',added:new Date().toISOString()
-          });
-          save();
-          // Switch to Move Plan tab
-          setTimeout(function(){
-            document.querySelector('[data-tab="moveplan"]').click();
-            setTimeout(function(){movePlanSub='houses';renderMovePlan()},200);
-          },500);
-        }
-      }
-    }catch(e){}
-    // Clean hash
+    var hashData=window.location.hash.slice(10);
+    // Clean hash immediately
     history.replaceState(null,null,window.location.pathname);
+    // Wait for page to fully render then process
+    window.addEventListener('load',function(){
+      setTimeout(function(){
+        try{
+          var json=decodeURIComponent(hashData);
+          var h=JSON.parse(json);
+          if(h.address){
+            if(!state.savedHouses)state.savedHouses=[];
+            // Check for duplicates
+            var exists=state.savedHouses.some(function(x){return x.link===h.link&&x.link});
+            if(!exists){
+              state.savedHouses.push({
+                address:h.address,suburb:h.suburb||'',rent:h.rent||0,beds:h.beds||4,baths:h.baths||0,cars:h.cars||0,
+                garden:h.features&&h.features.indexOf('garden')>=0,pool:h.features&&h.features.indexOf('pool')>=0,
+                ac:h.features&&h.features.indexOf('ac')>=0,dishwasher:h.features&&h.features.indexOf('dishwasher')>=0,
+                link:h.link||'',image:h.image||'',notes:'Added via bookmarklet — add rent',status:'Saved',added:new Date().toISOString()
+              });
+              save();
+            }
+            // Switch to Move Plan → Houses
+            document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active')});
+            document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('active')});
+            var tab=document.querySelector('[data-tab="moveplan"]');
+            if(tab){tab.classList.add('active');document.getElementById('moveplan').classList.add('active')}
+            movePlanSub='houses';
+            renderMovePlan();
+          }
+        }catch(e){console.log('addhouse error:',e)}
+      },800);
+    });
   }
 })();
 
