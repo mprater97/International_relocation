@@ -988,12 +988,20 @@ function movePlanFinder(){
   html+='<a href="https://www.domain.com.au/rent/?suburb=mordialloc-vic-3195,parkdale-vic-3195,aspendale-vic-3195,edithvale-vic-3196,chelsea-vic-3196,bonbeach-vic-3196,mentone-vic-3194,carrum-vic-3197&bedrooms=3-any&propertytype=house,townhouse&sort=dateupdated-desc" target="_blank" class="btn btn-p" style="width:100%;text-align:center;padding:12px">🔍 Search ALL shortlisted suburbs at once on Domain →</a>';
   html+='</div>';
   
-  // Also try
+  // All 3 search portals
+  html+='<div class="card" style="padding:12px"><h3 style="font-size:.85rem">🔍 Search All 3 Portals</h3>';
+  html+='<p class="tx tm" style="font-size:.7rem;margin-bottom:8px">Different listings on each — check all three for best coverage.</p>';
+  html+='<div style="display:flex;flex-direction:column;gap:6px">';
+  html+='<a href="https://www.domain.com.au/rent/?suburb=mordialloc-vic-3195,parkdale-vic-3195,aspendale-vic-3195,edithvale-vic-3196,chelsea-vic-3196,bonbeach-vic-3196,mentone-vic-3194,carrum-vic-3197&bedrooms=3-any&propertytype=house,townhouse&sort=dateupdated-desc" target="_blank" style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:8px;text-decoration:none;color:var(--text)"><div><strong style="color:var(--green)">Domain.com.au</strong><br><span style="font-size:.7rem">Largest portal — best filters, most agents list here first</span></div><span style="color:var(--accent);font-size:.8rem">Search →</span></a>';
+  html+='<a href="https://www.realestate.com.au/rent/property-house-with-3-bedrooms-in-mordialloc,+vic+3195%3b+parkdale,+vic+3195%3b+aspendale,+vic+3195%3b+edithvale,+vic+3196%3b+chelsea,+vic+3196%3b+bonbeach,+vic+3196%3b+mentone,+vic+3194%3b+carrum,+vic+3197/list-1?activeSort=list-date" target="_blank" style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:8px;text-decoration:none;color:var(--text)"><div><strong style="color:var(--accent)">realestate.com.au</strong><br><span style="font-size:.7rem">Second biggest — some exclusive listings not on Domain</span></div><span style="color:var(--accent);font-size:.8rem">Search →</span></a>';
+  html+='<a href="https://www.rentals.com.au/properties/melbourne+city+-+bayside?surrounding_suburbs=1&property_type=house+townhouse&bedrooms=3-any&sort=date-new" target="_blank" style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.2);border-radius:8px;text-decoration:none;color:var(--text)"><div><strong style="color:#8b5cf6">rentals.com.au</strong><br><span style="font-size:.7rem">Free to list — private landlords, less competition</span></div><span style="color:var(--accent);font-size:.8rem">Search →</span></a>';
+  html+='</div></div>';
+  
+  // Tips
   html+='<div style="padding:10px;background:rgba(59,130,246,.05);border-radius:8px;font-size:.78rem">';
-  html+='<strong>💡 Also try:</strong><br>';
-  html+='• <a href="https://www.realestate.com.au/rent/property-house-with-3-bedrooms-between-0-800-in-mordialloc,+vic+3195%3b+parkdale,+vic+3195%3b+aspendale,+vic+3195%3b+edithvale,+vic+3196%3b+chelsea,+vic+3196%3b+bonbeach,+vic+3196%3b+mentone,+vic+3194%3b+carrum,+vic+3197/list-1?activeSort=list-date" target="_blank" style="color:var(--accent)">realestate.com.au — all suburbs combined</a><br>';
-  html+='• Set up <strong>email alerts</strong> on Domain for instant notifications of new listings<br>';
-  html+='• Check <strong>Facebook Marketplace</strong> — some landlords list privately<br>';
+  html+='<strong>💡 Tips:</strong><br>';
+  html+='• Set up <strong>email alerts</strong> on all 3 portals — get emailed daily when new listings appear<br>';
+  html+='• Check <strong>Facebook Marketplace</strong> + local community groups — some landlords list privately<br>';
   html+='• When you find one, go to <strong>Houses tab → + Add Property</strong>';
   html+='</div></div>';
   
