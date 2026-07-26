@@ -865,7 +865,7 @@ function movePlanOverview(){
       html+='<div>🏆 <strong>Best value property:</strong> '+bestHouse.address+' ('+bestHouse.suburb+') — $'+bestDisp+'/mo disposable</div>';
     }
     html+='<div>📍 <strong>Top suburb:</strong> '+topSuburbs[0]+'</div>';
-    if(topSchools.length)html+='<div>🎓 <strong>Top school:</strong> '+topSchools[0]+'</div>';
+    html+='<div>🎓 <strong>Top school:</strong> Patterson River SC / Parkdale SC</div>';
     html+='</div></div>';
   }
   
