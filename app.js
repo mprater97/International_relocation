@@ -34,6 +34,37 @@ function save(){
 // Auto-save every 30 seconds as safety net
 setInterval(function(){save()},30000);
 
+// Receive property data from Chrome extension via URL hash
+(function(){
+  if(window.location.hash.indexOf('#addhouse=')===0){
+    try{
+      var json=decodeURIComponent(window.location.hash.slice(10));
+      var h=JSON.parse(json);
+      if(h.address&&h.rent){
+        if(!state.savedHouses)state.savedHouses=[];
+        // Check for duplicates
+        var exists=state.savedHouses.some(function(x){return x.link===h.link});
+        if(!exists){
+          state.savedHouses.push({
+            address:h.address,suburb:h.suburb||'',rent:h.rent,beds:h.beds||4,baths:h.baths||0,cars:h.cars||0,
+            garden:h.features&&h.features.indexOf('garden')>=0,pool:h.features&&h.features.indexOf('pool')>=0,
+            ac:h.features&&h.features.indexOf('ac')>=0,dishwasher:h.features&&h.features.indexOf('dishwasher')>=0,
+            link:h.link||'',image:h.image||'',notes:'Added via extension',status:'Saved',added:new Date().toISOString()
+          });
+          save();
+          // Switch to Move Plan tab
+          setTimeout(function(){
+            document.querySelector('[data-tab="moveplan"]').click();
+            setTimeout(function(){movePlanSub='houses';renderMovePlan()},200);
+          },500);
+        }
+      }
+    }catch(e){}
+    // Clean hash
+    history.replaceState(null,null,window.location.pathname);
+  }
+})();
+
 function exportData(){const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='relo-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
 function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{state=JSON.parse(ev.target.result);save();location.reload()}catch(e){alert('Invalid file')}};r.readAsText(f)}
 function resetEverything(){
