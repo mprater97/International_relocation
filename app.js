@@ -837,51 +837,90 @@ function movePlanHouses(){
   if(!state.savedHouses)state.savedHouses=[];
   var houses=state.savedHouses;
   var suburbData=typeof SUBURBS_DATA!=='undefined'?SUBURBS_DATA:[];
+  var shortlistedSuburbs=['Mentone','Parkdale','Mordialloc','Aspendale','Edithvale','Chelsea','Bonbeach','Carrum'];
   
-  var html='<div class="card"><h2>🏠 Saved Properties</h2>';
-  html+='<p class="tx tm mb2">Add properties you find on Domain/realestate.com.au. The system calculates your budget automatically.</p>';
+  var html='';
   
-  // Add new property form
-  html+='<div style="background:var(--card2);padding:12px;border-radius:10px;margin-bottom:16px">';
-  html+='<h3 style="font-size:.85rem;margin-bottom:8px">+ Add Property</h3>';
-  html+='<div style="display:flex;flex-direction:column;gap:6px">';
-  html+='<div style="display:flex;gap:6px;flex-wrap:wrap"><input type="text" id="hAddr" placeholder="Address" style="flex:2;min-width:180px"><select id="hSuburb" style="flex:1;min-width:120px">';
-  suburbData.forEach(function(s){html+='<option value="'+s.name+'">'+s.name+'</option>'});
-  html+='</select></div>';
-  html+='<div style="display:flex;gap:6px;flex-wrap:wrap"><input type="number" id="hRent" placeholder="$/wk" style="width:80px"><input type="number" id="hBeds" placeholder="Beds" style="width:60px" value="4"><input type="text" id="hLink" placeholder="Listing URL (Domain/realestate)" style="flex:1;min-width:180px"></div>';
-  html+='<div style="display:flex;gap:6px;flex-wrap:wrap"><input type="text" id="hPhotos" placeholder="Photo URLs (comma separated)" style="flex:1"><input type="text" id="hNotes" placeholder="Notes (garden? garage? condition?)" style="flex:1"></div>';
-  html+='<button class="btn btn-p" onclick="addSavedHouse()" style="align-self:flex-start">+ Save Property</button>';
+  // Set up alerts prompt
+  html+='<div class="card" style="border-left:4px solid var(--accent);padding:12px"><h3 style="font-size:.85rem">🔔 Set Up Alerts (do this once)</h3>';
+  html+='<div style="font-size:.78rem;line-height:1.8">';
+  html+='<div>1. <a href="https://www.domain.com.au/rent/?suburb=mordialloc-vic-3195,parkdale-vic-3195,aspendale-vic-3195,edithvale-vic-3196,chelsea-vic-3196,bonbeach-vic-3196,mentone-vic-3194,carrum-vic-3197&bedrooms=3-any&propertytype=house,townhouse&sort=dateupdated-desc" target="_blank" style="color:var(--accent)"><strong>Domain → Search → Save & set alert</strong></a> (get emailed new listings daily)</div>';
+  html+='<div>2. <a href="https://www.realestate.com.au/rent/property-house-with-3-bedrooms-in-mordialloc,+vic+3195%3b+parkdale,+vic+3195%3b+aspendale,+vic+3195%3b+edithvale,+vic+3196%3b+chelsea,+vic+3196%3b+bonbeach,+vic+3196%3b+mentone,+vic+3194%3b+carrum,+vic+3197/list-1" target="_blank" style="color:var(--accent)"><strong>realestate.com.au → Save search</strong></a></div>';
+  html+='<div>3. Join Facebook: <strong>"Mordialloc Community"</strong>, <strong>"Chelsea/Bonbeach Community"</strong> groups — some list privately</div>';
   html+='</div></div>';
   
-  // Comparison table
+  // Quick add form
+  html+='<div class="card" style="padding:12px"><h3 style="font-size:.9rem">+ Add Property</h3>';
+  html+='<p class="tx tm" style="font-size:.7rem;margin-bottom:8px">Found one on Domain? Paste the details below.</p>';
+  html+='<div style="display:flex;flex-direction:column;gap:6px">';
+  html+='<input type="text" id="hAddr" placeholder="Address (e.g. 14 Beach Rd)" style="font-size:.85rem">';
+  html+='<div style="display:flex;gap:6px;flex-wrap:wrap">';
+  html+='<select id="hSuburb" style="flex:1;min-width:120px">';
+  shortlistedSuburbs.forEach(function(n){html+='<option value="'+n+'">'+n+'</option>'});
+  html+='<option value="Other">Other</option></select>';
+  html+='<input type="number" id="hRent" placeholder="$/wk" style="width:80px">';
+  html+='<input type="number" id="hBeds" placeholder="Beds" style="width:60px" value="4"></div>';
+  html+='<input type="text" id="hLink" placeholder="Listing URL (paste from Domain/realestate)" style="font-size:.8rem">';
+  html+='<input type="text" id="hNotes" placeholder="Notes (garden? garage? near station? condition?)" style="font-size:.8rem">';
+  html+='<button class="btn btn-p" onclick="addSavedHouse()">+ Save Property</button>';
+  html+='</div></div>';
+  
+  // Status filters
+  var statuses=['Saved','Inspecting','Applied','Offered','Rejected'];
+  var counts={};statuses.forEach(function(s){counts[s]=houses.filter(function(h){return(h.status||'Saved')===s}).length});
+  html+='<div style="display:flex;gap:6px;margin:12px 0;flex-wrap:wrap">';
+  html+='<span style="font-size:.75rem;padding:4px 8px;background:var(--card2);border-radius:12px">All ('+houses.length+')</span>';
+  statuses.forEach(function(s){if(counts[s])html+='<span style="font-size:.75rem;padding:4px 8px;background:var(--card2);border-radius:12px">'+s+' ('+counts[s]+')</span>'});
+  html+='</div>';
+  
+  // Property cards
   if(houses.length){
-    html+='<div class="table-wrap"><table><tr><th>Address</th><th>Suburb</th><th>Beds</th><th>$/wk</th><th>$/mo</th><th>Disposable</th><th>Commute</th><th>Beach</th><th>School</th><th></th></tr>';
     houses.forEach(function(h,i){
       var s=suburbData.find(function(x){return x.name===h.suburb});
-      var monthlyRent=Math.round(h.rent*52/12);
+      var weeklyRent=h.rent||0;
+      var monthlyRent=Math.round(weeklyRent*52/12);
       var disposable=9571-monthlyRent-3345;
-      var train=s?s.train+'min':'?';
-      var beach=s?s.beach:'?';
-      var school=s?s.school:'?';
-      html+='<tr>';
-      html+='<td><strong>'+h.address+'</strong>'+(h.link?'<br><a href="'+h.link+'" target="_blank" style="color:var(--accent);font-size:.65rem">View →</a>':'')+'</td>';
-      html+='<td>'+h.suburb+'</td>';
-      html+='<td>'+( h.beds||'?')+'</td>';
-      html+='<td>$'+h.rent+'</td>';
-      html+='<td>$'+monthlyRent+'<br><span class="tx tm">£'+Math.round(monthlyRent*0.526)+'</span></td>';
-      html+='<td style="font-weight:600;color:'+(disposable>=2000?'var(--green)':disposable>=1000?'var(--orange)':'var(--red)')+'">$'+disposable+'<br><span style="font-size:.7rem">£'+Math.round(disposable*0.526)+'</span></td>';
-      html+='<td>'+train+'</td>';
-      html+='<td>'+beach+'</td>';
-      html+='<td style="font-size:.7rem">'+school+'</td>';
-      html+='<td><button class="btn btn-o" style="padding:2px 5px;color:var(--red);font-size:.65rem" onclick="removeSavedHouse('+i+')">✕</button></td>';
-      html+='</tr>';
+      var status=h.status||'Saved';
+      var statusColors={'Saved':'var(--accent)','Inspecting':'var(--orange)','Applied':'#8b5cf6','Offered':'var(--green)','Rejected':'var(--red)'};
+      
+      html+='<div class="card" style="padding:12px;margin-bottom:8px;border-left:3px solid '+statusColors[status]+'">';
+      html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">';
+      // Left side - address & details
+      html+='<div style="flex:1;min-width:200px">';
+      html+='<div style="display:flex;align-items:center;gap:6px"><strong style="font-size:.9rem">'+h.address+'</strong><span style="background:'+statusColors[status]+';color:#fff;padding:1px 6px;border-radius:8px;font-size:.6rem">'+status+'</span></div>';
+      html+='<div class="tx tm" style="font-size:.72rem">'+h.suburb+' | '+(h.beds||'?')+' bed | '+(s?s.train+' min train | '+s.beach:'')+'</div>';
+      if(h.link)html+='<a href="'+h.link+'" target="_blank" style="color:var(--accent);font-size:.72rem">View listing →</a>';
+      html+='</div>';
+      // Right side - financials
+      html+='<div style="text-align:right;min-width:120px">';
+      html+='<div style="font-size:1.1rem;font-weight:700">$'+weeklyRent+'/wk</div>';
+      html+='<div style="font-size:.75rem">$'+monthlyRent+'/mo (£'+Math.round(monthlyRent*0.526)+')</div>';
+      html+='<div style="font-size:.8rem;font-weight:600;color:'+(disposable>=2000?'var(--green)':disposable>=1000?'var(--orange)':'var(--red)')+'">$'+disposable+'/mo spare</div>';
+      html+='</div></div>';
+      // Notes
+      if(h.notes)html+='<div style="font-size:.72rem;color:var(--muted);margin-top:6px;padding:4px 8px;background:var(--card2);border-radius:4px">📝 '+h.notes+'</div>';
+      // Inspection date
+      if(h.inspectionDate)html+='<div style="font-size:.72rem;margin-top:4px">📅 Inspection: <strong>'+h.inspectionDate+'</strong></div>';
+      // Actions
+      html+='<div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;align-items:center">';
+      html+='<select style="font-size:.7rem;padding:2px 6px" onchange="updateHouseStatus('+i+',this.value)">';
+      statuses.forEach(function(st){html+='<option value="'+st+'"'+(status===st?' selected':'')+'>'+st+'</option>'});
+      html+='</select>';
+      html+='<input type="date" value="'+(h.inspectionDate||'')+'" style="font-size:.7rem;padding:2px 4px" onchange="updateHouseInspection('+i+',this.value)" title="Inspection date">';
+      html+='<input type="text" value="'+(h.notes||'')+'" placeholder="Add note..." style="flex:1;font-size:.7rem;min-width:120px" onchange="updateHouseNotes('+i+',this.value)">';
+      html+='<button class="btn btn-o" style="padding:2px 6px;color:var(--red);font-size:.65rem" onclick="removeSavedHouse('+i+')">✕</button>';
+      html+='</div></div>';
     });
-    html+='</table></div>';
+  }else{
+    html+='<div class="card" style="text-align:center;padding:20px"><p class="tm">No properties saved yet.</p><p class="tx tm">Go to <strong>Find Homes</strong> tab → browse Domain → come back here and add what you like.</p></div>';
   }
-  html+='</div>';
   
   document.getElementById('movePlanSub').innerHTML=html;
 }
+
+function updateHouseStatus(i,status){state.savedHouses[i].status=status;save();renderMovePlan()}
+function updateHouseInspection(i,date){state.savedHouses[i].inspectionDate=date;save();renderMovePlan()}
+function updateHouseNotes(i,notes){state.savedHouses[i].notes=notes;save()}
 
 function movePlanFinder(){
   var suburbData=typeof SUBURBS_DATA!=='undefined'?SUBURBS_DATA:[];
@@ -946,11 +985,10 @@ function addSavedHouse(){
   var rent=+(document.getElementById('hRent').value)||0;
   var beds=+(document.getElementById('hBeds').value)||4;
   var link=document.getElementById('hLink').value;
-  var photos=(document.getElementById('hPhotos').value||'').split(',').map(function(s){return s.trim()}).filter(function(s){return s});
   var notes=document.getElementById('hNotes').value;
   if(!addr||!rent)return;
   if(!state.savedHouses)state.savedHouses=[];
-  state.savedHouses.push({address:addr,suburb:suburb,rent:rent,beds:beds,link:link,photos:photos,notes:notes,added:new Date().toISOString()});
+  state.savedHouses.push({address:addr,suburb:suburb,rent:rent,beds:beds,link:link,notes:notes,status:'Saved',added:new Date().toISOString()});
   save();renderMovePlan();
 }
 function removeSavedHouse(i){
