@@ -685,48 +685,103 @@ function movePlanOverview(){
   if(!state.shortlistedSchools)state.shortlistedSchools=[];
   if(!state.savedHouses)state.savedHouses=[];
   var suburbData=typeof SUBURBS_DATA!=='undefined'?SUBURBS_DATA:[];
+  var schoolInfo=typeof SCHOOL_INFO!=='undefined'?SCHOOL_INFO:{};
+  var suburbPhotos=typeof SUBURB_PHOTOS!=='undefined'?SUBURB_PHOTOS:{};
   
   var html='<div class="card" style="border-left:4px solid var(--accent)"><h2>🎯 Your Move Plan</h2>';
-  html+='<p class="tx tm">Your shortlisted schools, suburbs, and saved properties in one view. This is your decision dashboard.</p></div>';
+  html+='<p class="tx tm">Schools: <strong>Patterson River SC</strong> + <strong>Parkdale SC</strong>. Coastal strip from Mentone to Carrum. Click any suburb or school to expand full details.</p></div>';
   
-  // SHORTLISTED SUBURBS
+  // SHORTLISTED SCHOOLS - expandable
+  html+='<div class="card"><h3>🎓 Shortlisted Schools</h3>';
+  // Patterson River SC
+  html+='<details style="margin-bottom:8px;border:1px solid var(--border);border-radius:8px;padding:10px"><summary style="cursor:pointer;font-weight:700;font-size:.9rem">⭐ Patterson River SC — Carrum <span style="font-size:.75rem;color:var(--muted)">(VCE 26 | ~950 students | Co-ed Yr 7–12)</span></summary>';
+  html+='<div style="margin-top:10px;font-size:.8rem;line-height:1.8">';
+  html+='<div style="color:var(--green);font-weight:600;margin-bottom:6px">Outstanding outdoor ed — river + beach on doorstep. Hands-on learning, kayaking, surfing, marine studies. Relaxed beach community school.</div>';
+  html+='<div><strong>🤸 Sport (5/5):</strong> AFL, Netball, Soccer, Basketball, Swimming, Surfing, Kayaking, Sailing, Beach sports</div>';
+  html+='<div><strong>🎭 Arts (4/5):</strong> Annual musical, Drama Yr 7-12, Dance, Music ensembles, Media, Photography</div>';
+  html+='<div><strong>⛺ Outdoor Ed (5/5):</strong> River access (kayak launch), Surfing, Sailing, Marine studies, VCE Outdoor Ed, Bushwalking, Rock climbing, Snorkelling</div>';
+  html+='<div><strong>😊 Vibe (5/5):</strong> Relaxed beach community, smaller than Parkdale, intimate feel, hands-on learning focus</div>';
+  html+='<div><strong>🏫 Facilities:</strong> Direct river access, Performing arts centre, Gym, Ovals, Courts, 2 min to beach</div>';
+  html+='<div><strong>🌍 International:</strong> EAL support, buddy program, transition coordinator</div>';
+  html+='<div style="margin-top:6px"><strong>📍 Catchment:</strong> Carrum, Bonbeach, Chelsea, Edithvale, Aspendale (south)</div>';
+  html+='<div><strong>👦 Jack (primary feeder):</strong> Carrum Primary — small, nurturing, outdoor focus, beach community</div>';
+  html+='<div style="margin-top:6px"><a href="https://www.pattersonriver.vic.edu.au" target="_blank" style="color:var(--accent)">School website →</a> · <a href="https://www.findmyschool.vic.gov.au" target="_blank" style="color:var(--accent)">Check catchment →</a></div>';
+  html+='</div></details>';
+  
+  // Parkdale SC
+  html+='<details style="border:1px solid var(--border);border-radius:8px;padding:10px"><summary style="cursor:pointer;font-weight:700;font-size:.9rem">⭐ Parkdale SC — Mordialloc/Parkdale <span style="font-size:.75rem;color:var(--muted)">(VCE 30 | ~1,500 students | Co-ed Yr 7–12)</span></summary>';
+  html+='<div style="margin-top:10px;font-size:.8rem;line-height:1.8">';
+  html+='<div style="color:var(--green);font-weight:600;margin-bottom:6px">Sports Academy + Performing Arts. Bigger school with more programs. Higher VCE. Still relaxed beach vibe with swimming pool on site.</div>';
+  html+='<div><strong>🤸 Sport (5/5):</strong> AFL Academy, Netball Academy, Soccer, Swimming (pool on site!), Athletics, Cross country, Basketball, Cricket, Volleyball, Surfing, Gymnastics (interschool)</div>';
+  html+='<div><strong>🎭 Arts (4/5):</strong> Annual musical (200+ students), Drama Yr 7-12, Dance, Music ensembles, Visual arts, Media, Theatre</div>';
+  html+='<div><strong>⛺ Outdoor Ed (4/5):</strong> Year 7-10 camps, VCE Outdoor Ed, Surfing, Kayaking, Rock climbing, Bushwalking</div>';
+  html+='<div><strong>😊 Vibe (4/5):</strong> Bigger school, more structured but still beach lifestyle. Strong community. State sport champions.</div>';
+  html+='<div><strong>🏫 Facilities:</strong> Swimming pool, Gym, Performing arts centre, Multiple ovals, Tennis/basketball courts, Recording studio</div>';
+  html+='<div><strong>🌍 International:</strong> Buddy program, EAL support, transition coordinator, wellbeing team</div>';
+  html+='<div style="margin-top:6px"><strong>📍 Catchment:</strong> Mordialloc, Parkdale, Mentone, Aspendale (north)</div>';
+  html+='<div><strong>👦 Jack (primary feeder):</strong> Parkdale Primary / Mordialloc Beach Primary — sports, outdoor ed, beach lifestyle</div>';
+  html+='<div style="margin-top:6px"><a href="https://www.parkdalesc.vic.edu.au" target="_blank" style="color:var(--accent)">School website →</a> · <a href="https://www.findmyschool.vic.gov.au" target="_blank" style="color:var(--accent)">Check catchment →</a></div>';
+  html+='</div></details>';
+  html+='</div>';
+  
+  // SHORTLISTED SUBURBS - expandable with full detail
   var subRatings=state.suburbRatings||{};
   var topSuburbs=Object.keys(subRatings).filter(function(k){return subRatings[k]>=4}).sort(function(a,b){return subRatings[b]-subRatings[a]});
+  var catchmentInfo={'Mentone':'Parkdale SC','Parkdale':'Parkdale SC','Mordialloc':'Parkdale SC','Aspendale':'Parkdale SC / Patterson River','Edithvale':'Patterson River SC','Chelsea':'Patterson River SC','Bonbeach':'Patterson River SC','Carrum':'Patterson River SC'};
   
-  html+='<div class="card"><h3>📍 Shortlisted Suburbs ('+(topSuburbs.length||0)+')</h3>';
-  if(topSuburbs.length){
-    html+='<div style="display:flex;flex-direction:column;gap:6px">';
-    topSuburbs.forEach(function(name){
-      var s=suburbData.find(function(x){return x.name===name});
-      if(!s)return;
-      var bed4mo=Math.round(parseInt(s.bed4)*52/12);
-      var disposable=9571-bed4mo-3345;
-      var stars='';for(var i=0;i<subRatings[name];i++)stars+='⭐';
-      html+='<div style="padding:10px 12px;background:rgba(34,197,94,.05);border-radius:8px;border-left:3px solid var(--green)">';
-      html+='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">';
-      html+='<div><strong>'+name+'</strong> '+stars+'<div class="tx tm" style="font-size:.7rem">'+s.vibe+'</div></div>';
-      html+='<div style="text-align:right;font-size:.78rem"><div>$'+bed4mo+'/mo rent | '+s.train+' min | '+s.beach+'</div><div style="color:var(--green);font-weight:600">$'+disposable+'/mo disposable</div></div>';
-      html+='</div></div>';
-    });
+  html+='<div class="card"><h3>📍 Shortlisted Suburbs ('+topSuburbs.length+')</h3>';
+  html+='<p class="tx tm mb2">All coastal, all within school catchment. Click to expand full details + photos.</p>';
+  topSuburbs.forEach(function(name){
+    var s=suburbData.find(function(x){return x.name===name});
+    if(!s)return;
+    var si=schoolInfo[name]||{};
+    var photos=suburbPhotos[name]||[];
+    var bed4mo=Math.round(parseInt(s.bed4)*52/12);
+    var bed3mo=Math.round(parseInt(s.bed3)*52/12);
+    var disposable=9571-bed4mo-3345;
+    var stars='';for(var i=0;i<subRatings[name];i++)stars+='⭐';
+    var domainUrl='https://www.domain.com.au/rent/'+name.toLowerCase().replace(/ /g,'-')+'-vic-'+s.pc+'/?bedrooms=3-any&propertytype=house,townhouse&sort=dateupdated-desc';
+    var mapUrl='https://www.google.com/maps/search/'+name.replace(/ /g,'+')+'+Victoria+Australia/@'+s.lat+','+s.lng+',14z';
+    
+    html+='<details style="margin-bottom:8px;border:1px solid var(--border);border-radius:8px;padding:10px">';
+    html+='<summary style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">';
+    html+='<div><strong style="font-size:.9rem">'+name+'</strong> '+stars+' <span style="font-size:.7rem;color:var(--muted)">→ '+(catchmentInfo[name]||'')+'</span><br><span style="font-size:.72rem;color:var(--muted)">'+s.vibe+'</span></div>';
+    html+='<div style="text-align:right;font-size:.75rem"><div>'+s.train+' min | '+s.beach+'</div><div style="color:var(--green);font-weight:600">$'+disposable+'/mo spare</div></div>';
+    html+='</summary>';
+    
+    // Expanded content
+    html+='<div style="margin-top:10px">';
+    // Photos
+    if(photos.length){
+      html+='<div style="display:flex;gap:6px;overflow-x:auto;padding:6px 0;-webkit-overflow-scrolling:touch">';
+      photos.slice(0,10).forEach(function(url){html+='<img src="'+url+'" style="height:80px;border-radius:8px;object-fit:cover;flex:0 0 auto" loading="lazy" onerror="this.style.display=\'none\'">';});
+      html+='</div>';
+    }
+    // Details grid
+    html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;font-size:.78rem">';
+    html+='<div style="padding:8px;background:rgba(34,197,94,.05);border-radius:6px"><strong>💰 Rent</strong><br>4-bed: $'+bed4mo+'/mo (£'+Math.round(bed4mo*0.526)+')<br>3-bed: $'+bed3mo+'/mo (£'+Math.round(bed3mo*0.526)+')<br><span style="color:var(--green);font-weight:600">Disposable: $'+disposable+'/mo</span></div>';
+    html+='<div style="padding:8px;background:rgba(59,130,246,.05);border-radius:6px"><strong>🚆 Location</strong><br>Train to CBD: '+s.train+' min<br>Beach: '+s.beach+'<br>Garden: '+(s.garden||'—')+'</div>';
+    html+='<div style="padding:8px;background:rgba(139,92,246,.05);border-radius:6px"><strong>🎓 School</strong><br>'+(catchmentInfo[name]||s.school)+'<br>'+(si.extra?si.extra.slice(0,120)+'...':'')+'</div>';
+    html+='<div style="padding:8px;background:rgba(249,115,22,.05);border-radius:6px"><strong>📊 Scores</strong><br>Safety: '+s.safety+'/5 | Walk: '+s.walk+'/5<br>Family: '+s.familyScore+'/5 | Growth: '+s.growth+'/5</div>';
     html+='</div>';
-  }else{html+='<p class="tx tm">Rate suburbs 4-5 stars on the Locations tab to add them here.</p>';}
-  html+='</div>';
-  
-  // SHORTLISTED SCHOOLS
-  var schRatings=state.schoolRatings||{};
-  var topSchools=Object.keys(schRatings).filter(function(k){return schRatings[k]>=4}).sort(function(a,b){return schRatings[b]-schRatings[a]});
-  
-  html+='<div class="card"><h3>🎓 Shortlisted Schools ('+topSchools.length+')</h3>';
-  if(topSchools.length){
-    html+='<div style="display:flex;flex-direction:column;gap:4px">';
-    topSchools.forEach(function(name){
-      var stars='';for(var i=0;i<schRatings[name];i++)stars+='⭐';
-      html+='<div style="padding:8px 12px;background:rgba(59,130,246,.05);border-radius:6px"><strong>'+name+'</strong> '+stars+'</div>';
-    });
+    // Lifestyle
+    html+='<div style="margin-top:8px;font-size:.75rem;line-height:1.7">';
+    html+='<div><strong>☕ Cafes:</strong> '+s.cafes+'</div>';
+    html+='<div><strong>🛍️ Shopping:</strong> '+s.shops+'</div>';
+    html+='<div><strong>🌳 Outdoors:</strong> '+s.outdoors+'</div>';
+    html+='<div><strong>👨‍👩‍👧‍👦 Community:</strong> '+s.community+'</div>';
+    html+='<div style="margin-top:4px;color:var(--green)"><strong>✅ Pros:</strong> '+s.pros+'</div>';
+    html+='<div style="color:var(--orange)"><strong>⚠️ Cons:</strong> '+s.cons+'</div>';
     html+='</div>';
-  }else{html+='<p class="tx tm">Rate schools 4-5 stars on the Locations → Schools tab to add them here.</p>';}
+    // Links
+    html+='<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">';
+    html+='<a href="'+domainUrl+'" target="_blank" class="btn btn-p" style="font-size:.7rem;padding:4px 10px">🏠 Browse rentals</a>';
+    html+='<a href="'+mapUrl+'" target="_blank" class="btn btn-o" style="font-size:.7rem;padding:4px 10px">📍 Google Maps</a>';
+    html+='<a href="https://www.findmyschool.vic.gov.au" target="_blank" class="btn btn-o" style="font-size:.7rem;padding:4px 10px">🎓 Check catchment</a>';
+    html+='</div>';
+    html+='</div></details>';
+  });
   html+='</div>';
-  
   // SAVED HOUSES
   var houses=state.savedHouses||[];
   html+='<div class="card"><h3>🏠 Saved Properties ('+houses.length+')</h3>';
