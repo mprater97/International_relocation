@@ -851,9 +851,10 @@ function movePlanHouses(){
   
   // Quick add form
   html+='<div class="card" style="padding:12px"><h3 style="font-size:.9rem">+ Add Property</h3>';
-  html+='<p class="tx tm" style="font-size:.7rem;margin-bottom:8px">Found one on Domain? Paste details below. Right-click the main photo → "Copy Image Address" for the image.</p>';
+  html+='<p class="tx tm" style="font-size:.7rem;margin-bottom:8px">Paste a Domain URL below — address and suburb auto-fill. Or use the bookmarklet (see below) to capture everything in one click.</p>';
   html+='<div style="display:flex;flex-direction:column;gap:6px">';
-  html+='<input type="text" id="hAddr" placeholder="Address (e.g. 14 Beach Rd)" style="font-size:.85rem">';
+  html+='<input type="text" id="hLink" placeholder="Paste Domain / realestate URL here..." style="font-size:.85rem;padding:10px;border:2px dashed var(--accent);border-radius:8px" onpaste="setTimeout(function(){parseDomainUrl()},100)" onchange="parseDomainUrl()">';
+  html+='<input type="text" id="hAddr" placeholder="Address (auto-fills from URL)" style="font-size:.85rem">';
   html+='<div style="display:flex;gap:6px;flex-wrap:wrap">';
   html+='<select id="hSuburb" style="flex:1;min-width:120px">';
   shortlistedSuburbs.forEach(function(n){html+='<option value="'+n+'">'+n+'</option>'});
@@ -868,11 +869,17 @@ function movePlanHouses(){
   html+='<label style="font-size:.72rem;display:flex;align-items:center;gap:3px"><input type="checkbox" id="hAC"> Air con</label>';
   html+='<label style="font-size:.72rem;display:flex;align-items:center;gap:3px"><input type="checkbox" id="hDishwasher"> Dishwasher</label>';
   html+='</div>';
-  html+='<input type="text" id="hLink" placeholder="Listing URL (paste from Domain/realestate)" style="font-size:.8rem">';
   html+='<input type="text" id="hImage" placeholder="Main photo URL (right-click image → Copy Image Address)" style="font-size:.8rem">';
   html+='<input type="text" id="hNotes" placeholder="Notes (condition? Street noise? Near station?)" style="font-size:.8rem">';
   html+='<button class="btn btn-p" onclick="addSavedHouse()">+ Save Property</button>';
   html+='</div></div>';
+  
+  // Bookmarklet
+  html+='<div class="card" style="padding:12px;border-left:4px solid var(--accent)"><h3 style="font-size:.85rem">⚡ One-Click Capture (Bookmarklet)</h3>';
+  html+='<p class="tx tm" style="font-size:.72rem;margin-bottom:8px">Drag this button to your bookmarks bar. Then when you are on a Domain listing, click it to copy key details to your clipboard. Paste into the Notes field above.</p>';
+  html+='<a href="javascript:void(navigator.clipboard.writeText(document.title+String.fromCharCode(124)+location.href).then(function(){alert(String.fromCharCode(10004)+String.fromCharCode(32)+String.fromCharCode(67)+String.fromCharCode(111)+String.fromCharCode(112)+String.fromCharCode(105)+String.fromCharCode(101)+String.fromCharCode(100))}))" class="btn btn-p" style="font-size:.75rem;padding:6px 12px;cursor:grab" draggable="true">📋 Grab Domain Listing</a>';
+  html+='<p class="tx tm" style="font-size:.65rem;margin-top:6px">Copies the listing title + URL. For the photo: right-click the main image → Copy Image Address → paste in photo field.</p>';
+  html+='</div>';
   
   // Status filters
   var statuses=['Saved','Inspecting','Applied','Offered','Rejected'];
@@ -1026,6 +1033,53 @@ function addSavedHouse(){
   if(!state.savedHouses)state.savedHouses=[];
   state.savedHouses.push({address:addr,suburb:suburb,rent:rent,beds:beds,baths:baths,cars:cars,garden:garden,pool:pool,ac:ac,dishwasher:dishwasher,link:link,image:image,notes:notes,status:'Saved',added:new Date().toISOString()});
   save();renderMovePlan();
+}
+
+function parseDomainUrl(){
+  var url=document.getElementById('hLink').value.trim();
+  if(!url)return;
+  
+  // Domain URL format: domain.com.au/ADDRESS-SUBURB-STATE-POSTCODE-ID
+  // e.g. domain.com.au/14-beach-road-mordialloc-vic-3195-17444583
+  var match=url.match(/domain\.com\.au\/([^?]+)/);
+  if(match){
+    var parts=match[1].split('-');
+    // Remove the listing ID (last number) and state+postcode
+    if(parts.length>4){
+      // Find vic/nsw and postcode
+      var vicIdx=parts.indexOf('vic');
+      if(vicIdx===-1)vicIdx=parts.indexOf('nsw');
+      if(vicIdx>0){
+        var addressParts=parts.slice(0,vicIdx);
+        var suburb=addressParts.pop(); // last part before state is suburb
+        // Sometimes suburb is two words
+        var knownSuburbs=['mordialloc','parkdale','mentone','aspendale','edithvale','chelsea','bonbeach','carrum','mordialloc','cheltenham','highett','bentleigh'];
+        // Check if previous word is part of suburb name
+        if(addressParts.length&&knownSuburbs.indexOf(addressParts[addressParts.length-1]+' '+suburb)>=0){
+          suburb=addressParts.pop()+' '+suburb;
+        }
+        var address=addressParts.map(function(w){return w.charAt(0).toUpperCase()+w.slice(1)}).join(' ');
+        var suburbName=suburb.charAt(0).toUpperCase()+suburb.slice(1);
+        
+        // Auto-fill address
+        if(address)document.getElementById('hAddr').value=address;
+        
+        // Auto-select suburb
+        var sel=document.getElementById('hSuburb');
+        for(var i=0;i<sel.options.length;i++){
+          if(sel.options[i].value.toLowerCase()===suburbName.toLowerCase()){
+            sel.selectedIndex=i;break;
+          }
+        }
+      }
+    }
+  }
+  
+  // realestate.com.au format: realestate.com.au/property-unit+3-bed-...-ADDRESS+SUBURB
+  // Less consistent but try to extract
+  if(url.includes('realestate.com.au')&&url.includes('property-')){
+    // Just set the link, user fills rest
+  }
 }
 function removeSavedHouse(i){
   state.savedHouses.splice(i,1);save();renderMovePlan();
