@@ -909,7 +909,7 @@ function movePlanHouses(){
   html+='<label style="font-size:.72rem;display:flex;align-items:center;gap:3px"><input type="checkbox" id="hAC"> Air con</label>';
   html+='<label style="font-size:.72rem;display:flex;align-items:center;gap:3px"><input type="checkbox" id="hDishwasher"> Dishwasher</label>';
   html+='</div>';
-  html+='<input type="text" id="hImage" placeholder="Main photo URL (right-click image → Copy Image Address)" style="font-size:.8rem">';
+  html+='<div style="background:rgba(59,130,246,.05);padding:8px 10px;border-radius:6px"><div style="font-size:.7rem;color:var(--accent);font-weight:600;margin-bottom:4px">📸 Add listing photo (optional):</div><div style="font-size:.65rem;color:var(--muted);margin-bottom:4px">On Domain: long-press the main photo → "Copy" or "Copy Image" → paste below</div><input type="text" id="hImage" placeholder="Paste image URL here..." style="font-size:.8rem;width:100%"></div>';
   html+='<input type="text" id="hNotes" placeholder="Notes (condition? Street noise? Near station?)" style="font-size:.8rem">';
   html+='<button class="btn btn-p" onclick="addSavedHouse()">+ Save Property</button>';
   html+='</div></div>';
@@ -942,12 +942,12 @@ function movePlanHouses(){
       var status=h.status||'Saved';
       var statusColors={'Saved':'var(--accent)','Inspecting':'var(--orange)','Applied':'#8b5cf6','Offered':'var(--green)','Rejected':'var(--red)'};
       
-      html+='<div class="card" style="padding:12px;margin-bottom:8px;border-left:3px solid '+statusColors[status]+'">';
-      // Image + details row
-      html+='<div style="display:flex;gap:10px;flex-wrap:wrap">';
-      // Image
-      if(h.image)html+='<img src="'+h.image+'" style="width:120px;height:80px;object-fit:cover;border-radius:6px;flex:0 0 auto" onerror="this.style.display=\'none\'">';
+      html+='<div class="card" style="padding:0;margin-bottom:8px;border-left:3px solid '+statusColors[status]+';overflow:hidden">';
+      // Image as header
+      if(h.image)html+='<img src="'+h.image+'" style="width:100%;height:140px;object-fit:cover;display:block" onerror="this.style.display=\'none\'">';
+      html+='<div style="padding:12px">';
       // Main info
+      html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">';
       html+='<div style="flex:1;min-width:180px">';
       html+='<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><strong style="font-size:.9rem">'+h.address+'</strong><span style="background:'+statusColors[status]+';color:#fff;padding:1px 6px;border-radius:8px;font-size:.6rem">'+status+'</span></div>';
       html+='<div class="tx tm" style="font-size:.72rem">'+h.suburb+' | '+(s?s.train+' min train | '+s.beach:'')+'</div>';
@@ -980,7 +980,7 @@ function movePlanHouses(){
       html+='<input type="date" value="'+(h.inspectionDate||'')+'" style="font-size:.7rem;padding:2px 4px" onchange="updateHouseInspection('+i+',this.value)" title="Inspection date">';
       html+='<input type="text" value="'+(h.notes||'')+'" placeholder="Add note..." style="flex:1;font-size:.7rem;min-width:120px" onchange="updateHouseNotes('+i+',this.value)">';
       html+='<button class="btn btn-o" style="padding:2px 6px;color:var(--red);font-size:.65rem" onclick="removeSavedHouse('+i+')">✕</button>';
-      html+='</div></div>';
+      html+='</div></div></div>';
     });
   }else{
     html+='<div class="card" style="text-align:center;padding:20px"><p class="tm">No properties saved yet.</p><p class="tx tm">Go to <strong>Find Homes</strong> tab → browse Domain → come back here and add what you like.</p></div>';
