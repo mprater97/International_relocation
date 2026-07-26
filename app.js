@@ -100,7 +100,7 @@ document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
   t.classList.add('active');document.getElementById(t.dataset.tab).classList.add('active');
-  ({plan:renderPlanNew,money:renderMoney,locations:renderCompare,notes:renderNotes,settings:renderSettings})[t.dataset.tab]?.();
+  ({plan:renderPlanNew,money:renderMoney,moveplan:renderMovePlan,locations:renderCompare,notes:renderNotes,settings:renderSettings})[t.dataset.tab]?.();
 }));
 
 function updateHeader(){
@@ -666,6 +666,231 @@ function moneyUK(){
   html+='</table></div></div>';
   
   document.getElementById('moneySub').innerHTML=html;
+}
+
+// ===== MOVE PLAN (consolidated decision view) =====
+var movePlanSub='overview';
+function renderMovePlan(){
+  var el=document.getElementById('moveplan');
+  el.innerHTML='<div class="stabs">'+
+    '<div class="stab '+(movePlanSub==='overview'?'active':'')+'" onclick="movePlanSub=\'overview\';renderMovePlan()">📊 Overview</div>'+
+    '<div class="stab '+(movePlanSub==='houses'?'active':'')+'" onclick="movePlanSub=\'houses\';renderMovePlan()">🏠 Houses</div>'+
+    '<div class="stab '+(movePlanSub==='finder'?'active':'')+'" onclick="movePlanSub=\'finder\';renderMovePlan()">🔍 Find Homes</div>'+
+    '</div><div id="movePlanSub"></div>';
+  ({overview:movePlanOverview,houses:movePlanHouses,finder:movePlanFinder})[movePlanSub]();
+}
+
+function movePlanOverview(){
+  if(!state.shortlistedSuburbs)state.shortlistedSuburbs=[];
+  if(!state.shortlistedSchools)state.shortlistedSchools=[];
+  if(!state.savedHouses)state.savedHouses=[];
+  var suburbData=typeof SUBURBS_DATA!=='undefined'?SUBURBS_DATA:[];
+  
+  var html='<div class="card" style="border-left:4px solid var(--accent)"><h2>🎯 Your Move Plan</h2>';
+  html+='<p class="tx tm">Your shortlisted schools, suburbs, and saved properties in one view. This is your decision dashboard.</p></div>';
+  
+  // SHORTLISTED SUBURBS
+  var subRatings=state.suburbRatings||{};
+  var topSuburbs=Object.keys(subRatings).filter(function(k){return subRatings[k]>=4}).sort(function(a,b){return subRatings[b]-subRatings[a]});
+  
+  html+='<div class="card"><h3>📍 Shortlisted Suburbs ('+(topSuburbs.length||0)+')</h3>';
+  if(topSuburbs.length){
+    html+='<div style="display:flex;flex-direction:column;gap:6px">';
+    topSuburbs.forEach(function(name){
+      var s=suburbData.find(function(x){return x.name===name});
+      if(!s)return;
+      var bed4mo=Math.round(parseInt(s.bed4)*52/12);
+      var disposable=9571-bed4mo-3345;
+      var stars='';for(var i=0;i<subRatings[name];i++)stars+='⭐';
+      html+='<div style="padding:10px 12px;background:rgba(34,197,94,.05);border-radius:8px;border-left:3px solid var(--green)">';
+      html+='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">';
+      html+='<div><strong>'+name+'</strong> '+stars+'<div class="tx tm" style="font-size:.7rem">'+s.vibe+'</div></div>';
+      html+='<div style="text-align:right;font-size:.78rem"><div>$'+bed4mo+'/mo rent | '+s.train+' min | '+s.beach+'</div><div style="color:var(--green);font-weight:600">$'+disposable+'/mo disposable</div></div>';
+      html+='</div></div>';
+    });
+    html+='</div>';
+  }else{html+='<p class="tx tm">Rate suburbs 4-5 stars on the Locations tab to add them here.</p>';}
+  html+='</div>';
+  
+  // SHORTLISTED SCHOOLS
+  var schRatings=state.schoolRatings||{};
+  var topSchools=Object.keys(schRatings).filter(function(k){return schRatings[k]>=4}).sort(function(a,b){return schRatings[b]-schRatings[a]});
+  
+  html+='<div class="card"><h3>🎓 Shortlisted Schools ('+topSchools.length+')</h3>';
+  if(topSchools.length){
+    html+='<div style="display:flex;flex-direction:column;gap:4px">';
+    topSchools.forEach(function(name){
+      var stars='';for(var i=0;i<schRatings[name];i++)stars+='⭐';
+      html+='<div style="padding:8px 12px;background:rgba(59,130,246,.05);border-radius:6px"><strong>'+name+'</strong> '+stars+'</div>';
+    });
+    html+='</div>';
+  }else{html+='<p class="tx tm">Rate schools 4-5 stars on the Locations → Schools tab to add them here.</p>';}
+  html+='</div>';
+  
+  // SAVED HOUSES
+  var houses=state.savedHouses||[];
+  html+='<div class="card"><h3>🏠 Saved Properties ('+houses.length+')</h3>';
+  if(houses.length){
+    html+='<div style="display:flex;flex-direction:column;gap:8px">';
+    houses.forEach(function(h,i){
+      var s=suburbData.find(function(x){return x.name===h.suburb});
+      var weeklyRent=h.rent||0;
+      var monthlyRent=Math.round(weeklyRent*52/12);
+      var disposable=9571-monthlyRent-3345;
+      html+='<div style="padding:12px;background:var(--card2);border-radius:10px;border-left:3px solid var(--accent)">';
+      html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">';
+      html+='<div style="flex:1;min-width:200px"><strong style="font-size:.9rem">'+h.address+'</strong>';
+      html+='<div class="tx tm" style="font-size:.75rem">'+h.suburb+' | '+(h.beds||'?')+' bed | '+(s?s.train+'min train':'')+'</div>';
+      if(h.link)html+='<a href="'+h.link+'" target="_blank" style="color:var(--accent);font-size:.7rem">View listing →</a>';
+      html+='</div>';
+      html+='<div style="text-align:right;min-width:130px">';
+      html+='<div style="font-size:1rem;font-weight:700">$'+weeklyRent+'/wk</div>';
+      html+='<div style="font-size:.78rem">$'+monthlyRent+'/mo (£'+Math.round(monthlyRent*0.526)+')</div>';
+      html+='<div style="font-size:.78rem;font-weight:600;color:'+(disposable>=2000?'var(--green)':'var(--orange)')+'">$'+disposable+'/mo spare</div>';
+      html+='</div></div>';
+      if(h.photos&&h.photos.length){
+        html+='<div style="display:flex;gap:4px;overflow-x:auto;margin-top:8px">';
+        h.photos.forEach(function(p){html+='<img src="'+p+'" style="height:60px;border-radius:6px;object-fit:cover" onerror="this.style.display=\'none\'">';});
+        html+='</div>';
+      }
+      if(h.notes)html+='<div style="font-size:.75rem;color:var(--muted);margin-top:6px">📝 '+h.notes+'</div>';
+      html+='<div style="margin-top:6px;display:flex;gap:6px"><button class="btn btn-o" style="font-size:.65rem;padding:2px 8px;color:var(--red)" onclick="removeSavedHouse('+i+')">✕ Remove</button></div>';
+      html+='</div>';
+    });
+    html+='</div>';
+  }else{html+='<p class="tx tm">No properties saved yet. Use the Houses tab to add properties you find.</p>';}
+  html+='</div>';
+  
+  // DECISION HELPER
+  if(houses.length&&topSuburbs.length){
+    html+='<div class="card" style="border-left:4px solid var(--green)"><h3>✅ Decision Summary</h3>';
+    html+='<div style="font-size:.82rem;line-height:1.8">';
+    var bestHouse=houses.sort(function(a,b){return(9571-Math.round(a.rent*52/12)-3345)-(9571-Math.round(b.rent*52/12)-3345)}).reverse()[0];
+    if(bestHouse){
+      var bestDisp=9571-Math.round(bestHouse.rent*52/12)-3345;
+      html+='<div>🏆 <strong>Best value property:</strong> '+bestHouse.address+' ('+bestHouse.suburb+') — $'+bestDisp+'/mo disposable</div>';
+    }
+    html+='<div>📍 <strong>Top suburb:</strong> '+topSuburbs[0]+'</div>';
+    if(topSchools.length)html+='<div>🎓 <strong>Top school:</strong> '+topSchools[0]+'</div>';
+    html+='</div></div>';
+  }
+  
+  document.getElementById('movePlanSub').innerHTML=html;
+}
+
+function movePlanHouses(){
+  if(!state.savedHouses)state.savedHouses=[];
+  var houses=state.savedHouses;
+  var suburbData=typeof SUBURBS_DATA!=='undefined'?SUBURBS_DATA:[];
+  
+  var html='<div class="card"><h2>🏠 Saved Properties</h2>';
+  html+='<p class="tx tm mb2">Add properties you find on Domain/realestate.com.au. The system calculates your budget automatically.</p>';
+  
+  // Add new property form
+  html+='<div style="background:var(--card2);padding:12px;border-radius:10px;margin-bottom:16px">';
+  html+='<h3 style="font-size:.85rem;margin-bottom:8px">+ Add Property</h3>';
+  html+='<div style="display:flex;flex-direction:column;gap:6px">';
+  html+='<div style="display:flex;gap:6px;flex-wrap:wrap"><input type="text" id="hAddr" placeholder="Address" style="flex:2;min-width:180px"><select id="hSuburb" style="flex:1;min-width:120px">';
+  suburbData.forEach(function(s){html+='<option value="'+s.name+'">'+s.name+'</option>'});
+  html+='</select></div>';
+  html+='<div style="display:flex;gap:6px;flex-wrap:wrap"><input type="number" id="hRent" placeholder="$/wk" style="width:80px"><input type="number" id="hBeds" placeholder="Beds" style="width:60px" value="4"><input type="text" id="hLink" placeholder="Listing URL (Domain/realestate)" style="flex:1;min-width:180px"></div>';
+  html+='<div style="display:flex;gap:6px;flex-wrap:wrap"><input type="text" id="hPhotos" placeholder="Photo URLs (comma separated)" style="flex:1"><input type="text" id="hNotes" placeholder="Notes (garden? garage? condition?)" style="flex:1"></div>';
+  html+='<button class="btn btn-p" onclick="addSavedHouse()" style="align-self:flex-start">+ Save Property</button>';
+  html+='</div></div>';
+  
+  // Comparison table
+  if(houses.length){
+    html+='<div class="table-wrap"><table><tr><th>Address</th><th>Suburb</th><th>Beds</th><th>$/wk</th><th>$/mo</th><th>Disposable</th><th>Commute</th><th>Beach</th><th>School</th><th></th></tr>';
+    houses.forEach(function(h,i){
+      var s=suburbData.find(function(x){return x.name===h.suburb});
+      var monthlyRent=Math.round(h.rent*52/12);
+      var disposable=9571-monthlyRent-3345;
+      var train=s?s.train+'min':'?';
+      var beach=s?s.beach:'?';
+      var school=s?s.school:'?';
+      html+='<tr>';
+      html+='<td><strong>'+h.address+'</strong>'+(h.link?'<br><a href="'+h.link+'" target="_blank" style="color:var(--accent);font-size:.65rem">View →</a>':'')+'</td>';
+      html+='<td>'+h.suburb+'</td>';
+      html+='<td>'+( h.beds||'?')+'</td>';
+      html+='<td>$'+h.rent+'</td>';
+      html+='<td>$'+monthlyRent+'<br><span class="tx tm">£'+Math.round(monthlyRent*0.526)+'</span></td>';
+      html+='<td style="font-weight:600;color:'+(disposable>=2000?'var(--green)':disposable>=1000?'var(--orange)':'var(--red)')+'">$'+disposable+'<br><span style="font-size:.7rem">£'+Math.round(disposable*0.526)+'</span></td>';
+      html+='<td>'+train+'</td>';
+      html+='<td>'+beach+'</td>';
+      html+='<td style="font-size:.7rem">'+school+'</td>';
+      html+='<td><button class="btn btn-o" style="padding:2px 5px;color:var(--red);font-size:.65rem" onclick="removeSavedHouse('+i+')">✕</button></td>';
+      html+='</tr>';
+    });
+    html+='</table></div>';
+  }
+  html+='</div>';
+  
+  document.getElementById('movePlanSub').innerHTML=html;
+}
+
+function movePlanFinder(){
+  var suburbData=typeof SUBURBS_DATA!=='undefined'?SUBURBS_DATA:[];
+  var subRatings=state.suburbRatings||{};
+  var topSuburbs=Object.keys(subRatings).filter(function(k){return subRatings[k]>=4}).sort(function(a,b){return subRatings[b]-subRatings[a]});
+  // If no shortlisted, show all active tier suburbs
+  var searchSuburbs=topSuburbs.length?topSuburbs:suburbData.map(function(s){return s.name});
+  
+  var html='<div class="card"><h2>🔍 Find Homes</h2>';
+  html+='<p class="tx tm mb2">Direct links to Domain.com.au filtered by your criteria. Click a suburb to search for 3-4 bed houses with gardens.</p>';
+  
+  // Search criteria
+  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;margin-bottom:12px;font-size:.8rem">';
+  html+='<strong>Search criteria:</strong> 3+ bedrooms | House/Townhouse | Has parking | Sort by newest';
+  html+='</div>';
+  
+  // Links grouped by priority
+  if(topSuburbs.length){
+    html+='<h3 style="font-size:.85rem;color:var(--green)">⭐ Your Shortlisted Suburbs</h3>';
+    html+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">';
+    topSuburbs.forEach(function(name){
+      var s=suburbData.find(function(x){return x.name===name});
+      if(!s)return;
+      var url='https://www.domain.com.au/rent/'+name.toLowerCase().replace(/ /g,'-')+'-vic-'+s.pc+'/?bedrooms=3-any&propertytype=house,townhouse&sort=dateupdated-desc';
+      html+='<a href="'+url+'" target="_blank" class="btn btn-p" style="font-size:.75rem;padding:6px 12px">'+name+' ('+s.train+'min, '+s.beach+')</a>';
+    });
+    html+='</div>';
+  }
+  
+  html+='<h3 style="font-size:.85rem">All Suburbs</h3>';
+  html+='<div style="display:flex;flex-wrap:wrap;gap:6px">';
+  suburbData.forEach(function(s){
+    var url='https://www.domain.com.au/rent/'+s.name.toLowerCase().replace(/ /g,'-')+'-vic-'+s.pc+'/?bedrooms=3-any&propertytype=house,townhouse&sort=dateupdated-desc';
+    var isTop=topSuburbs.indexOf(s.name)>=0;
+    html+='<a href="'+url+'" target="_blank" class="btn btn-o" style="font-size:.7rem;padding:4px 8px;'+(isTop?'border-color:var(--green)':'')+'">'+s.name+'</a>';
+  });
+  html+='</div>';
+  
+  html+='<div style="margin-top:16px;padding:10px;background:rgba(59,130,246,.05);border-radius:8px;font-size:.78rem">';
+  html+='<strong>💡 Tips:</strong><br>';
+  html+='• Also try <a href="https://www.realestate.com.au/rent/property-house-with-3-bedrooms-in-melbourne+-+southern+region,+vic/list-1?activeSort=list-date" target="_blank" style="color:var(--accent)">realestate.com.au</a> — sometimes different listings<br>';
+  html+='• Set up alerts on Domain for new listings in your suburbs<br>';
+  html+='• When you find one you like, come back to the Houses tab and add it<br>';
+  html+='• The system auto-calculates your disposable income for each property';
+  html+='</div></div>';
+  
+  document.getElementById('movePlanSub').innerHTML=html;
+}
+
+function addSavedHouse(){
+  var addr=document.getElementById('hAddr').value;
+  var suburb=document.getElementById('hSuburb').value;
+  var rent=+(document.getElementById('hRent').value)||0;
+  var beds=+(document.getElementById('hBeds').value)||4;
+  var link=document.getElementById('hLink').value;
+  var photos=(document.getElementById('hPhotos').value||'').split(',').map(function(s){return s.trim()}).filter(function(s){return s});
+  var notes=document.getElementById('hNotes').value;
+  if(!addr||!rent)return;
+  if(!state.savedHouses)state.savedHouses=[];
+  state.savedHouses.push({address:addr,suburb:suburb,rent:rent,beds:beds,link:link,photos:photos,notes:notes,added:new Date().toISOString()});
+  save();renderMovePlan();
+}
+function removeSavedHouse(i){
+  state.savedHouses.splice(i,1);save();renderMovePlan();
 }
 
 // ===== AU MONTHLY BUDGET (adaptive to suburb) =====
