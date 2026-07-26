@@ -442,16 +442,16 @@ function renderSuburbsInteractive(){
   html+='</details></div>';
 
   var tiers=[
+    {name:'⭐ SHORTLIST — Parkdale SC + Patterson River SC Catchment',suburbs:['Mentone','Parkdale','Mordialloc','Aspendale','Edithvale','Chelsea','Bonbeach','Carrum']},
     {name:'🏙️ INNER — Close to Work',suburbs:['Richmond','Windsor','Elwood','Port Melbourne','Albert Park','Middle Park']},
     {name:'🍽️ INNER SOUTH — Foodie + Near Coast',suburbs:['Elsternwick','Carnegie','Ormond','McKinnon','Bentleigh']},
-    {name:'🌊 CLOSE BAYSIDE — Beach + City',suburbs:['Hampton','Black Rock','Beaumaris','Parkdale','Highett']},
-    {name:'🌊 MID BAYSIDE — Beach Belt',suburbs:['Mordialloc','Aspendale','Mentone','Cheltenham','Edithvale','Chelsea','Bonbeach']},
+    {name:'🌊 CLOSE BAYSIDE — Beach + City',suburbs:['Hampton','Black Rock','Beaumaris','Highett']},
     {name:'⚓ WEST BAYSIDE — Village',suburbs:['Williamstown']},
     {name:'🏫 MID — Eastern (Schools)',suburbs:['Glen Waverley','Mt Waverley','Box Hill']},
-    {name:'💎 PREMIUM',suburbs:['Sandringham','Brighton']},
+    {name:'💎 PREMIUM',suburbs:['Sandringham','Brighton','Cheltenham']},
   ];
   var outerTiers=[
-    {name:'🏖️ BUDGET — Beach',suburbs:['Seaford','Carrum','Frankston','Frankston South']},
+    {name:'🏖️ BUDGET — Beach',suburbs:['Seaford','Frankston','Frankston South']},
     {name:'🏡 BUDGET — Inland',suburbs:['Langwarrin','Karingal','Cranbourne']},
     {name:'🍷 PENINSULA',suburbs:['Mornington','Mt Martha']},
   ];

@@ -832,45 +832,54 @@ function movePlanFinder(){
   var suburbData=typeof SUBURBS_DATA!=='undefined'?SUBURBS_DATA:[];
   var subRatings=state.suburbRatings||{};
   var topSuburbs=Object.keys(subRatings).filter(function(k){return subRatings[k]>=4}).sort(function(a,b){return subRatings[b]-subRatings[a]});
-  // If no shortlisted, show all active tier suburbs
   var searchSuburbs=topSuburbs.length?topSuburbs:suburbData.map(function(s){return s.name});
   
-  var html='<div class="card"><h2>🔍 Find Homes</h2>';
-  html+='<p class="tx tm mb2">Direct links to Domain.com.au filtered by your criteria. Click a suburb to search for 3-4 bed houses with gardens.</p>';
+  var html='<div class="card" style="border-left:4px solid var(--green)"><h2>🔍 Find Homes — Your Catchment Zone</h2>';
+  html+='<p class="tx tm mb2">All suburbs below are coastal and within catchment for <strong>Patterson River SC</strong> or <strong>Parkdale SC</strong>.</p>';
   
-  // Search criteria
-  html+='<div style="background:var(--card2);padding:10px 12px;border-radius:8px;margin-bottom:12px;font-size:.8rem">';
-  html+='<strong>Search criteria:</strong> 3+ bedrooms | House/Townhouse | Has parking | Sort by newest';
+  // Catchment map
+  html+='<div style="background:var(--card2);padding:12px;border-radius:8px;margin-bottom:12px;font-size:.8rem">';
+  html+='<div style="display:flex;gap:16px;flex-wrap:wrap">';
+  html+='<div><strong style="color:var(--green)">🎓 Parkdale SC catchment:</strong><br>Mentone, Parkdale, Mordialloc, Aspendale (north)</div>';
+  html+='<div><strong style="color:var(--accent)">🎓 Patterson River SC catchment:</strong><br>Carrum, Bonbeach, Chelsea, Edithvale, Aspendale (south)</div>';
+  html+='</div>';
+  html+='<div style="margin-top:8px;font-size:.7rem;color:var(--muted)">⚠️ Check exact catchment with <a href="https://www.findmyschool.vic.gov.au" target="_blank" style="color:var(--accent)">findmyschool.vic.gov.au</a> — boundaries can split streets</div>';
   html+='</div>';
   
-  // Links grouped by priority
-  if(topSuburbs.length){
-    html+='<h3 style="font-size:.85rem;color:var(--green)">⭐ Your Shortlisted Suburbs</h3>';
-    html+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">';
-    topSuburbs.forEach(function(name){
-      var s=suburbData.find(function(x){return x.name===name});
-      if(!s)return;
-      var url='https://www.domain.com.au/rent/'+name.toLowerCase().replace(/ /g,'-')+'-vic-'+s.pc+'/?bedrooms=3-any&propertytype=house,townhouse&sort=dateupdated-desc';
-      html+='<a href="'+url+'" target="_blank" class="btn btn-p" style="font-size:.75rem;padding:6px 12px">'+name+' ('+s.train+'min, '+s.beach+')</a>';
-    });
-    html+='</div>';
-  }
+  // Search criteria
+  html+='<div style="background:rgba(59,130,246,.05);padding:10px 12px;border-radius:8px;margin-bottom:12px;font-size:.8rem">';
+  html+='<strong>Your criteria:</strong> 3-4 bedrooms | House/Townhouse | Near coast | Garden preferred | ≤45 min commute';
+  html+='</div>';
   
-  html+='<h3 style="font-size:.85rem">All Suburbs</h3>';
-  html+='<div style="display:flex;flex-wrap:wrap;gap:6px">';
-  suburbData.forEach(function(s){
-    var url='https://www.domain.com.au/rent/'+s.name.toLowerCase().replace(/ /g,'-')+'-vic-'+s.pc+'/?bedrooms=3-any&propertytype=house,townhouse&sort=dateupdated-desc';
-    var isTop=topSuburbs.indexOf(s.name)>=0;
-    html+='<a href="'+url+'" target="_blank" class="btn btn-o" style="font-size:.7rem;padding:4px 8px;'+(isTop?'border-color:var(--green)':'')+'">'+s.name+'</a>';
+  // Priority search links - shortlisted suburbs
+  html+='<h3 style="font-size:.9rem;color:var(--green)">⭐ Search Your Shortlisted Suburbs</h3>';
+  html+='<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">';
+  var catchmentInfo={'Mentone':'Parkdale SC','Parkdale':'Parkdale SC','Mordialloc':'Parkdale SC','Aspendale':'Parkdale SC / Patterson River','Edithvale':'Patterson River SC','Chelsea':'Patterson River SC','Bonbeach':'Patterson River SC','Carrum':'Patterson River SC'};
+  topSuburbs.forEach(function(name){
+    var s=suburbData.find(function(x){return x.name===name});
+    if(!s)return;
+    var url='https://www.domain.com.au/rent/'+name.toLowerCase().replace(/ /g,'-')+'-vic-'+s.pc+'/?bedrooms=3-any&propertytype=house,townhouse&sort=dateupdated-desc';
+    var bed4mo=Math.round(parseInt(s.bed4)*52/12);
+    var disposable=9571-bed4mo-3345;
+    html+='<a href="'+url+'" target="_blank" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:8px;text-decoration:none;color:var(--text)">';
+    html+='<div><strong style="color:var(--accent)">'+name+'</strong> <span style="font-size:.7rem;color:var(--muted)">→ '+(catchmentInfo[name]||'')+'</span><br><span style="font-size:.72rem">'+s.train+' min train | '+s.beach+' | ~$'+bed4mo+'/mo rent</span></div>';
+    html+='<div style="text-align:right;font-size:.75rem"><div style="color:var(--green);font-weight:600">~$'+disposable+'/mo spare</div><div style="color:var(--accent)">Search →</div></div>';
+    html+='</a>';
   });
   html+='</div>';
   
-  html+='<div style="margin-top:16px;padding:10px;background:rgba(59,130,246,.05);border-radius:8px;font-size:.78rem">';
-  html+='<strong>💡 Tips:</strong><br>';
-  html+='• Also try <a href="https://www.realestate.com.au/rent/property-house-with-3-bedrooms-in-melbourne+-+southern+region,+vic/list-1?activeSort=list-date" target="_blank" style="color:var(--accent)">realestate.com.au</a> — sometimes different listings<br>';
-  html+='• Set up alerts on Domain for new listings in your suburbs<br>';
-  html+='• When you find one you like, come back to the Houses tab and add it<br>';
-  html+='• The system auto-calculates your disposable income for each property';
+  // Multi-suburb search
+  html+='<div style="margin-bottom:16px">';
+  html+='<a href="https://www.domain.com.au/rent/?suburb=mordialloc-vic-3195,parkdale-vic-3195,aspendale-vic-3195,edithvale-vic-3196,chelsea-vic-3196,bonbeach-vic-3196,mentone-vic-3194,carrum-vic-3197&bedrooms=3-any&propertytype=house,townhouse&sort=dateupdated-desc" target="_blank" class="btn btn-p" style="width:100%;text-align:center;padding:12px">🔍 Search ALL shortlisted suburbs at once on Domain →</a>';
+  html+='</div>';
+  
+  // Also try
+  html+='<div style="padding:10px;background:rgba(59,130,246,.05);border-radius:8px;font-size:.78rem">';
+  html+='<strong>💡 Also try:</strong><br>';
+  html+='• <a href="https://www.realestate.com.au/rent/property-house-with-3-bedrooms-between-0-800-in-mordialloc,+vic+3195%3b+parkdale,+vic+3195%3b+aspendale,+vic+3195%3b+edithvale,+vic+3196%3b+chelsea,+vic+3196%3b+bonbeach,+vic+3196%3b+mentone,+vic+3194%3b+carrum,+vic+3197/list-1?activeSort=list-date" target="_blank" style="color:var(--accent)">realestate.com.au — all suburbs combined</a><br>';
+  html+='• Set up <strong>email alerts</strong> on Domain for instant notifications of new listings<br>';
+  html+='• Check <strong>Facebook Marketplace</strong> — some landlords list privately<br>';
+  html+='• When you find one, go to <strong>Houses tab → + Add Property</strong>';
   html+='</div></div>';
   
   document.getElementById('movePlanSub').innerHTML=html;
